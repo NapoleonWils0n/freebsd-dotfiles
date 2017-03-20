@@ -1,0 +1,10 @@
+open_with vim
+search gpg
+search pf
+rename vpn-route
+rename vpn-split-route
+rename openvpn-down
+rename openvpn-up
+search ssh
+rename bash-scripts-freebsd
+delete 
