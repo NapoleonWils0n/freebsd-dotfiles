@@ -16,7 +16,7 @@ order += "volume master"
 order += "disk /"
 order += "path_exists VPN"
 order += "wireless _first_"
-order += "ethernet bge0"
+order += "ethernet ue0"
 order += "battery 0"
 order += "load"
 order += "tztime local"
@@ -26,7 +26,7 @@ wireless _first_ {
         format_down = "W: down"
 }
 
-ethernet bge0 {
+ethernet ue0 {
         # if you use %speed, i3status requires root privileges
         format_up = "E: %ip (%speed)"
         format_down = "E: down"
@@ -38,7 +38,7 @@ battery 0 {
 
 path_exists VPN {
         # path exists when a VPN tunnel launched by nmcli/nm-applet is active
-        path = "/proc/sys/net/ipv4/conf/tun0"
+        path = "/dev/tun0"
 }
 
 tztime local {
