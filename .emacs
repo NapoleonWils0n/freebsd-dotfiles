@@ -12,6 +12,11 @@
 ;; For interactive shell
 (setq python-shell-interpreter "python3")
 
+(tramp-set-completion-function "ssh"
+                               '((tramp-parse-sconfig "/etc/ssh_config")
+                                 (tramp-parse-sconfig "~/.ssh/config")))
+
+(setq tramp-default-method "ssh")
 
 ;Tell emacs where is your personal elisp lib dir
 (add-to-list 'load-path "~/.emacs.d/lisp/")
