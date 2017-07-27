@@ -21,6 +21,12 @@
 (add-to-list 'backup-directory-alist
 				 (cons tramp-file-name-regexp nil))
 
+(setq tramp-ssh-controlmaster-options
+                (concat
+                  "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
+                  "-o ControlMaster=auto -o ControlPersist=yes"))
+
+
 ;Tell emacs where is your personal elisp lib dir
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "org-protocol-capture-html")
