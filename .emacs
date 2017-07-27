@@ -18,6 +18,9 @@
 
 (setq tramp-default-method "ssh")
 
+(add-to-list 'backup-directory-alist
+				 (cons tramp-file-name-regexp nil))
+
 ;Tell emacs where is your personal elisp lib dir
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (load "org-protocol-capture-html")
