@@ -54,6 +54,11 @@ if [ -d "$HOME/git/kodi-playercorefactory/bash-scripts-freebsd" ] ; then
  		PATH="$HOME/git/kodi-playercorefactory/bash-scripts-freebsd:$PATH"
 fi
 
+# home local python bin 
+if [ -d "$HOME/.local/bin" ]; then
+   PATH="$HOME/.local/bin:$PATH"
+fi
+
 # prompt
 GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=true
