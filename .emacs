@@ -144,10 +144,7 @@
 ; org-babel graphviz
 (org-babel-do-load-languages
 'org-babel-load-languages
-'(
-  (sh . t)
-  (dot . t)
-  ))
+'((dot . t))) ; this line activates dot
 
 ; powerline-evil
 (require 'powerline)
