@@ -144,7 +144,10 @@
 ; org-babel graphviz
 (org-babel-do-load-languages
 'org-babel-load-languages
-'((dot . t))) ; this line activates dot
+'(
+  (sh . t)
+  (dot . t)
+  ))
 
 ; powerline-evil
 (require 'powerline)
@@ -171,4 +174,4 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode))))
+    (graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode))))
