@@ -144,7 +144,8 @@
 ; org-babel graphviz
 (org-babel-do-load-languages
 'org-babel-load-languages
-'((dot . t))) ; this line activates dot
+'((dot . t)
+  (shell . t))) ; this line activates bash shell script
 
 ; powerline-evil
 (require 'powerline)
