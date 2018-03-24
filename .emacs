@@ -6,7 +6,7 @@
 (elpy-enable)
 
 ; emacs server start for emacsclient
-(server-start)
+;(server-start)
 
 ; fixing elpy keybinding
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
