@@ -2,7 +2,7 @@
 name = Daniel J Wilcox
 email = danieljwilcox@gmail.com
 [core]
-	editor = vim
+	editor = emacsclient
 [color]
 ui = true
 [merge]
