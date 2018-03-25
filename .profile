@@ -15,7 +15,8 @@
 # serial line.
 # TERM=xterm; 	export TERM
 
-EDITOR=vim;   	export EDITOR
+#EDITOR=vim;   	export EDITOR
+EDITOR=emacsclient;   	export EDITOR
 PAGER=less;  	export PAGER
 
 # set ENV to a file invoked each time sh is started for interactive use.
