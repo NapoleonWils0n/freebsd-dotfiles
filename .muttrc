@@ -56,6 +56,7 @@ macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
 macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
 bind editor <Tab> complete-query
 
+bind index "^" imap-fetch-mail
 bind compose p pgp-menu
 macro compose Y pfy "send mail without GPG"
 
