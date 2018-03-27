@@ -7,6 +7,7 @@
 
 ; emacs server start for emacsclient
 (server-start)
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
 ; fixing elpy keybinding
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
