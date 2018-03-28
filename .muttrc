@@ -43,6 +43,7 @@ set imap_idle = "yes"
 set mail_check = "60"
 set imap_keepalive = "900"
 set editor = "emacsclient"
+set pager = "emacsclient"
 set beep_new
 
 # Ctrl-R to mark all as read
