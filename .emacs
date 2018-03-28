@@ -9,6 +9,11 @@
 (server-start)
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
+; ido mode
+(setq ido-enable-flex-matching t)
+(setq ido-everywhere t)
+(ido-mode 1)
+
 ; fixing elpy keybinding
 (define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
 (define-key global-map (kbd "C-c o") 'iedit-mode)
