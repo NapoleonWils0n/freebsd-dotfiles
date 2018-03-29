@@ -15,9 +15,8 @@
 # serial line.
 # TERM=xterm; 	export TERM
 
-#EDITOR=vim;   	export EDITOR
-EDITOR=emacsclient;   	export EDITOR
-VISUAL=emacsclient;   	export EDITOR
+# set emacsclient as editor for ranger
+EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
 PAGER=less;  	export PAGER
 
 # set ENV to a file invoked each time sh is started for interactive use.
