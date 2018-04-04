@@ -16,8 +16,8 @@
 # TERM=xterm; 	export TERM
 
 # set emacsclient as editor for ranger
-EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
-PAGER=less;  	export PAGER
+#EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
+#PAGER=less;  	export PAGER
 
 # set ENV to a file invoked each time sh is started for interactive use.
 ENV=$HOME/.shrc; export ENV
