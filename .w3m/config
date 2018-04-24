@@ -79,8 +79,8 @@ editor /usr/local/bin/emacsclient
 mailto_options 1
 mailer 
 extbrowser mpv %s &
-extbrowser2 youtube-dl %s &
-extbrowser3 
+extbrowser2 sh -c 'echo "$0" | xsel -b'
+extbrowser3 youtube-dl %s &
 extbrowser4 
 extbrowser5 
 extbrowser6 
