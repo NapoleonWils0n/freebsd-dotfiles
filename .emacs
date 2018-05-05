@@ -182,6 +182,6 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ranger json-mode graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode))))
+    (w3m ranger json-mode graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode))))
 
 ;(ranger-override-dired-mode t)
