@@ -2,7 +2,7 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/"))
-(package-initialize)
+; (package-initialize)
 (elpy-enable)
 
 ; emacs server start for emacsclient
