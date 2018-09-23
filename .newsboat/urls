@@ -8,14 +8,19 @@ https://www.omgubuntu.co.uk/feed linux news
 https://itsfoss.com/feed/ foss news
 
 # freebsd
-https://vermaden.wordpress.com/feed/ freebsd
+https://vermaden.wordpress.com/feed/ "~vermaden" freebsd
 https://forums.freebsd.org/forums/-/index.rss freebsd
 https://forums.freebsd.org/forums/howtos-and-faqs-moderated.39/index.rss freebsd
 https://null-byte.wonderhowto.com/rss.xml tech
 https://feeds2.feedburner.com/Command-line-fu commadline
 
+# google news
+https://news.google.com/news/rss/search/section/q/unix google
+https://news.google.com/news/rss/search/section/q/linux google
+
 # youtube channel rss
-#https://www.youtube.com/feeds/videos.xml?channel_id=UCHugE6eRhqB9_AZQh4DDbIw
+#https://www.youtube.com/feeds/videos.xml?channel_id=UCriRR_CzOny-akXyk1R-oDQ
+
 # youtube playlist rss
 https://www.youtube.com/feeds/videos.xml?playlist_id=PLUW3LUwQvegyqk2Iqi-YD7Do-AyD4W0s1 youtube freebsd
 
