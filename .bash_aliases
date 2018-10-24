@@ -1,8 +1,8 @@
 # hdmi display on
-alias hdmi-on='xrandr --output eDP1 --auto --primary --output HDMI1 --mode 1920x1080 --right-of eDP1'
+alias hdmi-on='xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of eDP-1'
 
 # hdmi display off
-alias hdmi-off='xrandr --output eDP1 --auto --primary --output HDMI1 --off'
+alias hdmi-off='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off'
 
 
 # keyboard backlight on
