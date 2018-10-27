@@ -7,4 +7,8 @@ rename openvpn-down
 rename openvpn-up
 search ssh
 rename bash-scripts-freebsd
+
+rename guisettings.xml.bak
+rename guisettings.xml
 delete 
+rename subreddits
