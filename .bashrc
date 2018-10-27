@@ -73,3 +73,8 @@ RANGER_LOAD_DEFAULT_RC="FALSE"
 
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
+
+# locale
+export LC_ALL=en_GB.UTF-8
+export LANG=en_US.GB-8
+export LANGUAGE=en_GB.UTF-8
