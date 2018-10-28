@@ -1,6 +1,7 @@
 # set term-256color for tmux
 #export TERM=xterm-256color
-export TERM=screen-256color
+#export TERM=screen-256color
+export TERM=rxvt-unicode-256color
 
 # If not running interactively, don't do anything
 case $- in
@@ -74,7 +75,7 @@ RANGER_LOAD_DEFAULT_RC="FALSE"
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
 
-# locale
-export LC_ALL=en_GB.UTF-8
-export LANG=en_US.GB-8
-export LANGUAGE=en_GB.UTF-8
+# locale for w3m
+export LANG=en_GB.UTF-8
+export LC_CTYPE=C
+export MM_CHARSET=UTF-8

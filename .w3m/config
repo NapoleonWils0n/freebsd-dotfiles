@@ -130,6 +130,7 @@ cookie_reject_domains
 cookie_accept_domains 
 cookie_avoid_wrong_number_of_dots 
 display_charset UTF-8
+display_charset UTF-8
 document_charset UTF-8
 auto_detect 2
 system_charset UTF-8
