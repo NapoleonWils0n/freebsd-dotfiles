@@ -10,6 +10,8 @@ rename bash-scripts-freebsd
 
 rename guisettings.xml.bak
 rename guisettings.xml
-delete 
 rename subreddits
 search firef
+search mutt
+delete 
+find l
