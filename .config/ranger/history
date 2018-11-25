@@ -1,5 +1,4 @@
 open_with vim
-search gpg
 search pf
 rename vpn-route
 rename vpn-split-route
@@ -13,5 +12,25 @@ rename guisettings.xml
 rename subreddits
 search firef
 search mutt
-delete 
 find l
+search fre
+rename lio
+search goo
+search pyth
+open_with 
+rename tvheadend-password.txt
+search tv
+rename vid1.mp4
+rename vid2.mp4
+search ubu
+search deb
+search ipt
+default_linemode 
+search win
+open_with lk
+rename freebsd-partition.md
+search pri
+search gpg
+search tvh
+delete 
+find fjl
