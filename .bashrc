@@ -74,3 +74,8 @@ RANGER_LOAD_DEFAULT_RC="FALSE"
 
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
+
+# set emacslient as editor
+ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
+EDITOR="/usr/local/bin/emacsclient -t"; export EDITOR
+VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
