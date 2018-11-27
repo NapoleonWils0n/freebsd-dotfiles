@@ -79,3 +79,8 @@ export MPD_HOST=${HOME}/.mpd/socket
 ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
 EDITOR="/usr/local/bin/emacsclient -t"; export EDITOR
 VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
+
+# emacsclient function e
+function e {
+/usr/local/bin/emacsclient -t "$@"
+}
