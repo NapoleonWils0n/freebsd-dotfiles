@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=org-protocol
-Exec=emacs-capture %u 
+Name=Emacs Client
+Exec=/home/djwilcox/bin/emacs-capture %u 
+Icon=emacs-icon
 Type=Application
 Terminal=false
-Categories=System;
 MimeType=x-scheme-handler/org-protocol;
