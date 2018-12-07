@@ -5,6 +5,7 @@
 ; (package-initialize)
 (elpy-enable)
 
+; start server
 (server-start)
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
