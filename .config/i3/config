@@ -197,4 +197,4 @@ mode "$mode_system" {
 bindsym $mod+Shift+BackSpace mode "$mode_system"
 
 # emacs window
-for_window [title="emacs-capture"] floating enable
+# for_window [title="emacs-capture"] floating enable
