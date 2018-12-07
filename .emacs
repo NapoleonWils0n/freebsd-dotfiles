@@ -5,8 +5,7 @@
 ; (package-initialize)
 (elpy-enable)
 
-; emacs server start for emacsclient
-;(server-start)
+(server-start)
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
 ; ido mode
