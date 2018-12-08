@@ -33,10 +33,10 @@ search gpg
 search tvh
 find fjl
 open_with vim
-delete 
 rename new
 open_with vlc
 open_with
 open_with emacs
 open_with e
 open_with emacsclient
+delete 
