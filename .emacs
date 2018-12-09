@@ -110,7 +110,7 @@
       (file+headline "~/org/todo.org" "Tasks")
       (file "~/org/templates/tpl-todo.txt")
       :empty-lines-before 1)
-      ("w" "Web site" entry (file+olp "~/org/web.org" "Web")
+      ("w" "Web site" entry (file+olp "~/org/web.org" "sites")
       (file "~/org/templates/tpl-web.txt")
       :empty-lines-before 1)))
 
