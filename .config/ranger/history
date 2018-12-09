@@ -39,4 +39,5 @@ open_with
 open_with emacs
 open_with e
 open_with emacsclient
+search sync
 delete 
