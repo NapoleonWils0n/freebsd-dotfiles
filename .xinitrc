@@ -35,5 +35,8 @@ fi
 # remap ctrl to alt, alt to super, super to ctrl
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
+# wallpaper - run before starting i3
+~/.fehbg &
+
 # start ssh-agent and i3
 exec ssh-agent /usr/local/bin/i3
