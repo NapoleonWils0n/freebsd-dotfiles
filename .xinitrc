@@ -37,6 +37,3 @@ xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
 # start ssh-agent and i3
 exec ssh-agent /usr/local/bin/i3
-
-# wallpaper
-~/.fehbg &

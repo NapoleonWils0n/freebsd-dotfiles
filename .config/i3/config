@@ -198,3 +198,6 @@ bindsym $mod+Shift+BackSpace mode "$mode_system"
 
 # emacs window
 # for_window [title="emacs-capture"] floating enable
+
+# wallpaper
+exec --no-startup-id ~/.fehbg
