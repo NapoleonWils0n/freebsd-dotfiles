@@ -85,7 +85,7 @@
 (require 'org-protocol)
 (require 'org-capture)
 (require 'org-protocol-capture-html)
-(setq org-agenda-files '("~/org/"))
+(setq org-agenda-files '("~/git/org/"))
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
 
@@ -106,12 +106,12 @@
 
 ; org capture templates
 (setq org-capture-templates
-    '(("t" "Todo" entry
-      (file+headline "~/org/todo.org" "Tasks")
-      (file "~/org/templates/tpl-todo.txt")
+    '(("t" "todo" entry
+      (file+headline "~/git/org/todo.org" "Tasks")
+      (file "~/git/org/templates/tpl-todo.txt")
       :empty-lines-before 1)
-      ("w" "Web site" entry (file+olp "~/org/web.org" "sites")
-      (file "~/org/templates/tpl-web.txt")
+      ("w" "web site" entry (file+olp "~/git/org/web.org" "sites")
+      (file "~/git/org/templates/tpl-web.txt")
       :empty-lines-before 1)))
 
 ; refile
