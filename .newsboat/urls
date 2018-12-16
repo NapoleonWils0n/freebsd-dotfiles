@@ -13,25 +13,11 @@ https://forums.freebsd.org/forums/howtos-and-faqs-moderated.39/index.rss freebsd
 https://null-byte.wonderhowto.com/rss.xml tech
 https://feeds2.feedburner.com/Command-line-fu commadline
 
-# google news
-https://news.google.com/news/rss/search/section/q/unix google
-https://news.google.com/news/rss/search/section/q/linux google
-
 # freebsd now
 https://www.youtube.com/feeds/videos.xml?playlist_id=PLUW3LUwQvegyqk2Iqi-YD7Do-AyD4W0s1 youtube freebsd
 
 # A Closer Look - Late Night with Seth Meyers
 https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa youtube
-
-# stephen colbert
-https://www.youtube.com/feeds/videos.xml?channel_id=UCMtFAi84ehTSYSE9XoHefig youtube
-
-# newcastle
-https://www.themag.co.uk/feed/ newcastle
-https://www.chroniclelive.co.uk/all-about/newcastle-united-fc?service=rss newcastle "~chronicle live"
-
-# everything black and white podast 
-https://rss.acast.com/thechronicle newcastle "~Everything Black and White"
 
 # reddit soccer streams
 https://www.reddit.com/r/soccerstreams.rss reddit football
