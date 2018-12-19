@@ -163,15 +163,17 @@ bar {
 # Multimedia Keys
 
 # increase volume
-bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+ unmute
+#bindsym XF86AudioRaiseVolume exec "mixer vol +5"
 # decrease volume
-bindsym XF86AudioLowerVolume exec amixer -q set Master 5%- unmute
+#bindsym XF86AudioLowerVolume exec "mixer vol -5"
+
 # mute volume
-bindsym XF86AudioMute exec amixer -q set Master mute
+#bindsym XF86AudioMute exec amixer -q set Master mute
+
 # pause / play / next / previous
-bindsym XF86AudioPlay exec playerctl play-pause
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioPrev exec playerctl previous
+#bindsym XF86AudioPlay exec playerctl play-pause
+#bindsym XF86AudioNext exec playerctl next
+#bindsym XF86AudioPrev exec playerctl previous
 
 # workspace back and forth
 workspace_auto_back_and_forth yes
@@ -180,14 +182,12 @@ bindsym $mod+z workspace back_and_forth
 # Shutdown, reboot, lock screen
 set $Locker i3lock && sleep 1
 
-set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+set $mode_system System (l) lock, (e) logout, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
     bindsym l exec --no-startup-id $Locker, mode "default"
     bindsym e exec --no-startup-id i3-msg exit, mode "default"
-    bindsym s exec --no-startup-id $Locker && systemctl suspend, mode "default"
-    bindsym h exec --no-startup-id $Locker && systemctl hibernate, mode "default"
-    bindsym r exec --no-startup-id systemctl reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id systemctl poweroff -i, mode "default"  
+    bindsym r exec --no-startup-id exec reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id exec poweroff -i, mode "default"  
 
     # back to normal: Enter or Escape
     bindsym Return mode "default"
