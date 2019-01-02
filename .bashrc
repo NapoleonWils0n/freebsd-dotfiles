@@ -84,3 +84,6 @@ VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
 function e {
 /usr/local/bin/emacsclient "$@"
 }
+
+# doas auto complete
+complete -cf doas
