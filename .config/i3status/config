@@ -29,14 +29,14 @@ order += "tztime local"
 
 ethernet ue0 {
         # if you use %speed, i3status requires root privileges
-        format_up = "%ip (%speed)"
-        format_down = " down"
+        format_up = " %ip (%speed)"
+        format_down = " down"
 }
 
 #ethernet bge0 {
 #        # if you use %speed, i3status requires root privileges
-#        format_up = "E: %ip (%speed)"
-#        format_down = "E: down"
+#        format_up = " %ip (%speed)"
+#        format_down = " down"
 #}
 
 
@@ -55,6 +55,8 @@ battery 0 {
 path_exists VPN {
         # path exists when a VPN tunnel launched by nmcli/nm-applet is active
         path = "/dev/tun0"
+	format = "VPN "
+	format_down = "VPN "
 }
 
 tztime local {
@@ -62,7 +64,7 @@ tztime local {
 }
 
 load {
-        format = "%1min"
+        format = " %1min"
 }
 
 disk "/" {
