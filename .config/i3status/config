@@ -29,8 +29,8 @@ order += "tztime local"
 
 ethernet ue0 {
         # if you use %speed, i3status requires root privileges
-        format_up = "E: %ip (%speed)"
-        format_down = "E: down"
+        format_up = "%ip (%speed)"
+        format_down = " down"
 }
 
 #ethernet bge0 {
@@ -42,6 +42,14 @@ ethernet ue0 {
 
 battery 0 {
         format = "%status %percentage %remaining"
+        format_down = "No battery"
+        status_bat = ""
+        status_chr = ""
+        status_full = ""
+        low_threshold = 30
+        threshold_type = percentage
+        integer_battery_capacity = true
+        color_good = "#0000FF"
 }
 
 path_exists VPN {
@@ -50,7 +58,7 @@ path_exists VPN {
 }
 
 tztime local {
-        format = "%Y-%m-%d %H:%M:%S"
+        format = " %H:%M:%S %d/%m/%Y"
 }
 
 load {
@@ -58,11 +66,12 @@ load {
 }
 
 disk "/" {
-        format = "ROOT: %avail"
+        format = " %avail"
 }
 
 volume master {
-        format = "V: %volume"
+        format = " %volume"
+        format_muted = " (%volume)"
         device = "default"
         mixer = "Master"
         mixer_idx = 0
