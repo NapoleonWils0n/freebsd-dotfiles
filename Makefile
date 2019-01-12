@@ -3,6 +3,7 @@
 
 # freebsd bash dotfiles
 dotfiles = .bash_aliases \
+.zshrc \
 .tmux.conf \
 .gitconfig \
 .xkb \
