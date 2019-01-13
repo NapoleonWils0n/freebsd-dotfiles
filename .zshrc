@@ -57,8 +57,8 @@ export CLICOLOR=1
 #=======
 
 # Set/unset  shell options
-setopt   notify globdots pushdtohome cdablevars autolist
-setopt   recexact longlistjobs
+setopt   notify globdots correct pushdtohome cdablevars autolist
+setopt   correctall recexact longlistjobs
 setopt   autoresume histignoredups pushdsilent noclobber
 setopt   autopushd pushdminus extendedglob rcquotes mailwarning
 unsetopt bgnice autoparamslash
