@@ -37,10 +37,8 @@ if [ -d "$HOME/.local/bin" ]; then
    PATH="$HOME/.local/bin:$PATH"
 fi
 
-
-# tell ls to be colourfull
-export LSCOLORS=ExFxCxDxBxegedabagacad
-export CLICOLOR=1
+# prompt
+PS1=$'[%n@%M %~]\nYes Master ? '
 
 # general
 #========
@@ -51,15 +49,16 @@ RANGER_LOAD_DEFAULT_RC="FALSE"
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
 
-# prompt
-PS1=$'[%n@%M %~]\nYes Master ? '
+# tell ls to be colourfull
+export LSCOLORS=ExFxCxDxBxegedabagacad
+export CLICOLOR=1
 
 # zstyle
 #=======
 
 # Set/unset  shell options
-setopt   notify globdots correct pushdtohome cdablevars autolist
-setopt   correctall recexact longlistjobs
+setopt   notify globdots pushdtohome cdablevars autolist
+setopt   recexact longlistjobs
 setopt   autoresume histignoredups pushdsilent noclobber
 setopt   autopushd pushdminus extendedglob rcquotes mailwarning
 unsetopt bgnice autoparamslash
@@ -110,7 +109,7 @@ zstyle ':completion:*' rehash true
 # cdpath
 setopt auto_cd
 #cdpath=($HOME)
-cdpath=(.. ~)
+cdpath=(~)
 
 # aliases
 #========
