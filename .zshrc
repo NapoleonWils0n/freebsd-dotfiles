@@ -37,7 +37,6 @@ if [ -d "$HOME/.local/bin" ]; then
    PATH="$HOME/.local/bin:$PATH"
 fi
 
-
 # git prompt
 if [ -f "/usr/local/share/git-core/contrib/completion/git-prompt.sh" ]; then
    source "/usr/local/share/git-core/contrib/completion/git-prompt.sh"
@@ -50,7 +49,7 @@ GIT_PS1_SHOWUNTRACKEDFILES=true
 GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
 PS1=$'[%n@%M %~]\nYes Master ? '
-export RPROMPT=$'$(__git_ps1 "%s")'
+RPROMPT=$'$(__git_ps1 "%s")'
 
 # general
 #========
@@ -100,11 +99,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
-
-# command for process lists, the local web server details and host completion
-#zstyle ':completion:*:processes' command 'ps -o pid,s,nice,stime,args'
-#zstyle ':completion:*:urls' local 'www' '/var/www/htdocs' 'public_html'
-#zstyle '*' hosts $hosts
 
 # Filename suffixes to ignore during completion (except after rm command)
 zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
