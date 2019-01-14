@@ -12,7 +12,7 @@ compinit
 # End of lines added by compinstall
 
 # fpath
-#fpath=(~/.zsh $fpath)
+fpath=(~/.zsh $fpath)
 
 # editor
 #=======
@@ -54,6 +54,7 @@ GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
 PS1=$'[%n@%M %~]\nYes Master ? '
 export RPROMPT=$'$(__git_ps1 "%s")'
+#export RPROMPT=$''
 
 # general
 #========
