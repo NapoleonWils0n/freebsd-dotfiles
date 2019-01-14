@@ -12,7 +12,7 @@ compinit
 # End of lines added by compinstall
 
 # fpath
-fpath=(~/.zsh $fpath)
+#fpath=(~/.zsh $fpath)
 
 # editor
 #=======
