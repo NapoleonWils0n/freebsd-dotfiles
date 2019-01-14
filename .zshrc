@@ -11,6 +11,9 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
+# fpath
+fpath=(~/.zsh $fpath)
+
 # editor
 #=======
 
@@ -37,8 +40,20 @@ if [ -d "$HOME/.local/bin" ]; then
    PATH="$HOME/.local/bin:$PATH"
 fi
 
+
+# git prompt
+if [ -f "/usr/local/share/git-core/contrib/completion/git-prompt.sh" ]; then
+   source "/usr/local/share/git-core/contrib/completion/git-prompt.sh"
+fi
+
 # prompt
+setopt prompt_subst
+GIT_PS1_SHOWDIRTYSTATE=true
+GIT_PS1_SHOWUNTRACKEDFILES=true
+GIT_PS1_SHOWUPSTREAM="auto verbose name git"
+
 PS1=$'[%n@%M %~]\nYes Master ? '
+export RPROMPT=$'$(__git_ps1 "%s")'
 
 # general
 #========
