@@ -53,7 +53,7 @@ GIT_PS1_SHOWUNTRACKEDFILES=true
 GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
 PS1=$'[%n@%M %~]\nYes Master ? '
-#export RPROMPT=$'$(__git_ps1 "%s")'
+export RPROMPT=$'$(__git_ps1 "%s")'
 
 # general
 #========
@@ -107,7 +107,7 @@ zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 # command for process lists, the local web server details and host completion
 #zstyle ':completion:*:processes' command 'ps -o pid,s,nice,stime,args'
 #zstyle ':completion:*:urls' local 'www' '/var/www/htdocs' 'public_html'
-zstyle '*' hosts $hosts
+#zstyle '*' hosts $hosts
 
 # Filename suffixes to ignore during completion (except after rm command)
 zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
