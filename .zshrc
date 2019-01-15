@@ -48,7 +48,7 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=true
 GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
-PS1=$'[%F{green}%n@%M %~%f]\nYes Master ? '
+PS1=$'[%n@%M %~]\nYes Master ? '
 RPROMPT=$'%F{yellow}$(__git_ps1 "%s")%f'
 
 # general
