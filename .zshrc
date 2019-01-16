@@ -112,8 +112,8 @@ zstyle ':completion:*:functions' ignored-patterns '_*'
 # kill - red, green, blue
 zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34'
 
-# list optiones colour
-zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=22=31'
+# list optiones colour, white + cyan
+zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
 
 
 # rehash commands
