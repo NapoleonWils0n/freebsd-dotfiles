@@ -49,7 +49,7 @@ GIT_PS1_SHOWUNTRACKEDFILES=true
 GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
 PS1=$'[%n@%M %~]\nYes Master ? '
-RPROMPT=$'%F{yellow}$(__git_ps1 "%s")%f'
+RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
 
 # general
 #========
