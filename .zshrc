@@ -64,6 +64,9 @@ export MPD_HOST=${HOME}/.mpd/socket
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export CLICOLOR=1
 
+# qt5 
+export QT_QPA_PLATFORMTHEME=qt5ct
+
 # zstyle
 #=======
 
