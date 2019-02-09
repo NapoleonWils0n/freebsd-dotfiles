@@ -13,11 +13,6 @@ https://itsfoss.com/feed/ text
 https://forums.freebsd.org/forums/-/index.rss text
 https://forums.freebsd.org/forums/howtos-and-faqs-moderated.39/index.rss text
 https://vermaden.wordpress.com/feed/ "~vermaden" text
-https://null-byte.wonderhowto.com/rss.xml text
-https://feeds2.feedburner.com/Command-line-fu text
-
-# reddit soccer streams
-https://www.reddit.com/r/soccerstreams_pl.rss text
 
 # Video
 #======
@@ -29,10 +24,7 @@ https://www.youtube.com/feeds/videos.xml?channel_id=UCc_MoWuQlqnGJ2w0bTAmmEw vid
 https://www.youtube.com/feeds/videos.xml?channel_id=UC7GG4HsvV8hvKSjl_VWW5rg video
 
 # A Closer Look - Late Night with Seth Meyers
-https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa video
-
-# freebsd now
-https://www.youtube.com/feeds/videos.xml?playlist_id=PLUW3LUwQvegyqk2Iqi-YD7Do-AyD4W0s1 video
+https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa "~A Closer Look" video
 
 # Audio podcasts
 #===============
