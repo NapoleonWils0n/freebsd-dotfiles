@@ -1,7 +1,7 @@
 # set term-256color for tmux
 #export TERM=xterm-256color
-#export TERM=screen-256color
-export TERM=rxvt-unicode-256color
+export TERM=screen-256color
+#export TERM=rxvt-unicode-256color
 
 # If not running interactively, don't do anything
 case $- in
