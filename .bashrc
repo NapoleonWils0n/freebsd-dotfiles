@@ -87,3 +87,6 @@ function e {
 
 # doas auto complete
 complete -cf doas
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
