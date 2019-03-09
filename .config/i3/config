@@ -154,7 +154,10 @@ new_window none
 bar {
         status_command i3status
         font pango:DejaVu Sans Mono, Awesome 8
-        tray_output primary
+        #tray_output primary
+	# tray output, use xrandr to get the screen name, needed for icons to work
+        tray_output eDP-1
+	tray_padding 0
 		  colors{
 		  background #1b2631 
 		  statusline #e4e4e4
