@@ -12,12 +12,12 @@ general {
 	output_format = "i3bar"
 }
 
-#order += "disk /"
 #order += "ethernet bge0"
 order += "ethernet ue0"
 order += "wireless _first_"
 order += "path_exists VPN"
 order += "volume master"
+order += "disk /"
 order += "battery 0"
 #order += "load"
 order += "tztime local"
