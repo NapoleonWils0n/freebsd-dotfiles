@@ -7,9 +7,6 @@ bindkey -e
 # The following lines were added by compinstall
 zstyle :compinstall filename '/home/djwilcox/.zshrc'
 
-# add custom completion scripts
-fpath=(~/.zsh/completion $fpath) 
-
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
