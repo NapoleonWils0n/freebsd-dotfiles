@@ -1,4 +1,7 @@
 # Lines configured by zsh-newuser-install
+# ssh zsh fix
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
