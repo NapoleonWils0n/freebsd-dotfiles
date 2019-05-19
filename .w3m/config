@@ -81,13 +81,13 @@ mailer
 extbrowser /usr/local/bin/cvlc --quiet %s 2>/dev/null &
 extbrowser2 /usr/local/bin/mpv %s &
 extbrowser3 /usr/local/bin/youtube-dl %s &
-extbrowser4 sh -c 'echo "$0" | xsel -b'
+extbrowser4 
 extbrowser5 
 extbrowser6 
 extbrowser7 
 extbrowser8 
 extbrowser9 
-bgextviewer 1
+bgextviewer 0
 use_lessopen 0
 passwd_file ~/.w3m/passwd
 disable_secret_security_check 0
