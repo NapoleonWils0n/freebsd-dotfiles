@@ -58,7 +58,7 @@ vi_prec_num 0
 mark_all_pages 0
 wrap_search 0
 ignorecase_search 1
-use_mouse 1
+use_mouse 0
 reverse_mouse 0
 relative_wheel_scroll 0
 relative_wheel_scroll_ratio 30
@@ -78,10 +78,10 @@ urimethodmap ~/.w3m/urimethodmap, /usr/local/etc/w3m/urimethodmap
 editor /usr/local/bin/emacsclient
 mailto_options 1
 mailer 
-extbrowser mpv %s &
-extbrowser2 sh -c 'echo "$0" | xsel -b'
-extbrowser3 youtube-dl %s &
-extbrowser4 
+extbrowser /usr/local/bin/cvlc --quiet %s 2>/dev/null &
+extbrowser2 /usr/local/bin/mpv %s &
+extbrowser3 /usr/local/bin/youtube-dl %s &
+extbrowser4 sh -c 'echo "$0" | xsel -b'
 extbrowser5 
 extbrowser6 
 extbrowser7 
@@ -95,7 +95,7 @@ ftppasswd
 ftppass_hostnamegen 1
 pre_form_file ~/.w3m/pre_form
 siteconf_file ~/.w3m/siteconf
-user_agent
+user_agent 
 no_referer 0
 accept_language en;q=1.0
 accept_encoding gzip, compress, bzip, bzip2, deflate
@@ -129,7 +129,6 @@ accept_bad_cookie 0
 cookie_reject_domains 
 cookie_accept_domains 
 cookie_avoid_wrong_number_of_dots 
-display_charset UTF-8
 display_charset UTF-8
 document_charset UTF-8
 auto_detect 2
