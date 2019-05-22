@@ -80,7 +80,7 @@ mailto_options 1
 mailer 
 extbrowser /usr/local/bin/mpv %s
 extbrowser2 /usr/local/bin/cvlc --quiet %s 2>/dev/null &
-extbrowser3 /usr/local/bin/youtube-dl %s &
+extbrowser3 ~/.local/bin/youtube-dl %s
 extbrowser4 
 extbrowser5 
 extbrowser6 
