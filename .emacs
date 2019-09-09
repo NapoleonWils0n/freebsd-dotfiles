@@ -192,3 +192,5 @@
    '(ranger json-mode graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
 
 ;(ranger-override-dired-mode t)
+
+(setq org-latex-listings 'minted)
