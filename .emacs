@@ -189,9 +189,9 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(ranger json-mode graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
+   '(dired-ranger ranger json-mode graphviz-dot-mode ## elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
 
-;(ranger-override-dired-mode t)
+(ranger-override-dired-mode t)
 
 ;(setq org-latex-listings 'minted)
 (setq org-latex-listings 'minted
@@ -202,3 +202,6 @@
 
 (setq org-latex-minted-options
     '(("frame" "lines") ("linenos=true")) )
+
+; always follow symlinks
+(setq vc-follow-symlinks t)
