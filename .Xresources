@@ -295,7 +295,7 @@ URxvt*modifier: mod1
 ! URxvt*keysym.sym: action
 
 ! URxvt*perl-ext-common: string
-URxvt*perl-ext-common: default,clipboard,selection-to-clipboard
+URxvt*perl-ext-common: default,clipboard,selection-to-clipboard,font-size
 
 ! copy and paste, alt + control + c, alt + control + v
 !URxvt.keysym.Alt-Control-C: perl:clipboard:copy
