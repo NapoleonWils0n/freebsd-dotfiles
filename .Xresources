@@ -351,6 +351,7 @@ URxvt.keysym.M-C-v: eval:paste_clipboard
 
 ! Turn on/off ISO 14755 (default enabled).
 URxvt*iso14755: False
+URxvt.iso14755_52: false
 
 ! Turn on/off ISO 14755 5.2 mode (default enabled).
 !URxvt*iso14755_52: boolean
