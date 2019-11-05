@@ -189,7 +189,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(dired-ranger ranger json-mode graphviz-dot-mode elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
+   '(flycheck dired-ranger ranger json-mode graphviz-dot-mode elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
 
 (ranger-override-dired-mode t)
 
@@ -205,3 +205,6 @@
 
 ; always follow symlinks
 (setq vc-follow-symlinks t)
+
+; flycheck syntax linting
+(add-hook 'sh-mode-hook 'flycheck-mode)
