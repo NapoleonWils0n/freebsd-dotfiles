@@ -206,3 +206,6 @@
 
 ; flycheck syntax linting
 (add-hook 'sh-mode-hook 'flycheck-mode)
+
+; dont indent src block for export
+(setq org-src-preserve-indentation t)
