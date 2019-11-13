@@ -210,5 +210,8 @@
 ; dont indent src block for export
 (setq org-src-preserve-indentation t)
 
-; dired dont use the ls dired option
+; dired ls
 (setq dired-use-ls-dired nil)
+
+; dired directory listing options for ls
+(setq dired-listing-switches "-ahl")
