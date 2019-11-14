@@ -215,3 +215,6 @@
 
 ; dired directory listing options for ls
 (setq dired-listing-switches "-ahl")
+
+; dired hide aync output buffer
+(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
