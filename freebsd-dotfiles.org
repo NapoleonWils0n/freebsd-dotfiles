@@ -1952,6 +1952,26 @@ rofi.theme: /usr/local/share/rofi/themes/solarized_alternate.rasi
 
 ; dired hide aync output buffer
 (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+
+; elfeed
+(require 'elfeed)
+(require 'elfeed-org)
+(elfeed-org)
+(setq rmh-elfeed-org-files (list "~/git/org/feeds.org"))
+(global-set-key (kbd "C-x w") 'elfeed)
+
+
+; Mark all YouTube entries
+(add-hook 'elfeed-new-entry-hook
+          (elfeed-make-tagger :feed-url "youtube\\.com"
+                              :add '(video youtube)))
+
+; elfeed goodies
+(require 'elfeed-goodies)
+(elfeed-goodies/setup)
+
+(add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
+(add-to-list 'evil-motion-state-modes 'elfeed-show-mode)
 #+END_SRC
 
 *** emacs tangle
