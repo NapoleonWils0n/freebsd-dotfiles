@@ -236,5 +236,9 @@
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
 
+; elfeed evil
 (add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
 (add-to-list 'evil-motion-state-modes 'elfeed-show-mode)
+
+; l show entry
+(define-key elfeed-search-mode-map (kbd "l") 'elfeed-search-show-entry)
