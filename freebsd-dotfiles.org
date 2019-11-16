@@ -1979,10 +1979,24 @@ rofi.theme: /usr/local/share/rofi/themes/solarized_alternate.rasi
 
 ; elfeed face for tags
 (defface youtube-elfeed-entry
-  '((t :foreground "#f77"))
+  '((t :foreground "#268bd2"))
   "Marks an youtube Elfeed entry.")
 
 (push '(youtube youtube-elfeed-entry)
+      elfeed-search-face-alist)
+
+(defface freebsd-elfeed-entry
+  '((t :foreground "#b58900"))
+  "Marks an freensd Elfeed entry.")
+
+(push '(freebsd freebsd-elfeed-entry)
+      elfeed-search-face-alist)
+
+(defface nufc-elfeed-entry
+  '((t :foreground "#2aa198"))
+  "Marks an nufc Elfeed entry.")
+
+(push '(nufc nufc-elfeed-entry)
       elfeed-search-face-alist)
 #+END_SRC
 
