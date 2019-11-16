@@ -242,3 +242,11 @@
 
 ; l show entry
 (define-key elfeed-search-mode-map (kbd "l") 'elfeed-search-show-entry)
+
+; elfeed face for tags
+(defface youtube-elfeed-entry
+  '((t :foreground "#f77"))
+  "Marks an youtube Elfeed entry.")
+
+(push '(youtube youtube-elfeed-entry)
+      elfeed-search-face-alist)
