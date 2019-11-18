@@ -274,7 +274,7 @@
   (interactive)
     (let ((link (elfeed-entry-link elfeed-show-entry)))
       (when link
-        (message "Sent to browser: %s" link)
+        (message "Opening video: %s" link)
         (async-shell-command (format "%s '%s'"
                                       mpv-path
                                       (elfeed-entry-link elfeed-show-entry))))))
@@ -284,6 +284,7 @@
   (interactive)
   (let ((entry (elfeed-search-selected :single)))
    (when entry
+     (message "Opening video")
      (async-shell-command (format "%s '%s'"
                                    mpv-path
                                    (elfeed-entry-link entry))))))
