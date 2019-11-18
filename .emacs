@@ -264,3 +264,30 @@
 
 (push '(nufc nufc-elfeed-entry)
       elfeed-search-face-alist)
+
+; mpv elfeed
+(setq mpv-path "/usr/local/bin/mpv")
+
+; play video when viewing the entry
+(defun elfeed-show-mpv ()
+  "Playing video with mpv"
+  (interactive)
+    (let ((link (elfeed-entry-link elfeed-show-entry)))
+      (when link
+        (message "Sent to browser: %s" link)
+        (async-shell-command (format "%s '%s'"
+                                      mpv-path
+                                      (elfeed-entry-link elfeed-show-entry))))))
+
+; play the selected video
+(defun elfeed-search-mpv ()
+  (interactive)
+  (let ((entry (elfeed-search-selected :single)))
+   (when entry
+     (async-shell-command (format "%s '%s'"
+                                   mpv-path
+                                   (elfeed-entry-link entry))))))
+
+; mpv keymaps
+(define-key elfeed-search-mode-map (kbd "x") 'elfeed-search-mpv)
+(define-key elfeed-show-mode-map (kbd "x") 'elfeed-show-mpv)
