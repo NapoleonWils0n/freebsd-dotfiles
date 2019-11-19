@@ -208,3 +208,6 @@ exec --no-startup-id ~/.fehbg
 
 # emacs window
 # for_window [title="emacs-capture"] floating enable
+
+# mpv floating enable and resize
+for_window [class="mpv"] floating enable resize set 640 480
