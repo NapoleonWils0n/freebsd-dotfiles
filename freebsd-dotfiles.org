@@ -665,7 +665,10 @@ exec --no-startup-id ~/.fehbg
 # for_window [title="emacs-capture"] floating enable
 
 # mpv floating enable and resize
-for_window [class="mpv"] floating enable resize set 640 480
+for_window [class="mpv"] floating enable resize set 640 480, move absolute position center
+
+# move floating window to center
+bindsym $mod+n move absolute position center
 #+END_SRC
 
 *** i3 tangle
