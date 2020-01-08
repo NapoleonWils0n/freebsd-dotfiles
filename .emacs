@@ -189,7 +189,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(package-selected-packages
-   '(flycheck json-mode graphviz-dot-mode elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode)))
+   '(flycheck json-mode graphviz-dot-mode elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode elfeed elfeed-org elfeed-goodies ob-async)))
 
 ;(setq org-latex-listings 'minted)
 (setq org-latex-listings 'minted
