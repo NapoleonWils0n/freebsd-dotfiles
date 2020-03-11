@@ -4171,7 +4171,7 @@ if [ -d /usr/local/etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 # remap ctrl to alt, alt to super, super to ctrl
-#xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
+xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
 # start ssh-agent and i3
 exec ssh-agent /usr/local/bin/i3
