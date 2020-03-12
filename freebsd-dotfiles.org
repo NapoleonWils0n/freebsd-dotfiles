@@ -23,6 +23,51 @@ emacs --batch -l org --eval '(org-babel-tangle-file "filename.org")'
 :PROPERTIES:
 :VISIBILITY: children
 :END:
+** barrier
+
+#+NAME: barrier
+#+BEGIN_SRC conf
+section: screens
+	# three hosts named:  moe, larry, and curly
+	pollux:
+	macmini.local:
+end
+
+section: links
+	# larry is to the right of moe and curly is above moe
+	pollux:
+		right = macmini.local
+
+	# moe is to the left of larry and curly is above larry.
+	# note that curly is above both moe and larry and moe
+	# and larry have a symmetric connection (they're in
+	# opposite directions of each other).
+	macmini.local:
+		left  = pollux
+end
+
+section: options
+	keystroke(super+`) = switchInDirection(right)
+	keystroke(super+shift+`) = switchInDirection(left)
+end
+#+END_SRC
+
+*** barrier tangle
+
++ home dir
+  
+#+NAME: barrier-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.barrier/barrier.conf"
+<<barrier>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: barrier-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".barrier/barrier.conf"
+<<barrier>>
+#+END_SRC
+
 ** Xmodmap
 
 #+NAME: Xmodmap
@@ -44,6 +89,29 @@ pointer = 1 2 3 5 4 6 7 8 9 10
 #+NAME: Xmodmap-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".Xmodmap"
 <<Xmodmap>>
+#+END_SRC
+
+** Mouse-Xmodmap
+
+#+NAME: Mouse-Xmodmap
+#+BEGIN_SRC conf
+pointer = 1 2 3 4 5 6 7 8 9 10
+#+END_SRC
+
+*** Mouse-Xmodmap tangle
+
++ home dir
+  
+#+NAME: Mouse-Xmodmap-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.Mouse-Xmodmap"
+<<Mouse-Xmodmap>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: Mouse-Xmodmap-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".Mouse-Xmodmap"
+<<Mouse-Xmodmap>>
 #+END_SRC
 
 ** Xresources
