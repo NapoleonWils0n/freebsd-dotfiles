@@ -2967,6 +2967,14 @@ https://www.youtube.com/feeds/videos.xml?channel_id=UCzbwOixfdDkOEl4c2Gy1Xow vid
 # Newcastle Fans TV
 https://www.youtube.com/feeds/videos.xml?channel_id=UC7GG4HsvV8hvKSjl_VWW5rg video
 
+# youtube
+https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa "a closer look" video
+https://www.youtube.com/channel/UC2eYFnH61tmytImy1mTYvhA/videos "luke smith" video
+https://www.youtube.com/channel/UCVls1GmFKf6WlTraIb_IaJg "distrotube" video
+https://www.youtube.com/channel/UCxwcmRAmBRzZMNS37dCgmHA/videos "RoboNuggie" video
+https://www.youtube.com/user/kaihendry/videos "kai hendy" video
+https://www.youtube.com/user/hexdsl/videos "hexdsl" video
+
 # newcastle podcast
 https://rss.acast.com/thechronicle "~Everything Black and White" audio
 #+END_SRC
