@@ -9,10 +9,10 @@ macro m set browser "/usr/local/bin/mpv %u"; open-in-browser ; set browser "/usr
 macro l set browser "/usr/local/bin/firefox %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
 
 # cvlc send stand error to /dev/null and run in background
-macro . set browser "/usr/local/bin/cvlc --quiet %u 2>/dev/null &"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
+#macro . set browser "/usr/local/bin/cvlc --quiet %u 2>/dev/null &"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
 
-# mpc add url to mpd queue
-#macro . set browser "/usr/local/bin/mpc add %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
+# mpc get enclosure url with youtube-dl and play
+macro . set browser "/usr/local/bin/mpc add $(youtube-dl -g %u) && /usr/local/bin/mpc play"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
 
 # unbind keys
 unbind-key ENTER
