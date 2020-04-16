@@ -3441,13 +3441,13 @@ fold_textarea 0
 display_ins_del 1
 ignore_null_img_alt 1
 view_unseenobject 0
-display_image 1
-pseudo_inlines 1
-auto_image 1
+display_image 0
+pseudo_inlines 0
+auto_image 0
 max_load_image 4
 ext_image_viewer 1
 image_scale 100
-imgdisplay w3mimgdisplay
+imgdisplay 
 image_map_list 1
 fold_line 0
 show_lnum 0
@@ -3498,7 +3498,7 @@ editor /usr/local/bin/emacsclient
 mailto_options 1
 mailer 
 extbrowser /usr/local/bin/mpv %s
-extbrowser2 /usr/local/bin/cvlc --quiet %s 2>/dev/null &
+extbrowser2 /usr/home/djwilcox/bin/pinch -i %s
 extbrowser3 ~/.local/bin/youtube-dl %s
 extbrowser4 
 extbrowser5 
@@ -3514,7 +3514,7 @@ ftppasswd
 ftppass_hostnamegen 1
 pre_form_file ~/.w3m/pre_form
 siteconf_file ~/.w3m/siteconf
-user_agent 
+user_agent
 no_referer 0
 accept_language en;q=1.0
 accept_encoding gzip, compress, bzip, bzip2, deflate
