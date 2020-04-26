@@ -3186,7 +3186,7 @@ dht.port.set = 6882
 #+NAME: tmux
 #+BEGIN_SRC conf
 # make tmux display things in 256 colors
-set -g default-terminal "screen-256color"
+#set -g default-terminal "screen-256color"
 
 # reload ~/.tmux.conf using PREFIX r
 bind r source-file ~/.tmux.conf \; display "Reloaded!"
@@ -3242,7 +3242,7 @@ bind K resize-pane -U 5
 bind L resize-pane -R 5
 
 # copy and paste
-set-window-option -g automatic-rename on
+set-window-option -g automatic-rename off
 
 #+END_SRC
 
