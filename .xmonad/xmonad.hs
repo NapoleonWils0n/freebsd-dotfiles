@@ -20,6 +20,9 @@ import XMonad.Config.Desktop
 -- layout 
 import XMonad.Layout.NoBorders
 
+-- hooks 
+import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, ToggleStruts(..))
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
