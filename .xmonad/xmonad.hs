@@ -14,8 +14,10 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
--- import custom 
+-- config 
 import XMonad.Config.Desktop
+
+-- layout 
 import XMonad.Layout.NoBorders
 
 -- The preferred terminal program, which is used in a binding below and by
