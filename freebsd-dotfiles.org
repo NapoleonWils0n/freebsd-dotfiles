@@ -26,7 +26,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "filename.org")'
 ** xmonad
 
 #+NAME: xmonad
-#+BEGIN_SRC conf
+#+Begin_SRC conf
 --
 -- xmonad example config file.
 --
@@ -48,6 +48,9 @@ import XMonad.Config.Desktop
 
 -- layout 
 import XMonad.Layout.NoBorders
+
+-- hooks 
+import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, ToggleStruts(..))
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
