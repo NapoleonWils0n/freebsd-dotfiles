@@ -116,7 +116,7 @@ myLayout = avoidStruts ( smartBorders (tiled) ||| Mirror tiled ||| smartBorders 
 
 #+NAME: xmobar
 #+BEGIN_SRC conf
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false"
        , additionalFonts = []
        , borderColor = "black"
        , border = TopB
@@ -140,7 +140,7 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , sepChar = "%"
        , alignSep = "}{"
        , template = "%eth0% }\
-                    \{ <fc=#ee9a00>%date%</fc>"
+                    \{ <fc=#cccccc>%date%</fc>"
        }
 #+END_SRC
 
