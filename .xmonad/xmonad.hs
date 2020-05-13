@@ -29,6 +29,7 @@ myTerminal      = "urxvt"   -- Sets default terminal
 myBorderWidth   = 1         -- Sets border width for windows
 myNormalBorderColor = "#cccccc"
 myFocusedBorderColor = "#ff0000"
+windowCount     = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- main
 main = do
@@ -43,7 +44,7 @@ main = do
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , logHook = dynamicLogWithPP xmobarPP
-                        { ppOutput = \x -> hPutStrLn xmproc0 x  >> hPutStrLn xmproc1 x  >> hPutStrLn xmproc2 x
+                        { ppOutput = \x -> hPutStrLn xmproc x
                         , ppCurrent = xmobarColor "#c3e88d" "" . wrap "[" "]" -- Current workspace in xmobar
                         , ppVisible = xmobarColor "#c3e88d" ""                -- Visible but not current workspace
                         , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" ""   -- Hidden workspaces in xmobar
