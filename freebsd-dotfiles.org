@@ -76,7 +76,7 @@ main = do
     		    }
 
 -- layout
-myLayout = avoidStruts ( tiled ||| Mirror tiled ||| noBorders (Full) )
+myLayout = avoidStruts ( tiled ||| Mirror tiled ||| smartBorders (Full) ) ||| smartBorders (Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio

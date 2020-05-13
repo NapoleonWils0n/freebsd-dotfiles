@@ -32,8 +32,8 @@ myFocusedBorderColor = "#ff0000"
 -- main
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
-    xmonad $ def
-        { manageHook = manageDocks <+> manageHook
+    xmonad $ desktopConfig
+        { manageHook = manageDocks <+> manageHook desktopConfig
         , layoutHook = myLayout
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
@@ -47,7 +47,7 @@ main = do
     		    }
 
 -- layout
-myLayout = avoidStruts ( tiled ||| Mirror tiled ||| noBorders (Full) )
+myLayout = avoidStruts ( tiled ||| Mirror tiled ||| smartBorders (Full) ) ||| smartBorders (Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
