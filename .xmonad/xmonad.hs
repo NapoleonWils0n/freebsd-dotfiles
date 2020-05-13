@@ -10,6 +10,15 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+
+import System.IO (hPutStrLn)
+-- util
+import XMonad.Util.Run(spawnPipe)
+
+-- hooks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+
 -- layout 
 import XMonad.Layout.NoBorders
 
@@ -21,17 +30,24 @@ myNormalBorderColor = "#cccccc"
 myFocusedBorderColor = "#ff0000"
 
 -- main
-main = xmonad $ def
-    { borderWidth        = myBorderWidth
-    , terminal           = myTerminal
-    , modMask            = myModMask
-    , layoutHook         = myLayout
-    , normalBorderColor  = myNormalBorderColor
-    , focusedBorderColor = myFocusedBorderColor }
-
+main = do
+    xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
+    xmonad $ def
+        { manageHook = manageDocks <+> manageHook
+        , layoutHook = myLayout
+        , borderWidth        = myBorderWidth
+        , terminal           = myTerminal
+        , modMask            = myModMask
+        , normalBorderColor  = myNormalBorderColor
+        , focusedBorderColor = myFocusedBorderColor
+        , logHook = dynamicLogWithPP xmobarPP
+                        { ppOutput = hPutStrLn xmproc
+                        , ppTitle = xmobarColor "green" "" . shorten 50
+                        }
+    		    }
 
 -- layout
-myLayout = tiled ||| Mirror tiled ||| noBorders (Full)
+myLayout = avoidStruts ( tiled ||| Mirror tiled ||| noBorders (Full) )
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio

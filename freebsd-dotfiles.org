@@ -39,6 +39,15 @@ import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+
+import System.IO (hPutStrLn)
+-- util
+import XMonad.Util.Run(spawnPipe)
+
+-- hooks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+
 -- layout 
 import XMonad.Layout.NoBorders
 
@@ -50,17 +59,24 @@ myNormalBorderColor = "#cccccc"
 myFocusedBorderColor = "#ff0000"
 
 -- main
-main = xmonad $ def
-    { borderWidth        = myBorderWidth
-    , terminal           = myTerminal
-    , modMask            = myModMask
-    , layoutHook         = myLayout
-    , normalBorderColor  = myNormalBorderColor
-    , focusedBorderColor = myFocusedBorderColor }
-
+main = do
+    xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
+    xmonad $ desktopConfig
+        { manageHook = manageDocks <+> manageHook desktopConfig
+        , layoutHook = myLayout
+        , borderWidth        = myBorderWidth
+        , terminal           = myTerminal
+        , modMask            = myModMask
+        , normalBorderColor  = myNormalBorderColor
+        , focusedBorderColor = myFocusedBorderColor
+        , logHook = dynamicLogWithPP xmobarPP
+                        { ppOutput = hPutStrLn xmproc
+                        , ppTitle = xmobarColor "green" "" . shorten 50
+                        }
+    		    }
 
 -- layout
-myLayout = tiled ||| Mirror tiled ||| noBorders (Full)
+myLayout = avoidStruts ( tiled ||| Mirror tiled ||| noBorders (Full) )
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
@@ -112,26 +128,14 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Weather "EGPF" ["-t","<station>: <tempC>C",
-                                          "-L","18","-H","25",
-                                          "--normal","green",
-                                          "--high","red",
-                                          "--low","lightblue"] 36000
-                    , Run Network "eth0" ["-L","0","-H","32",
+       , commands = [ Run Network "eth0" ["-L","0","-H","32",
                                           "--normal","green","--high","red"] 10
-                    , Run Network "eth1" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Cpu ["-L","3","-H","50",
-                               "--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Swap [] 10
-                    , Run Com "uname" ["-s","-r"] "" 36000
                     , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%cpu% | %memory% * %swap% | %eth0% - %eth1% }\
-                    \{ <fc=#ee9a00>%date%</fc>| %EGPF% | %uname%"
+       , template = "%eth0% }\
+                    \{ <fc=#ee9a00>%date%</fc>"
        }
 #+END_SRC
 
