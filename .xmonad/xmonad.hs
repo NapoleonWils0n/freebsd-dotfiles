@@ -4,16 +4,20 @@
 --
 
 import XMonad
-import XMonad.Config.Desktop
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+-- config
+import XMonad.Config.Desktop
 
+-- system
 import System.IO (hPutStrLn)
+
 -- util
 import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.SpawnOnce
 
 -- hooks
 import XMonad.Hooks.DynamicLog
@@ -29,6 +33,16 @@ myBorderWidth   = 1         -- Sets border width for windows
 myNormalBorderColor = "#cccccc"
 myFocusedBorderColor = "#ff0000"
 
+-- Startup hook
+
+-- Perform an arbitrary action each time xmonad starts or is restarted
+-- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
+-- per-workspace layout choices.
+--
+-- By default, do nothing.
+myStartupHook = do
+	      spawnOnce "urxvtd &"
+
 -- main
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
@@ -38,6 +52,7 @@ main = do
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
         , modMask            = myModMask
+        , startupHook        = myStartupHook
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , logHook = dynamicLogWithPP xmobarPP

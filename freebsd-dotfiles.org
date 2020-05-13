@@ -33,16 +33,20 @@ emacs --batch -l org --eval '(org-babel-tangle-file "filename.org")'
 --
 
 import XMonad
-import XMonad.Config.Desktop
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+-- config
+import XMonad.Config.Desktop
 
+-- system
 import System.IO (hPutStrLn)
+
 -- util
 import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.SpawnOnce
 
 -- hooks
 import XMonad.Hooks.DynamicLog
@@ -58,6 +62,16 @@ myBorderWidth   = 1         -- Sets border width for windows
 myNormalBorderColor = "#cccccc"
 myFocusedBorderColor = "#ff0000"
 
+-- Startup hook
+
+-- Perform an arbitrary action each time xmonad starts or is restarted
+-- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
+-- per-workspace layout choices.
+--
+-- By default, do nothing.
+myStartupHook = do
+	      spawnOnce "urxvtd &"
+
 -- main
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
@@ -67,6 +81,7 @@ main = do
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
         , modMask            = myModMask
+        , startupHook        = myStartupHook
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , logHook = dynamicLogWithPP xmobarPP
@@ -128,14 +143,11 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Network "eth0" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+       , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%eth0% }\
-                    \{ <fc=#ee9a00>%date%</fc>"
+       , template = \{ <fc=#ee9a00>%date%</fc>"
        }
 #+END_SRC
 
