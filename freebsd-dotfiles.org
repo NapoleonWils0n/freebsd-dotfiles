@@ -129,9 +129,9 @@ myLayout = avoidStruts ( smartBorders (tiled) ||| Mirror tiled ||| smartBorders 
 #+BEGIN_SRC conf
 Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false"
        , additionalFonts = []
-       , borderColor = "black"
+       , borderColor = "#002b36"
        , border = TopB
-       , bgColor = "black"
+       , bgColor = "#073642"
        , fgColor = "grey"
        , alpha = 255
        , position = Top
