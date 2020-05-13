@@ -211,8 +211,10 @@ feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/freeb
 # start ssh-agent and window mamager
 #exec ssh-agent /usr/local/bin/i3
 # start slstatus bar
-/usr/local/bin/slstatus &
-exec ssh-agent /usr/local/bin/dwm
+#/usr/local/bin/slstatus &
+#exec ssh-agent /usr/local/bin/dwm
+# xmonad
+exec ssh-agent /usr/local/bin/xmonad
 #+END_SRC
 
 *** xinitrc tangle
