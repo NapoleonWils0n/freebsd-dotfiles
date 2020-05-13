@@ -13,9 +13,24 @@ import qualified Data.Map        as M
 -- layout 
 import XMonad.Layout.NoBorders
 
+-- config
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
 myTerminal      = "urxvt"      -- Sets default terminal
 myBorderWidth   = 1         -- Sets border width for windows
+myNormalBorderColor = "#cccccc"
+myFocusedBorderColor = "#ff0000"
+
+-- main
+main = xmonad $ def
+    { borderWidth        = myBorderWidth
+    , terminal           = myTerminal
+    , modMask            = myModMask
+    , layoutHook         = myLayout
+    , normalBorderColor  = myNormalBorderColor
+    , focusedBorderColor = myFocusedBorderColor }
+
+
+-- layout
 myLayout = tiled ||| Mirror tiled ||| noBorders (Full)
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -29,13 +44,3 @@ myLayout = tiled ||| Mirror tiled ||| noBorders (Full)
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
-
-
--- main
-main = xmonad $ def
-    { borderWidth        = myBorderWidth
-    , terminal           = myTerminal
-    , modMask            = myModMask
-    , layoutHook         = myLayout
-    , normalBorderColor  = "#cccccc"
-    , focusedBorderColor = "#ff0000" }
