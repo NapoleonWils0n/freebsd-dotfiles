@@ -15,12 +15,11 @@ Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgb
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Network "ue0" ["-L","0","-H","32",
-                                          "--normal","green","--high","red"] 10
-                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+       , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+		    , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%eth0% }\
+       , template = "%StdinReader% }\
                     \{ <fc=#cccccc>%date%</fc>"
        }
