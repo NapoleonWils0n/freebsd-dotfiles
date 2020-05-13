@@ -1,16 +1,9 @@
---
--- An example, simple ~/.xmonad/xmonad.hs file.
--- It overrides a few basic settings, reusing all the other defaults.
---
-
 import XMonad
+import XMonad.Config.Desktop
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
--- config
-import XMonad.Config.Desktop
 
 -- system
 import System.IO (hPutStrLn)
@@ -51,7 +44,7 @@ main = do
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
                         }
-    		    }
+                    }
 
 -- Startup hook
 myStartupHook = do

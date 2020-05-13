@@ -15,9 +15,12 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+       , commands = [ Run Network "ue0" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = \{ <fc=#ee9a00>%date%</fc>"
+       , template = "%eth0% }\
+                    \{ <fc=#ee9a00>%date%</fc>"
        }

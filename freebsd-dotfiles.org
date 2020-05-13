@@ -27,19 +27,12 @@ emacs --batch -l org --eval '(org-babel-tangle-file "filename.org")'
 
 #+NAME: xmonad
 #+Begin_SRC conf
---
--- An example, simple ~/.xmonad/xmonad.hs file.
--- It overrides a few basic settings, reusing all the other defaults.
---
-
 import XMonad
+import XMonad.Config.Desktop
 import Data.Monoid
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
--- config
-import XMonad.Config.Desktop
 
 -- system
 import System.IO (hPutStrLn)
@@ -80,7 +73,7 @@ main = do
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
                         }
-    		    }
+                    }
 
 -- Startup hook
 myStartupHook = do
@@ -140,11 +133,14 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+       , commands = [ Run Network "ue0" ["-L","0","-H","32",
+                                          "--normal","green","--high","red"] 10
+                    , Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = \{ <fc=#ee9a00>%date%</fc>"
+       , template = "%eth0% }\
+                    \{ <fc=#ee9a00>%date%</fc>"
        }
 #+END_SRC
 
