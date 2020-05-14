@@ -93,7 +93,7 @@ myStartupHook = do
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/akira.jpg'"
 
 -- layout
-myLayout = avoidStruts ( smartBorders (tiled) ||| grid ||| monocle ) ||| monocle
+myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = spacing 12 $ Tall nmaster delta ratio
