@@ -1,6 +1,6 @@
 Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false"
        , additionalFonts = []
-       , borderColor = "#002B36"
+       , borderColor = "#292929"
        , border = TopB
        , bgColor = "#292929"
        , fgColor = "#FDF6E3"
