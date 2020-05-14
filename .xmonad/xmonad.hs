@@ -29,7 +29,7 @@ myModMask       = mod4Mask  -- Sets modkey to super/windows key
 myTerminal      = "urxvt"   -- Sets default terminal
 myBorderWidth   = 1         -- Sets border width for windows
 myNormalBorderColor = "#cccccc"
-myFocusedBorderColor = "#ff0000"
+myFocusedBorderColor = "#dc322f"
 windowCount     = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- main
@@ -61,7 +61,7 @@ main = do
 -- Startup hook
 myStartupHook = do
       spawnOnce "urxvtd &"
-      spawnOnce "feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/akira.jpg'"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#657b83' '/home/djwilcox/.wallpaper/freebsd.png'"
 
 -- layout
 myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
