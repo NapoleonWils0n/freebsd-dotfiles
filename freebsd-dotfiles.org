@@ -267,6 +267,9 @@ Xft.hintstyle:  hintfull
 ,*pointerColorBackground: #586e75
 ,*pointerColorForeground: #93a1a1
 
+!! internal border
+URxvt.internalBorder: 4
+
 !! black dark/light
 ,*color0: #073642
 ,*color8: #002b36
@@ -304,9 +307,6 @@ URxvt*font:           xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
 
 !! emacs font
 emacs.font: Inconsolata:size=18:weight=regular:antialias=true:hinting=true:hintstyle=hintfull
-
-!! internal border
-URxvt.internalBorder: 6
 
 ! Set scrollbar style to rxvt, plain, next or xterm. plain is the authors favourite.
 ! URxvt*scrollstyle: mode
