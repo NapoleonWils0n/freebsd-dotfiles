@@ -1,9 +1,9 @@
 Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false"
        , additionalFonts = []
-       , borderColor = "#002b36"
+       , borderColor = "#002B36"
        , border = TopB
-       , bgColor = "#282828"
-       , fgColor = "grey"
+       , bgColor = "#292929"
+       , fgColor = "#FDF6E3"
        , alpha = 255
        , position = Top
        , textOffset = -1
