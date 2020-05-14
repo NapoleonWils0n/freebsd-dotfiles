@@ -90,22 +90,28 @@ main = do
 -- Startup hook
 myStartupHook = do
       spawnOnce "urxvtd &"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/akira.jpg'"
 
 -- layout
-myLayout = avoidStruts ( smartBorders (tiled) ||| Grid (16/10) ||| Mirror tiled ||| smartBorders (Full) ) ||| smartBorders (Full)
+myLayout = avoidStruts ( smartBorders (tiled) ||| grid ||| monocle ) ||| monocle
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
+     tiled   = spacing 12 $ Tall nmaster delta ratio
+     
+     -- grid
+     grid = spacing 12 $ Grid (16/10) 
+
+     -- monocle
+     monocle = smartBorders (Full)
 
      -- The default number of windows in the master pane
      nmaster = 1
-
+     
      -- Default proportion of screen occupied by master pane
      ratio   = 1/2
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
-
 #+END_SRC
 
 *** xmonad tangle

@@ -23,6 +23,7 @@ import XMonad.Hooks.Place (placeHook, withGaps, smart)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
 import XMonad.Layout.GridVariants (Grid(Grid))
+import XMonad.Layout.Renamed (renamed, Rename(CutWordsLeft, Replace))
 
 -- config
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
@@ -63,14 +64,14 @@ myStartupHook = do
       spawnOnce "urxvtd &"
 
 -- layout
-myLayout = avoidStruts ( smartBorders (tiled) ||| Grid (16/10) ||| Mirror tiled ||| smartBorders (Full) ) ||| smartBorders (Full)
+myLayout = avoidStruts ( smartBorders (tiled) ||| Grid (16/10) ) ||| smartBorders (Full)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
+     tiled   = spacing 12 $ Tall nmaster delta ratio
 
      -- The default number of windows in the master pane
      nmaster = 1
-
+     
      -- Default proportion of screen occupied by master pane
      ratio   = 1/2
 
