@@ -23,7 +23,6 @@ import XMonad.Hooks.Place (placeHook, withGaps, smart)
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
 import XMonad.Layout.GridVariants (Grid(Grid))
-import XMonad.Layout.Renamed (renamed, Rename(CutWordsLeft, Replace))
 
 -- config
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
@@ -62,12 +61,19 @@ main = do
 -- Startup hook
 myStartupHook = do
       spawnOnce "urxvtd &"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/akira.jpg'"
 
 -- layout
-myLayout = avoidStruts ( smartBorders (tiled) ||| Grid (16/10) ) ||| smartBorders (Full)
+myLayout = avoidStruts ( smartBorders (tiled) ||| grid ||| monocle ) ||| monocle
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = spacing 12 $ Tall nmaster delta ratio
+     
+     -- grid
+     grid = spacing 12 $ Grid (16/10) 
+
+     -- monocle
+     monocle = smartBorders (Full)
 
      -- The default number of windows in the master pane
      nmaster = 1
