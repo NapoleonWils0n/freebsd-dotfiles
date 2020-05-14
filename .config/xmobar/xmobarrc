@@ -2,7 +2,7 @@ Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgb
        , additionalFonts = []
        , borderColor = "#002b36"
        , border = TopB
-       , bgColor = "#073642"
+       , bgColor = "#282828"
        , fgColor = "grey"
        , alpha = 255
        , position = Top

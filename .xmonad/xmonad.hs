@@ -27,9 +27,9 @@ import XMonad.Layout.GridVariants (Grid(Grid))
 -- config
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
 myTerminal      = "urxvt"   -- Sets default terminal
-myBorderWidth   = 1         -- Sets border width for windows
-myNormalBorderColor = "#cccccc"
-myFocusedBorderColor = "#dc322f"
+myBorderWidth   = 2         -- Sets border width for windows
+myNormalBorderColor = "#839496"
+myFocusedBorderColor = "#268BD2"
 windowCount     = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 -- main
@@ -61,7 +61,7 @@ main = do
 -- Startup hook
 myStartupHook = do
       spawnOnce "urxvtd &"
-      spawnOnce "feh --no-fehbg --bg-center --image-bg '#839496' '/home/djwilcox/.wallpaper/freebsd.png'"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
 
 -- layout
 myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
