@@ -24,7 +24,10 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
 import XMonad.Layout.GridVariants (Grid(Grid))
 
+------------------------------------------------------------------------
 -- config
+------------------------------------------------------------------------
+
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
 myTerminal      = "urxvt"   -- Sets default terminal
 myBorderWidth   = 2         -- Sets border width for windows
@@ -38,7 +41,10 @@ myppTitle = "#FDF6E3"
 myppUrgent = "#DC322F"
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
+------------------------------------------------------------------------
 -- main
+------------------------------------------------------------------------
+
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
     xmonad $ ewmh desktopConfig
@@ -64,7 +70,10 @@ main = do
                         }
                     }
 
+------------------------------------------------------------------------
 -- Startup hook
+------------------------------------------------------------------------
+
 myStartupHook = do
       spawnOnce "urxvtd &"
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
@@ -98,6 +107,7 @@ myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
 
 ------------------------------------------------------------------------
 -- Window rules:
+------------------------------------------------------------------------
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
 -- a new window. You can use this to, for example, always float a
@@ -120,7 +130,8 @@ myManageHook = composeAll
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
---
+------------------------------------------------------------------------
+
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- launch a terminal
@@ -216,7 +227,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
---
+------------------------------------------------------------------------
+
 myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- mod-button1, Set the window to floating mode and move by dragging
@@ -235,6 +247,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 
 ------------------------------------------------------------------------
 -- Event handling
+------------------------------------------------------------------------
 
 -- * EwmhDesktops users should change this to ewmhDesktopsEventHook
 --
@@ -245,7 +258,10 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- myEventHook = mempty
 myEventHook = ewmhDesktopsEventHook
 
+------------------------------------------------------------------------
 -- | Finally, a copy of the default bindings in simple textual tabular format.
+------------------------------------------------------------------------
+
 help :: String
 help = unlines ["The default modifier key is 'alt'. Default keybindings:",
     "",
