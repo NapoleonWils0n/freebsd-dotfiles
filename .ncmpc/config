@@ -113,47 +113,47 @@ visible-bitrate = yes
 
 ## Enable/disable colors.
 #enable-colors = yes
-enable-colors = yes
+enable-colors = no
 
 ## Set the background color.
-color background = 8
-
-## Set the text color for the title row.
-color title = 0
-
-## Set the text color for the title row (the bold part).
-color title-bold = 0,bold
-
-## Set the color of the line on the second row.
-color line = 7
-
-## Set the text color used to indicate mpd flags on the second row.
-color line-flags = 8,bold
-
-## Set the text color in the main area of ncmpc.
-color list = 7
-
-## Set the bold text color in the main area of ncmpc.
-color list-bold = 7,bold
-
-## Sets the text color of directories in the browser
-color browser-directory = 8
-
-## Sets the text color of playlists in the browser
-color browser-playlist = 4
-
-## Set the color of the progress indicator.
-color progressbar = 7/4
-color progressbar-background = 7/8
-
-## Set the text color used to display mpd status in the status window.
-color status-state = 0,bold
-
-## Set the text color used to display song names in the status window.
-color status-song  = 0
-
-## Set the text color used to display time the status window.
-color status-time  = 0
-
-## Text color used to display alerts in the status window.
-color alert = 0,bold
+#color background = 8
+#
+### Set the text color for the title row.
+#color title = 0
+#
+### Set the text color for the title row (the bold part).
+#color title-bold = 0,bold
+#
+### Set the color of the line on the second row.
+#color line = 7
+#
+### Set the text color used to indicate mpd flags on the second row.
+#color line-flags = 8,bold
+#
+### Set the text color in the main area of ncmpc.
+#color list = 7
+#
+### Set the bold text color in the main area of ncmpc.
+#color list-bold = 7,bold
+#
+### Sets the text color of directories in the browser
+#color browser-directory = 8
+#
+### Sets the text color of playlists in the browser
+#color browser-playlist = 4
+#
+### Set the color of the progress indicator.
+#color progressbar = 7/4
+#color progressbar-background = 7/8
+#
+### Set the text color used to display mpd status in the status window.
+#color status-state = 0,bold
+#
+### Set the text color used to display song names in the status window.
+#color status-song  = 0
+#
+### Set the text color used to display time the status window.
+#color status-time  = 0
+#
+### Text color used to display alerts in the status window.
+#color alert = 0,bold
