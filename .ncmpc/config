@@ -116,7 +116,7 @@ visible-bitrate = yes
 enable-colors = yes
 
 # Set the background color.
-color background = 0
+color background = none
 
 ## Set the text color for the title row.
 color title = 0
