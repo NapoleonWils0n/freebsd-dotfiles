@@ -116,10 +116,10 @@ visible-bitrate = yes
 enable-colors = yes
 
 ## Set the background color.
-color background = none
+color background = 8
 
 ## Set the text color for the title row.
-color title = 0/4
+color title = 0
 
 ## Set the text color for the title row (the bold part).
 color title-bold = 0,bold
@@ -143,8 +143,8 @@ color browser-directory = 8
 color browser-playlist = 4
 
 ## Set the color of the progress indicator.
-color progressbar = 8/4
-color progressbar-background = 4/8
+color progressbar = 7/4
+color progressbar-background = 7/8
 
 ## Set the text color used to display mpd status in the status window.
 color status-state = 0,bold
