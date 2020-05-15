@@ -3125,13 +3125,13 @@ color background = 8
 color title = 0
 
 ## Set the text color for the title row (the bold part).
-color title-bold = 0,bold
+color title-bold = 8,bold
 
 ## Set the color of the line on the second row.
-color line = 7/8
+color line = 8/4
 
 ## Set the text color used to indicate mpd flags on the second row.
-color line-flags = 7/8,bold
+color line-flags = 8/4,bold
 
 ## Set the text color in the main area of ncmpc.
 color list = 7
@@ -3146,20 +3146,20 @@ color browser-directory = 7
 color browser-playlist = 7
 
 ## Set the color of the progress indicator.
-color progressbar = 7/8
-color progressbar-background = 7/8
+color progressbar = 8/4
+color progressbar-background = 8/4
 
 ## Set the text color used to display mpd status in the status window.
-color status-state = 7/8,bold
+color status-state = 7/4,bold
 
 ## Set the text color used to display song names in the status window.
-color status-song  = 7/8
+color status-song  = 7/4
 
 ## Set the text color used to display time the status window.
-color status-time  = 7/8
+color status-time  = 7/4
 
 ## Text color used to display alerts in the status window.
-color alert = 7/8,bold
+color alert = 7/4,bold
 #+END_SRC
 
 *** ncmpc tangle
