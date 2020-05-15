@@ -3128,10 +3128,10 @@ color title = 0
 color title-bold = 0,bold
 
 ## Set the color of the line on the second row.
-color line = 7
+color line = 7/8
 
 ## Set the text color used to indicate mpd flags on the second row.
-color line-flags = 8,bold
+color line-flags = 7/8,bold
 
 ## Set the text color in the main area of ncmpc.
 color list = 7
@@ -3140,10 +3140,10 @@ color list = 7
 color list-bold = 7,bold
 
 ## Sets the text color of directories in the browser
-color browser-directory = 4
+color browser-directory = 7
 
 ## Sets the text color of playlists in the browser
-color browser-playlist = 4
+color browser-playlist = 7
 
 ## Set the color of the progress indicator.
 color progressbar = 7/8
