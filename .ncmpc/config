@@ -115,8 +115,8 @@ visible-bitrate = yes
 #enable-colors = yes
 enable-colors = yes
 
-## Set the background color.
-color background = none
+# Set the background color.
+color background = 0
 
 ## Set the text color for the title row.
 color title = 0
@@ -128,7 +128,7 @@ color title-bold = 0,bold
 color line = 0
 
 ## Set the text color used to indicate mpd flags on the second row.
-color line-flags = 0,bold
+color line-flags = 8,bold
 
 ## Set the text color in the main area of ncmpc.
 color list = 7
@@ -144,6 +144,7 @@ color browser-playlist = 4
 
 ## Set the color of the progress indicator.
 color progressbar = 8
+color progressbar-background = 8
 
 ## Set the text color used to display mpd status in the status window.
 color status-state = 0,bold
