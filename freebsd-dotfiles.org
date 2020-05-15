@@ -3150,16 +3150,16 @@ color progressbar = 8/4
 color progressbar-background = 8/4
 
 ## Set the text color used to display mpd status in the status window.
-color status-state = 7/4,bold
+color status-state = 8/4,bold
 
 ## Set the text color used to display song names in the status window.
-color status-song  = 7/4
+color status-song  = 8/4
 
 ## Set the text color used to display time the status window.
-color status-time  = 7/4
+color status-time  = 8/4
 
 ## Text color used to display alerts in the status window.
-color alert = 7/4,bold
+color alert = 8/4,bold
 #+END_SRC
 
 *** ncmpc tangle
