@@ -58,7 +58,7 @@ import XMonad.Layout.GridVariants (Grid(Grid))
 ------------------------------------------------------------------------
 
 myModMask       = mod4Mask  -- Sets modkey to super/windows key
-myTerminal      = "urxvt"   -- Sets default terminal
+myTerminal      = "urxvtc"   -- Sets default terminal
 myBorderWidth   = 2         -- Sets border width for windows
 myNormalBorderColor = "#839496"
 myFocusedBorderColor = "#268BD2"
@@ -106,6 +106,7 @@ main = do
 myStartupHook = do
       spawnOnce "urxvtd &"
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
+
 
 ------------------------------------------------------------------------
 
