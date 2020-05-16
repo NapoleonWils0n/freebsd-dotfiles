@@ -143,8 +143,8 @@ myManageHook = composeAll
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
 myKeys =
-    [("M-S-s", windows copyToAll)   -- copy window to all workspaces
-     , ("M-C-s", killAllOtherCopies)  -- kill copies of window on other workspaces
+    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
+     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
     ]
 
 ------------------------------------------------------------------------
