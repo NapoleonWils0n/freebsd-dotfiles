@@ -10,7 +10,7 @@
 import XMonad
 import XMonad.Config.Desktop
 import Data.Monoid
-import System.Exit (exitSuccess)
+import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
