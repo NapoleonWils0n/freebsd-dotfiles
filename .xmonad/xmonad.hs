@@ -36,7 +36,6 @@ import XMonad.Actions.CopyWindow
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
 import XMonad.Layout.GridVariants (Grid(Grid))
-
 ------------------------------------------------------------------------
 -- config
 ------------------------------------------------------------------------
@@ -70,7 +69,8 @@ myStartupHook = do
 myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = spacing 12 $ Tall nmaster delta ratio
+     -- tiled   = spacing 12 $ Tall nmaster delta ratio
+     tiled   = spacing 12 $ Tall 1 (3/100) (1/2)
      
      -- grid
      grid = spacing 12 $ Grid (16/10) 
@@ -114,8 +114,8 @@ myManageHook = composeAll
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
 myKeys =
-    [("M-S-s", windows copyToAll)   -- copy window to all workspaces
-     , ("M-C-s", killAllOtherCopies)  -- kill copies of window on other workspaces
+    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
+     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
     ]
 
 ------------------------------------------------------------------------
