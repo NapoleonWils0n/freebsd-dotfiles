@@ -24,7 +24,7 @@ import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)
 
 -- hooks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat) 
 import XMonad.Hooks.Place (placeHook, withGaps, smart)
@@ -67,8 +67,8 @@ myStartupHook = do
 ------------------------------------------------------------------------
 -- layout
 ------------------------------------------------------------------------
-
-myLayout = avoidStruts ( monocle ||| tiled ||| grid  ) ||| monocle
+-- using toggleStruts with monocle
+myLayout = avoidStruts ( monocle ||| tiled ||| grid  )
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = spacing 12 $ ResizableTall 1 (3/100) (1/2) []    
@@ -117,8 +117,9 @@ myManageHook = composeAll
 myKeys =
     [("S-C-a", windows copyToAll)   -- copy window to all workspaces
      , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
-     , (("M-a"), sendMessage MirrorShrink)
-     , (("M-z"), sendMessage MirrorExpand)
+     , ("M-a", sendMessage MirrorExpand)
+     , ("M-z", sendMessage MirrorShrink)
+     , ("M-S-<Space>", sendMessage ToggleStruts)
     ]
 
 ------------------------------------------------------------------------
