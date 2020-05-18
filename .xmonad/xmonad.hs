@@ -68,16 +68,16 @@ myStartupHook = do
 -- layout
 ------------------------------------------------------------------------
 -- using toggleStruts with monocle
-myLayout = avoidStruts ( monocle ||| tiled ||| grid  )
+myLayout = avoidStruts ( full ||| tiled ||| grid )
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = spacing 12 $ ResizableTall 1 (3/100) (1/2) []    
+     tiled = spacing 12 $ ResizableTall 1 (3/100) (1/2) []    
 
      -- grid
      grid = spacing 12 $ Grid (16/10) 
 
-     -- monocle
-     monocle = smartBorders (Full)
+     -- full
+     full = smartBorders (Full)
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -119,7 +119,7 @@ myKeys =
      , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
      , ("M-a", sendMessage MirrorExpand)
      , ("M-z", sendMessage MirrorShrink)
-     , ("M-S-<Space>", sendMessage ToggleStruts)
+     , ("M-s", sendMessage ToggleStruts)
     ]
 
 ------------------------------------------------------------------------
