@@ -119,13 +119,13 @@ myKeys =
     [("M-" ++ m ++ k, windows $ f i)
         | (i, k) <- zip (myWorkspaces) (map show [1 :: Int ..])
         , (f, m) <- [(W.view, ""), (W.shift, "S-"), (copy, "S-C-")]]
-
---    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
---     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
---     , ("M-a", sendMessage MirrorExpand)
---     , ("M-z", sendMessage MirrorShrink)
---     , ("M-s", sendMessage ToggleStruts)
---    ]
+    ++
+    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
+     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
+     , ("M-a", sendMessage MirrorExpand)
+     , ("M-z", sendMessage MirrorShrink)
+     , ("M-s", sendMessage ToggleStruts)
+    ]
 
 ------------------------------------------------------------------------
 -- main
