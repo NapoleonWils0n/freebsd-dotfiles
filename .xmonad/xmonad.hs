@@ -115,13 +115,17 @@ myManageHook = composeAll
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
-myKeys =
-    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
-     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
-     , ("M-a", sendMessage MirrorExpand)
-     , ("M-z", sendMessage MirrorShrink)
-     , ("M-s", sendMessage ToggleStruts)
-    ]
+-- myKeys =
+--     [("S-C-a", windows copyToAll)   -- copy window to all workspaces
+--      , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
+--      , ("M-a", sendMessage MirrorExpand)
+--      , ("M-z", sendMessage MirrorShrink)
+--      , ("M-s", sendMessage ToggleStruts)
+--     ]
+
+   [((m .|. modm, k), windows $ f i)
+       | (i, k) <- zip (myWorkspaces) [xK_1 ..]
+       , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
 
 ------------------------------------------------------------------------
 -- main
@@ -133,6 +137,7 @@ main = do
         { manageHook = manageDocks <+> manageHook desktopConfig
         , startupHook        = myStartupHook
         , layoutHook         = myLayout
+        , workspaces         = myWorkspaces
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
         , modMask            = myModMask
@@ -150,7 +155,8 @@ main = do
                         , ppExtras  = [windowCount]                           -- # of windows current workspace
                         , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
                         }
-                    } `additionalKeysP`         myKeys
+                    -- } `additionalKeysP`         myKeys
+                    }
 
 ------------------------------------------------------------------------
 -- help

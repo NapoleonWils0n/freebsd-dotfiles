@@ -154,10 +154,9 @@ myManageHook = composeAll
 --      , ("M-s", sendMessage ToggleStruts)
 --     ]
 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (myWorkspaces) [xK_1 ..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
+   [((m .|. modm, k), windows $ f i)
+       | (i, k) <- zip (myWorkspaces) [xK_1 ..]
+       , (f, m) <- [(W.view, 0), (W.shift, shiftMask), (copy, shiftMask .|. controlMask)]]
 
 ------------------------------------------------------------------------
 -- main
