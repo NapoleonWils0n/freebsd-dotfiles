@@ -142,6 +142,7 @@ main = do
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
         , modMask            = myModMask
+        , keys               = myKeys
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , logHook = dynamicLogWithPP xmobarPP
