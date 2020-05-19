@@ -7,7 +7,9 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
-import XMonad
+-- import XMonad
+import XMonad hiding ( (|||) )
+import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||))
 import XMonad.Config.Desktop
 import Data.Monoid
 import System.Exit
@@ -125,6 +127,10 @@ myKeys =
      , ("M-a", sendMessage MirrorExpand)
      , ("M-z", sendMessage MirrorShrink)
      , ("M-s", sendMessage ToggleStruts)
+     , ("M-f", sendMessage $ JumpToLayout "Full")
+     , ("M-t", sendMessage $ JumpToLayout "Spacing ResizableTall")
+     , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
+     , ("M-b", sendMessage $ JumpToLayout "BSP")
     ]
 
 ------------------------------------------------------------------------
