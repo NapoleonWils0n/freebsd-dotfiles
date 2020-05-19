@@ -37,6 +37,7 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
 import XMonad.Layout.GridVariants (Grid(Grid))
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.BinarySpacePartition
 
 ------------------------------------------------------------------------
 -- config
@@ -68,7 +69,7 @@ myStartupHook = do
 -- layout
 ------------------------------------------------------------------------
 -- using toggleStruts with monocle
-myLayout = avoidStruts ( full ||| tiled ||| grid )
+myLayout = avoidStruts ( full ||| tiled ||| grid ||| emptyBSP)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled = spacing 12 $ ResizableTall 1 (3/100) (1/2) []    
