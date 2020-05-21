@@ -3142,7 +3142,7 @@ MimeType=x-scheme-handler/org-protocol;
 #+NAME: rofi
 #+BEGIN_SRC conf
 configuration {
- modi: "window,drun,ssh,combi";
+ modi: "window,drun,combi";
  theme: "solarized";
  font: "Inconsolata 14";
  show-icons: true;
