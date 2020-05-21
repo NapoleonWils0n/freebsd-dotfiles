@@ -3144,7 +3144,8 @@ MimeType=x-scheme-handler/org-protocol;
 configuration {
  modi: "window,drun,ssh,combi";
  theme: "solarized";
- font: "hack 10";
+ font: "Inconsolata 14";
+ show-icons: true;
  combi-modi: "window,drun,ssh";
  }
 #+END_SRC
