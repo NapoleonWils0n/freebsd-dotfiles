@@ -131,7 +131,7 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Spacing ResizableTall")
      , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "rofi -combi-modi window,drun,ssh -show combi -modi combi")
+     , ("M-p", spawn "rofi -show combi -modi combi")
     ]
 
 ------------------------------------------------------------------------

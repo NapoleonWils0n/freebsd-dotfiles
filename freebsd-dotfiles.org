@@ -162,7 +162,7 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Spacing ResizableTall")
      , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "rofi -combi-modi window,drun,ssh -show combi -modi combi")
+     , ("M-p", spawn "rofi -show combi -modi combi")
     ]
 
 ------------------------------------------------------------------------
@@ -5726,7 +5726,12 @@ bindsym $mod+n move absolute position center
 
 #+NAME: rofi
 #+BEGIN_SRC conf
-rofi.theme: /usr/local/share/rofi/themes/solarized_alternate.rasi
+configuration {
+ modi: "window,drun,ssh,combi";
+ theme: "solarized";
+ font: "hack 10";
+ combi-modi: "window,drun,ssh";
+ }
 #+END_SRC
 
 *** rofi tangle
@@ -5734,14 +5739,14 @@ rofi.theme: /usr/local/share/rofi/themes/solarized_alternate.rasi
 + home dir
 
 #+NAME: rofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rofi/config"
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rofi/config.rasi"
 <<rofi>>
 #+END_SRC
 
 + current dir
 
 #+NAME: rofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/rofi/config"
+#+BEGIN_SRC conf :noweb yes :tangle ".config/rofi/config.rasi"
 <<rofi>>
 #+END_SRC
 
