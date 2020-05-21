@@ -3145,6 +3145,7 @@ configuration {
  modi: "window,drun,combi";
  theme: "solarized";
  font: "Inconsolata 14";
+ terminal: "urxvtc";
  show-icons: true;
  combi-modi: "window,drun";
  }
