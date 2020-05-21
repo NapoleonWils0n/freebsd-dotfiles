@@ -3137,6 +3137,34 @@ MimeType=x-scheme-handler/org-protocol;
 <<emacs-capture>>
 #+END_SRC
 
+** rofi
+
+#+NAME: rofi
+#+BEGIN_SRC conf
+configuration {
+ modi: "window,drun,ssh,combi";
+ theme: "solarized";
+ font: "hack 10";
+ combi-modi: "window,drun,ssh";
+ }
+#+END_SRC
+
+*** rofi tangle
+
++ home dir
+
+#+NAME: rofi-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rofi/config.rasi"
+<<rofi>>
+#+END_SRC
+
++ current dir
+
+#+NAME: rofi-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/rofi/config.rasi"
+<<rofi>>
+#+END_SRC
+
 ** ncmpc
 
 #+NAME: ncmpc
@@ -5720,34 +5748,6 @@ bindsym $mod+n move absolute position center
 #+NAME: i3-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/i3/config"
 <<i3-conf>>
-#+END_SRC
-
-** rofi
-
-#+NAME: rofi
-#+BEGIN_SRC conf
-configuration {
- modi: "window,drun,ssh,combi";
- theme: "solarized";
- font: "hack 10";
- combi-modi: "window,drun,ssh";
- }
-#+END_SRC
-
-*** rofi tangle
-
-+ home dir
-
-#+NAME: rofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rofi/config.rasi"
-<<rofi>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: rofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/rofi/config.rasi"
-<<rofi>>
 #+END_SRC
 
 ** ranger
