@@ -3,5 +3,5 @@ configuration {
  theme: "solarized";
  font: "Inconsolata 14";
  show-icons: true;
- combi-modi: "window,drun,ssh";
+ combi-modi: "window,drun";
  }
