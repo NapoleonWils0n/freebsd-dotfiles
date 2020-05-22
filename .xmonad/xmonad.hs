@@ -7,17 +7,17 @@
 --                                                                           --
 -------------------------------------------------------------------------------
 
--- import XMonad
-import XMonad hiding ( (|||) )
-import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||))
+import XMonad hiding ( (|||) ) -- jump to layout
+import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||)) -- jump to layout
 import XMonad.Config.Desktop
 import Data.Monoid
+import Data.Ratio ((%)) -- for video
 import System.Exit
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 -- system
-import System.IO (hPutStrLn)
+import System.IO (hPutStrLn) -- for xmobar
 
 -- util
 import XMonad.Util.Run (safeSpawn, unsafeSpawn, runInTerm, spawnPipe)
@@ -27,12 +27,12 @@ import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)
 -- hooks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, ToggleStruts(..))
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops -- for rofi
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat) 
 import XMonad.Hooks.Place (placeHook, withGaps, smart)
 
 -- actions
-import XMonad.Actions.CopyWindow
+import XMonad.Actions.CopyWindow -- for dwm window style tagging
 
 -- layout 
 import XMonad.Layout.NoBorders
@@ -108,7 +108,8 @@ myLayout = avoidStruts ( full ||| tiled ||| grid ||| emptyBSP)
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
-    [ className =? "mpv"            --> doRectFloat (W.RationalRect (1/6) (1/6) (2/3) (2/3))
+--    [ className =? "mpv"            --> doRectFloat (W.RationalRect 0.25 0.25 0.3 0.3)
+    [ className =? "mpv"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
     , className =? "Gimp"           --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat -- firefox pip
     , resource  =? "desktop_window" --> doIgnore
@@ -132,7 +133,8 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Spacing ResizableTall")
      , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "rofi -show combi -modi combi")
+     , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
+     , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
     ]
 
 ------------------------------------------------------------------------
