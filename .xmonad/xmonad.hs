@@ -110,10 +110,10 @@ myLayout = avoidStruts ( full ||| tiled ||| grid ||| emptyBSP)
 myManageHook = composeAll
     [ className =? "mpv"            --> doRectFloat (W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , className =? "Gimp"           --> doFloat
+    , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat
     , resource  =? "desktop_window" --> doIgnore
-    , title =? "Picture-In-Picture" --> doFloat
     , resource  =? "kdesktop"       --> doIgnore ]
-
+    
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
@@ -141,7 +141,7 @@ myKeys =
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
     xmonad $ ewmh desktopConfig
-        { manageHook = manageDocks <+> manageHook desktopConfig
+        { manageHook = manageDocks <+> myManageHook <+> manageHook desktopConfig
         , startupHook        = myStartupHook
         , layoutHook         = myLayout
         , workspaces         = myWorkspaces
