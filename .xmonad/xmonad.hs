@@ -110,10 +110,11 @@ myLayout = avoidStruts ( full ||| tiled ||| grid ||| emptyBSP)
 myManageHook = composeAll
     [ className =? "mpv"            --> doRectFloat (W.RationalRect (1/6) (1/6) (2/3) (2/3))
     , className =? "Gimp"           --> doFloat
-    , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat
+    , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat -- firefox pip
     , resource  =? "desktop_window" --> doIgnore
     , resource  =? "kdesktop"       --> doIgnore ]
     
+
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
