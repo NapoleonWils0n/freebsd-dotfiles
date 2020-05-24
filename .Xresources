@@ -1,5 +1,5 @@
 ! set urxvt to xterm-256color
-URxvt*termName: xterm-256color
+!URxvt*termName: xterm-256color
 
 ! font settings
 URxvt.letterSpace: -1

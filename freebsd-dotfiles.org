@@ -394,7 +394,7 @@ exec ssh-agent /usr/local/bin/xmonad
 #+NAME: Xresources
 #+BEGIN_SRC conf
 ! set urxvt to xterm-256color
-URxvt*termName: xterm-256color
+!URxvt*termName: xterm-256color
 
 ! font settings
 URxvt.letterSpace: -1
@@ -4403,7 +4403,7 @@ bind-key h quit
 
 # podboat
 download-path "~/downloads/%n"
-player "xdg-open"
+player "mpv"
 
 # colours
 color background         default   default
