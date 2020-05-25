@@ -68,7 +68,7 @@ import XMonad.Actions.CopyWindow -- for dwm window style tagging
 -- layout 
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
-import XMonad.Layout.Spacing (spacing) 
+import XMonad.Layout.Spacing
 import XMonad.Layout.GridVariants
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
@@ -100,16 +100,22 @@ myStartupHook = do
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
 
 ------------------------------------------------------------------------
+-- Event hook
+------------------------------------------------------------------------
+
+myEventHook = hintsEventHook
+
+------------------------------------------------------------------------
 -- layout
 ------------------------------------------------------------------------
 -- using toggleStruts with monocle
-myLayout = avoidStruts ( full ||| tiled ||| grid ||| bsp)
+myLayout = avoidStruts (full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled = layoutHintsWithPlacement (1.0, 0.0) (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
+     tiled = layoutHintsWithPlacement (1.0, 0.0) (spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
-     grid = spacing 12 $ Grid (16/10)
+     grid = spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
 
      -- full
      full = smartBorders (Full)
@@ -181,6 +187,7 @@ main = do
         { manageHook = manageDocks <+> myManageHook <+> manageHook desktopConfig
         , startupHook        = myStartupHook
         , layoutHook         = myLayout
+        , handleEventHook    = myEventHook <+>  handleEventHook desktopConfig
         , workspaces         = myWorkspaces
         , borderWidth        = myBorderWidth
         , terminal           = myTerminal
@@ -3292,7 +3299,7 @@ visible-bitrate = yes
 
 ## Enable/disable colors.
 #enable-colors = yes
-enable-colors = yes
+enable-colors = no
 
 ## Set the background color.
 color background = 8
