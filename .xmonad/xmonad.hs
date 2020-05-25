@@ -75,7 +75,7 @@ myStartupHook = do
 myLayout = avoidStruts ( full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled = layoutHintsWithPlacement (1.0, 1.0) (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
+     tiled = layoutHintsWithPlacement (1.0, 0.0) (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
      grid = spacing 12 $ Grid (16/10)
