@@ -36,6 +36,7 @@ import XMonad.Hooks.Place (placeHook, withGaps, smart)
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
 
 -- layout 
+import XMonad.Layout.Renamed (renamed, Rename(Replace))
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
@@ -82,16 +83,16 @@ myEventHook = hintsEventHook
 myLayout = avoidStruts (full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled = layoutHintsWithPlacement (1.0, 0.0) (spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ ResizableTall 1 (3/100) (1/2) [])
+     tiled = renamed [Replace "tall"] $ layoutHintsWithPlacement (1.0, 0.0) (spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
-     grid = spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
+     grid = renamed [Replace "grid"] $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
 
      -- full
-     full = smartBorders (Full)
+     full = renamed [Replace "full"] $ smartBorders (Full)
 
      -- bsp
-     bsp = emptyBSP
+     bsp = renamed [Replace "bsp"] $ emptyBSP
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -140,10 +141,10 @@ myKeys =
      , ("M-a", sendMessage MirrorExpand)
      , ("M-z", sendMessage MirrorShrink)
      , ("M-s", sendMessage ToggleStruts)
-     , ("M-f", sendMessage $ JumpToLayout "Full")
-     , ("M-t", sendMessage $ JumpToLayout "Hinted Spacing ResizableTall")
-     , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
-     , ("M-b", sendMessage $ JumpToLayout "BSP")
+     , ("M-f", sendMessage $ JumpToLayout "full")
+     , ("M-t", sendMessage $ JumpToLayout "tall")
+     , ("M-g", sendMessage $ JumpToLayout "grid")
+     , ("M-b", sendMessage $ JumpToLayout "bsp")
      , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
