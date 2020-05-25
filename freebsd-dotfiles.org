@@ -66,9 +66,10 @@ import XMonad.Hooks.Place (placeHook, withGaps, smart)
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
 
 -- layout 
+import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing (spacing) 
-import XMonad.Layout.GridVariants (Grid(Grid))
+import XMonad.Layout.GridVariants
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.BinarySpacePartition
 
@@ -102,16 +103,21 @@ myStartupHook = do
 -- layout
 ------------------------------------------------------------------------
 -- using toggleStruts with monocle
-myLayout = avoidStruts ( full ||| tiled ||| grid ||| emptyBSP)
+myLayout = avoidStruts ( full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled = spacing 12 $ ResizableTall 1 (3/100) (1/2) []    
+     -- tiled = ResizableTall 1 (3/100) (1/2) []
+     -- tiled = layoutHints (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
+     tiled = layoutHintsWithPlacement (1.0, 1.0) (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
-     grid = spacing 12 $ Grid (16/10) 
+     grid = spacing 12 $ Grid (16/10)
 
      -- full
      full = smartBorders (Full)
+
+     -- bsp
+     bsp = emptyBSP
 
      -- The default number of windows in the master pane
      nmaster = 1
