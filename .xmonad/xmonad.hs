@@ -23,6 +23,7 @@ import System.IO (hPutStrLn) -- for xmobar
 import XMonad.Util.Run (safeSpawn, unsafeSpawn, runInTerm, spawnPipe)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)  
+import XMonad.Util.NamedScratchpad
 
 -- hooks
 import XMonad.Hooks.DynamicLog
@@ -122,7 +123,8 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat -- firefox pip
     , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore 
+    ] <+> namedScratchpadManageHook scratchpads
     
 
 ------------------------------------------------------------------------
@@ -144,8 +146,21 @@ myKeys =
      , ("M-b", sendMessage $ JumpToLayout "BSP")
      , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
+     , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
     ]
 
+------------------------------------------------------------------------
+-- scratchpads
+------------------------------------------------------------------------
+
+scratchpads :: [NamedScratchpad]
+scratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
+                ]
+    where
+    spawnTerm  = myTerminal ++  " -name scratchpad"
+    findTerm   = resource =? "scratchpad"
+    manageTerm = nonFloating
+    
 ------------------------------------------------------------------------
 -- main
 ------------------------------------------------------------------------
