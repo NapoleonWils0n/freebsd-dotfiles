@@ -75,8 +75,6 @@ myStartupHook = do
 myLayout = avoidStruts ( full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     -- tiled = ResizableTall 1 (3/100) (1/2) []
-     -- tiled = layoutHints (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
      tiled = layoutHintsWithPlacement (1.0, 1.0) (spacing 12 $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
@@ -114,7 +112,6 @@ myLayout = avoidStruts ( full ||| tiled ||| grid ||| bsp)
 -- 'className' and 'resource' are used below.
 --
 myManageHook = composeAll
---    [ className =? "mpv"            --> doRectFloat (W.RationalRect 0.25 0.25 0.3 0.3)
     [ className =? "mpv"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
     , className =? "Gimp"           --> doFloat
     , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat -- firefox pip
@@ -136,7 +133,7 @@ myKeys =
      , ("M-z", sendMessage MirrorShrink)
      , ("M-s", sendMessage ToggleStruts)
      , ("M-f", sendMessage $ JumpToLayout "Full")
-     , ("M-t", sendMessage $ JumpToLayout "Spacing ResizableTall")
+     , ("M-t", sendMessage $ JumpToLayout "Hinted Spacing ResizableTall")
      , ("M-g", sendMessage $ JumpToLayout "Spacing Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
      , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
