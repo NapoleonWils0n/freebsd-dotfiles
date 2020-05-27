@@ -148,6 +148,7 @@ myKeys =
      , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
+     , ("M-C-<Space>", namedScratchpadAction scratchpads "emacs-scratch")
     ]
 
 ------------------------------------------------------------------------
@@ -156,11 +157,15 @@ myKeys =
 
 scratchpads :: [NamedScratchpad]
 scratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
+              , NS "emacs-scratch" spawnEmacsScratch findEmacsScratch manageEmacsScratch
                 ]
     where
     spawnTerm  = myTerminal ++  " -name scratchpad"
     findTerm   = resource =? "scratchpad"
     manageTerm = nonFloating
+    findEmacsScratch = title =? "emacs-scratch"
+    spawnEmacsScratch = "emacsclient -a='' -nc -F='(quote (name . \"emacs-scratch\"))'"
+    manageEmacsScratch = nonFloating
     
 ------------------------------------------------------------------------
 -- main
