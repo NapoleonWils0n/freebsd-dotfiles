@@ -3197,7 +3197,7 @@ configuration {
  theme: "solarized";
  font: "Inconsolata 14";
  terminal: "urxvtc";
- show-icons: false;
+ show-icons: true;
  combi-modi: "window,drun";
  }
 #+END_SRC
