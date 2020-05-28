@@ -3,6 +3,6 @@ configuration {
  theme: "solarized";
  font: "Inconsolata 14";
  terminal: "urxvtc";
- show-icons: true;
+ show-icons: false;
  combi-modi: "window,drun";
  }
