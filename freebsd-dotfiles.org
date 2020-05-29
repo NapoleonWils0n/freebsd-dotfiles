@@ -114,16 +114,16 @@ myEventHook = hintsEventHook
 myLayout = avoidStruts (full ||| tiled ||| grid ||| bsp)
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled = renamed [Replace "tall"] $ layoutHintsWithPlacement (1.0, 0.0) (spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ ResizableTall 1 (3/100) (1/2) [])
+     tiled = renamed [Replace "Tall"] $ layoutHintsWithPlacement (1.0, 0.0) (spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ ResizableTall 1 (3/100) (1/2) [])
 
      -- grid
-     grid = renamed [Replace "grid"] $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
+     grid = renamed [Replace "Grid"] $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
 
      -- full
-     full = renamed [Replace "full"] $ smartBorders (Full)
+     full = renamed [Replace "Full"] $ smartBorders (Full)
 
      -- bsp
-     bsp = renamed [Replace "bsp"] $ emptyBSP
+     bsp = renamed [Replace "BSP"] $ emptyBSP
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -172,10 +172,10 @@ myKeys =
      , ("M-a", sendMessage MirrorExpand)
      , ("M-z", sendMessage MirrorShrink)
      , ("M-s", sendMessage ToggleStruts)
-     , ("M-f", sendMessage $ JumpToLayout "full")
-     , ("M-t", sendMessage $ JumpToLayout "tall")
-     , ("M-g", sendMessage $ JumpToLayout "grid")
-     , ("M-b", sendMessage $ JumpToLayout "bsp")
+     , ("M-f", sendMessage $ JumpToLayout "Full")
+     , ("M-t", sendMessage $ JumpToLayout "Tall")
+     , ("M-g", sendMessage $ JumpToLayout "Grid")
+     , ("M-b", sendMessage $ JumpToLayout "BSP")
      , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
