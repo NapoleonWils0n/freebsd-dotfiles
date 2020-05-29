@@ -308,7 +308,7 @@ help = unlines ["The default modifier key is 'alt'. Default keybindings:",
 
 #+NAME: xmobar
 #+BEGIN_SRC conf
-Config { font = "Inconsolata:size=14:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false"
+Config { font = "xft:Inconsolata:size=11:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold"
        , additionalFonts = []
        , borderColor = "#292929"
        , border = TopB
