@@ -67,9 +67,9 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 ------------------------------------------------------------------------
 
 myStartupHook = do
-      spawnOnce "urxvtd &"
+      spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
-
+      spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
 ------------------------------------------------------------------------
 -- Event hook
 ------------------------------------------------------------------------
