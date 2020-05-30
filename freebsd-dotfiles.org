@@ -3190,6 +3190,42 @@ MimeType=x-scheme-handler/org-protocol;
 <<emacs-capture>>
 #+END_SRC
 
+** dmenu
+
+#+NAME: dmenu
+#+BEGIN_SRC conf
+audacity
+blender
+chrome
+emacs
+firefox
+gcolor3
+gimp
+gramps
+meld
+mpv
+obs
+sonic-visualiser
+urxvt
+vlc
+#+END_SRC
+
+*** dmenu tangle
+
++ home dir
+
+#+NAME: dmenu-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.cache/dmenu_run"
+<<dmenu>>
+#+END_SRC
+
++ current dir
+
+#+NAME: dmenu-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".cache/dmenu_run"
+<<dmenu>>
+#+END_SRC
+
 ** rofi
 
 #+NAME: rofi
