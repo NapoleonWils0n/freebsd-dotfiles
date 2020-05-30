@@ -1,4 +1,4 @@
-Config { font = "xft:Inconsolata:size=11:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold"
+Config { font = "xft:Inconsolata:size=12:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold"
        , additionalFonts = []
        , borderColor = "#292929"
        , border = TopB
