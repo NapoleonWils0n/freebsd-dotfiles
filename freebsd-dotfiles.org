@@ -3204,7 +3204,7 @@ meld
 mpv
 obs
 sonic-visualiser
-urxvt
+urxvtc
 vlc
 #+END_SRC
 
