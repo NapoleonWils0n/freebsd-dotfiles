@@ -99,8 +99,7 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
-
---      spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
+      spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
 
 ------------------------------------------------------------------------
 -- Event hook
@@ -181,7 +180,7 @@ myKeys =
      , ("M-g", sendMessage $ JumpToLayout "Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
      , ("M-p", spawn "dmenu_run -p 'Yes Master ?' -fn 'xft:Inconsolata:size=9:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold' -nb '#292929' -nf '#eee8d5' -sb '#268BD2' -sf '#fdf6e3'") -- dmenu
-     , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
+     , ("S-M-t", withFocused $ windows . W.sink) -- flatten floating window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
      , ("M-C-<Space>", namedScratchpadAction scratchpads "emacs-scratch")
     ]
