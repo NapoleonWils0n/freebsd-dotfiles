@@ -53,9 +53,11 @@ myTerminal      = "urxvtc"   -- Sets default terminal
 myBorderWidth   = 2         -- Sets border width for windows
 myNormalBorderColor = "#839496"
 myFocusedBorderColor = "#268BD2"
-myppCurrent = "#B58900"
-myppVisible = "#B58900"
-myppHidden = "#268BD2"
+-- myppCurrent = "#B58900"
+-- myppVisible = "#B58900"
+myppCurrent = "#cb4b16"
+myppVisible = "#cb4b16"
+myppHidden = "#268bd2"
 myppHiddenNoWindows = "#93A1A1"
 myppTitle = "#FDF6E3"
 myppUrgent = "#DC322F"
@@ -145,7 +147,7 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Tall")
      , ("M-g", sendMessage $ JumpToLayout "Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
+     , ("M-p", spawn "dmenu_run -p 'Yes Master ?' -fn 'xft:Inconsolata:size=9:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold' -nb '#292929' -nf '#eee8d5' -sb '#292929' -sf '#268bd2'") -- dmenu
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten flaoting window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
      , ("M-C-<Space>", namedScratchpadAction scratchpads "emacs-scratch")
