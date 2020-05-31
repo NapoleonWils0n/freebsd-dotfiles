@@ -180,7 +180,7 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Tall")
      , ("M-g", sendMessage $ JumpToLayout "Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "dmenu_run -p 'Yes Master ?' -nb '#292929' -nf '#eee8d5' -sb '#005577' -sf '#fdf6e3'") -- dmenu
+     , ("M-p", spawn "dmenu_run -p 'Yes Master ?'") -- dmenu
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten floating window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
      , ("M-C-<Space>", namedScratchpadAction scratchpads "emacs-scratch")
