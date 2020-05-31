@@ -97,6 +97,7 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 -- Startup hook
 ------------------------------------------------------------------------
 
+myStartupHook :: X ()
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
