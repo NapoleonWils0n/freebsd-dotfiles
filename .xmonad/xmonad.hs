@@ -39,6 +39,7 @@ import XMonad.Hooks.Place (placeHook, withGaps, smart)
 
 -- actions
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
+import XMonad.Actions.WindowBringer -- dmenu window switcher
 
 -- layout 
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
@@ -179,10 +180,12 @@ myKeys =
      , ("M-t", sendMessage $ JumpToLayout "Tall")
      , ("M-g", sendMessage $ JumpToLayout "Grid")
      , ("M-b", sendMessage $ JumpToLayout "BSP")
-     , ("M-p", spawn "dmenu_run -p 'Yes Master ?' -fn 'xft:Inconsolata:size=9:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold' -nb '#292929' -nf '#eee8d5' -sb '#268BD2' -sf '#fdf6e3'") -- dmenu
+     , ("M-p", spawn "dmenu_run -p 'Yes Master ?' -nb '#292929' -nf '#eee8d5' -sb '#005577' -sf '#fdf6e3'") -- dmenu
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten floating window to tiled
      , ("M-C-<Return>", namedScratchpadAction scratchpads "terminal")
      , ("M-C-<Space>", namedScratchpadAction scratchpads "emacs-scratch")
+     , ("M-o", gotoMenu) -- gotoMenu dmenu
+     , ("M-i", bringMenu) -- bringMenu dmenu
     ]
 
 ------------------------------------------------------------------------
