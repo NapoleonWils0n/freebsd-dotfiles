@@ -195,6 +195,6 @@ main = do
                         , ppUrgent = xmobarColor  myppUrgent "" . wrap "!" "!"  -- Urgent workspace
                         , ppExtras  = [windowCount]                           -- # of windows current workspace
                         , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
-                        } >> updatePointer (0.5, 0.5) (0, 0)
+                        } >> updatePointer (0.25, 0.25) (0.25, 0.25)
           }
           `additionalKeysP` myKeys
