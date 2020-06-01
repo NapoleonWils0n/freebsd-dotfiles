@@ -67,7 +67,6 @@ import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, Tog
 import XMonad.Hooks.EwmhDesktops -- for rofi
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat) 
 import XMonad.Hooks.Place (placeHook, withGaps, smart)
-import XMonad.Hooks.DynamicBars
 
 -- actions
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
