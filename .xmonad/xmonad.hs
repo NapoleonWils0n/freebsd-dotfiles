@@ -76,6 +76,7 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
+      spawnOnce "emacs &" 
       spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
       spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
 
@@ -168,7 +169,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
     findTerm = resource =? "scratchpad"
     manageTerm = nonFloating
     findEmacsScratch = title =? "emacs-scratch"
-    spawnEmacsScratch = "emacsclient -a='' -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
+    spawnEmacsScratch = "emacsclient -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
     manageEmacsScratch = nonFloating
 
 ------------------------------------------------------------------------
