@@ -177,8 +177,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 ------------------------------------------------------------------------
 
 main = do
-    xmproc0 <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
-    xmproc1 <- spawnPipe "/usr/local/bin/xmobar -x 1 /home/djwilcox/.config/xmobar/xmobarrc"
+    xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
     xmonad $ ewmh desktopConfig
         { manageHook = manageDocks <+> myManageHook <+> manageHook desktopConfig
         , startupHook        = myStartupHook
@@ -191,7 +190,7 @@ main = do
         , normalBorderColor  = myNormalBorderColor
         , focusedBorderColor = myFocusedBorderColor
         , logHook = dynamicLogWithPP xmobarPP  
-                        { ppOutput = \x -> hPutStrLn xmproc0 x >> hPutStrLn xmproc1 x
+                        { ppOutput = \x -> hPutStrLn xmproc x
                         , ppCurrent = xmobarColor myppCurrent "" . wrap "[" "]" -- Current workspace in xmobar
                         , ppVisible = xmobarColor myppVisible ""                -- Visible but not current workspace
                         , ppHidden = xmobarColor myppHidden "" . wrap "+" ""   -- Hidden workspaces in xmobar
