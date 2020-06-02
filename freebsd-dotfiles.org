@@ -200,7 +200,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
     findTerm = resource =? "scratchpad"
     manageTerm = nonFloating
     findEmacsScratch = title =? "emacs-scratch"
-    spawnEmacsScratch = "emacsclient -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
+    spawnEmacsScratch = "emacsclient -a='' -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
     manageEmacsScratch = nonFloating
 
 ------------------------------------------------------------------------
