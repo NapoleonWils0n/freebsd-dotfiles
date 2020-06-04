@@ -29,6 +29,7 @@ import XMonad.Util.Run (safeSpawn, unsafeSpawn, runInTerm, spawnPipe)
 import XMonad.Util.SpawnOnce
 import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)  
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.NamedWindows
 import XMonad.Util.WorkspaceCompare
 
 -- hooks
@@ -37,6 +38,7 @@ import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, Tog
 import XMonad.Hooks.EwmhDesktops -- for rofi
 import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat) 
 import XMonad.Hooks.Place (placeHook, withGaps, smart)
+import XMonad.Hooks.UrgencyHook
 
 -- actions
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
@@ -71,6 +73,19 @@ myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
 
 ------------------------------------------------------------------------
+-- desktop notifications -- dunst package required
+------------------------------------------------------------------------
+
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+
+instance UrgencyHook LibNotifyUrgencyHook where
+    urgencyHook LibNotifyUrgencyHook w = do
+        name     <- getName w
+        Just idx <- fmap (W.findTag w) $ gets windowset
+
+        safeSpawn "notify-send" [show name, "workspace " ++ idx]
+
+------------------------------------------------------------------------
 -- Startup hook
 ------------------------------------------------------------------------
 
@@ -98,7 +113,7 @@ myLayout = avoidStruts (full ||| tiled ||| grid ||| bsp)
      grid = renamed [Replace "Grid"] $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True $ Grid (16/10)
 
      -- full
-     full = renamed [Replace "Full"] $ noBorders (Full)
+     full = renamed [Replace "Full"] $ smartBorders (Full)
 
      -- bsp
      bsp = renamed [Replace "BSP"] $ emptyBSP
@@ -150,12 +165,6 @@ myKeys =
      , ("M-i", bringMenu) -- bringMenu dmenu
     ]
 
-    -- Make sure to put any where clause after your last list of key bindings*
-    where notSP = (return $ ("NSP" /=) . W.tag) :: X (WindowSpace -> Bool)
-          getSortByIndexNoSP =
-                  fmap (.namedScratchpadFilterOutWorkspace) getSortByIndex
-
-
 ------------------------------------------------------------------------
 -- scratchpads
 ------------------------------------------------------------------------
@@ -178,7 +187,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
 
 main = do
     xmproc <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
-    xmonad $ ewmh desktopConfig
+    xmonad $ withUrgencyHook LibNotifyUrgencyHook $ ewmh desktopConfig
         { manageHook = manageDocks <+> myManageHook <+> manageHook desktopConfig
         , startupHook        = myStartupHook
         , layoutHook         = myLayout
