@@ -85,3 +85,7 @@ URxvt.keysym.Shift-C-V: eval:paste_clipboard
 ! Turn on/off ISO 14755 (default enabled).
 URxvt*iso14755: False
 URxvt.iso14755_52: false
+
+! urgent
+URxvt*urgentOnBell: true
+URxvt*visualBell:   false
