@@ -16,10 +16,8 @@ C-u C-c C-v t
 ** tangle from the command line
 
 #+BEGIN_SRC sh
-emacs --batch -l org --eval '(org-babel-tangle-file "filename.org")'
+emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/freebsd-dotfiles.org")'
 #+END_SRC
-
-#+RESULTS:
 
 * freebsd dotfiles
 :PROPERTIES:
