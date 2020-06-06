@@ -61,11 +61,16 @@ export MPD_HOST=${HOME}/.mpd/socket
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export CLICOLOR=1
 
+# qt5 
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# xdg
 # urxvt
 export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 
-# qt5 
-export QT_QPA_PLATFORMTHEME=qt5ct
+# less
+export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 
 # zstyle
 #=======

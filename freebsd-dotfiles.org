@@ -827,11 +827,16 @@ export MPD_HOST=${HOME}/.mpd/socket
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export CLICOLOR=1
 
+# qt5 
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# xdg
 # urxvt
 export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 
-# qt5 
-export QT_QPA_PLATFORMTHEME=qt5ct
+# less
+export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 
 # zstyle
 #=======
@@ -5614,4 +5619,20 @@ or if you are using another shell add the code to the shell config file
 
 #+BEGIN_SRC config
 export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
+#+END_SRC
+
+** less
+
+#+NAME: less-xdg
+#+begin_src sh
+mkdir -p ~/.local/share/less
+mkdir -p ~/.config/less
+#+end_src
+
+add the follow code to your ~/.zshrc in you using the zsh shell,
+or if you are using another shell add the code to the shell config file
+
+#+BEGIN_SRC conf
+export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 #+END_SRC
