@@ -19,6 +19,41 @@ C-u C-c C-v t
 emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/freebsd-dotfiles.org")'
 #+END_SRC
 
+* xdg and dotfiles
+
+** xmonad
+
++ Create XDG directories for xmonad
+
+#+NAME: xmonad-xdg
+#+begin_src sh
+mkdir -p ~/.local/share/xmonad
+mkdir -p ~/.config/xmonad/
+#+end_src
+
+** urxvtd
+
+hide the ~/.urxvt/urxvtd-hostname directory
+
+add the follow code to your ~/.zshrc in you using the zsh shell,
+or if you are using another shell add the code to the shell config file
+
+#+BEGIN_SRC config
+export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
+#+END_SRC
+
+** tig
+
+~/.local/share/tig directory must exist,
+writes to ~/.tig_history otherwise. 
+
++ create the ~/.local/share/tig 
+
+#+NAME: tig-xdg
+#+BEGIN_SRC sh
+mkdir -p ~/.local/share/tig 
+#+END_SRC
+
 * freebsd dotfiles
 :PROPERTIES:
 :VISIBILITY: children
@@ -830,13 +865,8 @@ export CLICOLOR=1
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-# xdg
-# urxvt
+# urxvt - xdg
 export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
-
-# less
-export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
-export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 
 # zstyle
 #=======
@@ -5586,53 +5616,3 @@ gtk-theme-name = Adwaita-dark
 <<gtk>>
 #+END_SRC
 
-* xdg and dotfiles
-
-** xmonad
-
-+ Create XDG directories for xmonad
-
-#+NAME: xmonad-xdg
-#+begin_src sh
-mkdir -p ~/.local/share/xmonad
-mkdir -p ~/.config/xmonad/
-#+end_src
-
-** tig
-
-~/.local/share/tig directory must exist,
-writes to ~/.tig_history otherwise. 
-
-+ create the ~/.local/share/tig 
-
-#+NAME: tig-xdg
-#+BEGIN_SRC sh
-mkdir -p ~/.local/share/tig 
-#+END_SRC
-
-** urxvtd
-
-hide the ~/.urxvt/urxvtd-hostname directory
-
-add the follow code to your ~/.zshrc in you using the zsh shell,
-or if you are using another shell add the code to the shell config file
-
-#+BEGIN_SRC config
-export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
-#+END_SRC
-
-** less
-
-#+NAME: less-xdg
-#+begin_src sh
-mkdir -p ~/.local/share/less
-mkdir -p ~/.config/less
-#+end_src
-
-add the follow code to your ~/.zshrc in you using the zsh shell,
-or if you are using another shell add the code to the shell config file
-
-#+BEGIN_SRC conf
-export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
-export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-#+END_SRC

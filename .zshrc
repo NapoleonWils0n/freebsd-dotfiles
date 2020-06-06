@@ -64,13 +64,8 @@ export CLICOLOR=1
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-# xdg
-# urxvt
+# urxvt - xdg
 export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
-
-# less
-export LESSKEY="$XDG_CONFIG_HOME"/less/lesskey
-export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 
 # zstyle
 #=======
