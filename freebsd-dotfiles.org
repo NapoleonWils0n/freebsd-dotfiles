@@ -3042,14 +3042,8 @@ me:\
 [user]
 name = Daniel J Wilcox
 email = danieljwilcox@gmail.com
-[core]
-	editor ="/usr/local/bin/emacsclient"
 [color]
 ui = true
-[merge]
-	tool = meld
-[diff]
-	external = /home/djwilcox/bin/git-diff
 #+END_SRC
 
 *** gitconfig tangle
@@ -5526,14 +5520,14 @@ set-window-option -g automatic-rename off
 + home dir
 
 #+NAME: tmux-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.tmux.conf"
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
 <<tmux>>
 #+END_SRC
 
 + current dir
 
 #+NAME: tmux-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".tmux.conf"
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
 <<tmux>>
 #+END_SRC
 
