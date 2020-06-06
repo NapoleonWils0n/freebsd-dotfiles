@@ -35,13 +35,5 @@ fi
 # remap ctrl to alt, alt to super, super to ctrl
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
-# feh set wallpaper
-#feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/freebsd.png' 
-
 # start ssh-agent and window mamager
-#exec ssh-agent /usr/local/bin/i3
-# start slstatus bar
-#/usr/local/bin/slstatus &
-#exec ssh-agent /usr/local/bin/dwm
-# xmonad
 exec ssh-agent /usr/local/bin/xmonad

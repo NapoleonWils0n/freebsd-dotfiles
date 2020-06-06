@@ -1,2 +1,0 @@
-#!/bin/sh
-feh --no-fehbg --bg-center --image-bg '#002b36' '/home/djwilcox/.wallpaper/freebsd.png' 
