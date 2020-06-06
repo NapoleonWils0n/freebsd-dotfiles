@@ -17,9 +17,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-# editor
-#=======
-
 # set emacslient as editor
 ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
 EDITOR="/usr/local/bin/emacsclient"; export EDITOR
@@ -29,9 +26,6 @@ VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
 function e {
 /usr/local/bin/emacsclient "$@"
 }
-
-# directories
-#============
 
 # home bin 
 if [ -d "$HOME/bin" ]; then
@@ -60,15 +54,15 @@ RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
 # general
 #========
 
-# ranger dont load default
-RANGER_LOAD_DEFAULT_RC="FALSE"
-
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
 
 # tell ls to be colourfull
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export CLICOLOR=1
+
+# urxvt
+export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct

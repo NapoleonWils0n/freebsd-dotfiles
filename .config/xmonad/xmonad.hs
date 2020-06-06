@@ -86,7 +86,7 @@ instance UrgencyHook LibNotifyUrgencyHook where
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "emacs &" 
-      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png'"
       spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
       spawnOnce "dunst &" 
 

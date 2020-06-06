@@ -115,7 +115,7 @@ instance UrgencyHook LibNotifyUrgencyHook where
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "emacs &" 
-      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.wallpaper/freebsd.png'"
+      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png'"
       spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
       spawnOnce "dunst &" 
 
@@ -783,9 +783,6 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 
-# editor
-#=======
-
 # set emacslient as editor
 ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
 EDITOR="/usr/local/bin/emacsclient"; export EDITOR
@@ -795,9 +792,6 @@ VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
 function e {
 /usr/local/bin/emacsclient "$@"
 }
-
-# directories
-#============
 
 # home bin 
 if [ -d "$HOME/bin" ]; then
@@ -826,15 +820,15 @@ RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
 # general
 #========
 
-# ranger dont load default
-RANGER_LOAD_DEFAULT_RC="FALSE"
-
 # mpd socket
 export MPD_HOST=${HOME}/.mpd/socket
 
 # tell ls to be colourfull
 export LSCOLORS=ExFxCxDxBxegedabagacad
 export CLICOLOR=1
+
+# urxvt
+export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct
@@ -5609,4 +5603,15 @@ writes to ~/.tig_history otherwise.
 #+NAME: tig-xdg
 #+BEGIN_SRC sh
 mkdir -p ~/.local/share/tig 
+#+END_SRC
+
+** urxvtd
+
+hide the ~/.urxvt/urxvtd-hostname directory
+
+add the follow code to your ~/.zshrc in you using the zsh shell,
+or if you are using another shell add the code to the shell config file
+
+#+BEGIN_SRC config
+export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 #+END_SRC
