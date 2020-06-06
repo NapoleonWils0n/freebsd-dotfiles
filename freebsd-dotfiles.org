@@ -5587,3 +5587,26 @@ gtk-theme-name = Adwaita-dark
 <<gtk>>
 #+END_SRC
 
+* xdg and dotfiles
+
+** xmonad
+
++ Create XDG directories for xmonad
+
+#+NAME: xmonad-xdg
+#+begin_src sh
+mkdir -p ~/.local/share/xmonad
+mkdir -p ~/.config/xmonad/
+#+end_src
+
+** tig
+
+~/.local/share/tig directory must exist,
+writes to ~/.tig_history otherwise. 
+
++ create the ~/.local/share/tig 
+
+#+NAME: tig-xdg
+#+BEGIN_SRC sh
+mkdir -p ~/.local/share/tig 
+#+END_SRC
