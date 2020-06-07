@@ -64,9 +64,6 @@ export CLICOLOR=1
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct
 
-# urxvt - xdg
-export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
-
 # zstyle
 #=======
 

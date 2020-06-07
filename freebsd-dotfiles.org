@@ -31,29 +31,6 @@ mkdir -p ~/.local/share/xmonad
 mkdir -p ~/.config/xmonad/
 #+end_src
 
-** urxvtd
-
-hide the ~/.urxvt/urxvtd-hostname directory
-
-add the follow code to your ~/.zshrc in you using the zsh shell,
-or if you are using another shell add the code to the shell config file
-
-#+BEGIN_SRC config
-export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
-#+END_SRC
-
-** tig
-
-~/.local/share/tig directory must exist,
-writes to ~/.tig_history otherwise. 
-
-+ create the ~/.local/share/tig 
-
-#+NAME: tig-xdg
-#+BEGIN_SRC sh
-mkdir -p ~/.local/share/tig 
-#+END_SRC
-
 * freebsd dotfiles
 :PROPERTIES:
 :VISIBILITY: children
@@ -864,9 +841,6 @@ export CLICOLOR=1
 
 # qt5 
 export QT_QPA_PLATFORMTHEME=qt5ct
-
-# urxvt - xdg
-export RXVT_SOCKET="$XDG_RUNTIME_DIR"/urxvtd
 
 # zstyle
 #=======
