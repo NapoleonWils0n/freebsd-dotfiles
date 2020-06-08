@@ -1247,14 +1247,14 @@ color alert = 7/8,bold
 + home dir
 
 #+NAME: ncmpc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.ncmpc/config"
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/ncmpc/config"
 <<ncmpc>>
 #+END_SRC
 
 + current dir
 
 #+NAME: ncmpc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".ncmpc/config"
+#+BEGIN_SRC conf :noweb yes :tangle ".config/ncmpc/config"
 <<ncmpc>>
 #+END_SRC
 
