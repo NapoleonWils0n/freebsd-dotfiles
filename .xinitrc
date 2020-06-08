@@ -35,5 +35,11 @@ fi
 # remap ctrl to alt, alt to super, super to ctrl
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
+# feh set wallpaper
+feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
+
+# set the cursor form xmonad
+xsetroot -cursor_name left_ptr
+
 # start ssh-agent and window mamager
 exec ssh-agent /usr/local/bin/xmonad

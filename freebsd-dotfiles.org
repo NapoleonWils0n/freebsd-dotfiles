@@ -127,8 +127,6 @@ instance UrgencyHook LibNotifyUrgencyHook where
 myStartupHook = do
       spawnOnce "urxvtd &" -- start urxvt terminal daemon
       spawnOnce "emacs &" 
-      spawnOnce "feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png'"
-      spawnOnce "xsetroot -cursor_name left_ptr" -- set cursor
       spawnOnce "dunst &" 
 
 
@@ -360,6 +358,12 @@ fi
 # remap ctrl to alt, alt to super, super to ctrl
 xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
+# feh set wallpaper
+feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
+
+# set the cursor form xmonad
+xsetroot -cursor_name left_ptr
+
 # start ssh-agent and window mamager
 exec ssh-agent /usr/local/bin/xmonad
 #+END_SRC
@@ -491,6 +495,30 @@ URxvt*visualBell:   false
 #+NAME: Xresources-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".Xresources"
 <<Xresources>>
+#+END_SRC
+
+** feh
+
+#+NAME: feh
+#+BEGIN_SRC sh
+#!/bin/sh
+feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
+#+END_SRC
+
+*** feh tangle
+
++ home dir
+
+#+NAME: feh-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.fehbg" :tangle-mode (identity #o755)
+<<feh>>
+#+END_SRC
+
++ current dir
+
+#+NAME: feh-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".fehbg" :tangle-mode (identity #o755)
+<<feh>>
 #+END_SRC
 
 ** emacs
