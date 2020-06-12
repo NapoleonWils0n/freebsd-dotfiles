@@ -1,6 +1,3 @@
-! set urxvt to xterm-256color
-!URxvt*termName: xterm-256color
-
 ! font settings
 Xft.dpi:        96
 Xft.antialias:  true
@@ -16,12 +13,10 @@ URxvt*scrollBar: False
 URxvt*modifier: mod1
 URxvt*urgentOnBell: true
 URxvt*visualBell:   false
-URxvt*font:           xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
+URxvt*font: xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
 URxvt*perl-ext-common: default,clipboard,selection-to-clipboard,font-size
-! copy and paste
 URxvt.keysym.Shift-C-C: eval:selection_to_clipboard
 URxvt.keysym.Shift-C-V: eval:paste_clipboard
-! Turn on/off ISO 14755 (default enabled).
 URxvt*iso14755: False
 URxvt.iso14755_52: false
 
@@ -33,7 +28,6 @@ emacs.font: Inconsolata:size=18:weight=regular:antialias=true:hinting=true:hints
 ! color
 *background: #002b36
 *foreground: #839496
-!!*fading: 40
 *fadeColor: #002b36
 *cursorColor: #93a1a1
 *pointerColorBackground: #586e75
