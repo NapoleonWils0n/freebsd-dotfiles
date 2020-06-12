@@ -8,10 +8,43 @@ Xft.antialias:  true
 Xft.rgba:       rgb
 Xft.hinting:    true
 Xft.hintstyle:  hintfull
+!! internal border
+URxvt.internalBorder: 4
+
+!! fonts
+URxvt*font:           xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
 
 ! emacs
 Emacs*toolBar: 0
 Emacs.verticalScrollBars: off
+emacs.font: Inconsolata:size=18:weight=regular:antialias=true:hinting=true:hintstyle=hintfull
+
+! Set scrollbar style to rxvt, plain, next or xterm. plain is the authors favourite.
+! URxvt*scrollstyle: mode
+URxvt*scrollstyle: plain
+
+! True: enable the scrollbar [default]; option -sb. False: disable the scrollbar; option +sb.
+! URxvt*scrollBar: boolean
+URxvt*scrollBar: False
+
+! Set the key to be interpreted as the Meta key to: alt, meta, hyper, super, mod1, mod2, mod3, mod4, mod5; option -mod.
+! URxvt*modifier: modifier
+URxvt*modifier: mod1
+
+! URxvt*perl-ext-common: string
+URxvt*perl-ext-common: default,clipboard,selection-to-clipboard,font-size
+
+! copy and paster
+URxvt.keysym.Shift-C-C: eval:selection_to_clipboard
+URxvt.keysym.Shift-C-V: eval:paste_clipboard
+
+! Turn on/off ISO 14755 (default enabled).
+URxvt*iso14755: False
+URxvt.iso14755_52: false
+
+! urgent
+URxvt*urgentOnBell: true
+URxvt*visualBell:   false
 
 ! color
 *background: #002b36
@@ -21,9 +54,6 @@ Emacs.verticalScrollBars: off
 *cursorColor: #93a1a1
 *pointerColorBackground: #586e75
 *pointerColorForeground: #93a1a1
-
-!! internal border
-URxvt.internalBorder: 4
 
 !! black dark/light
 *color0: #073642
@@ -56,36 +86,3 @@ URxvt.internalBorder: 4
 !! white dark/light
 *color7: #eee8d5
 *color15: #fdf6e3
-
-!! fonts
-URxvt*font:           xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
-
-!! emacs font
-emacs.font: Inconsolata:size=18:weight=regular:antialias=true:hinting=true:hintstyle=hintfull
-
-! Set scrollbar style to rxvt, plain, next or xterm. plain is the authors favourite.
-! URxvt*scrollstyle: mode
-URxvt*scrollstyle: plain
-
-! True: enable the scrollbar [default]; option -sb. False: disable the scrollbar; option +sb.
-! URxvt*scrollBar: boolean
-URxvt*scrollBar: False
-
-! Set the key to be interpreted as the Meta key to: alt, meta, hyper, super, mod1, mod2, mod3, mod4, mod5; option -mod.
-! URxvt*modifier: modifier
-URxvt*modifier: mod1
-
-! URxvt*perl-ext-common: string
-URxvt*perl-ext-common: default,clipboard,selection-to-clipboard,font-size
-
-! copy and paster
-URxvt.keysym.Shift-C-C: eval:selection_to_clipboard
-URxvt.keysym.Shift-C-V: eval:paste_clipboard
-
-! Turn on/off ISO 14755 (default enabled).
-URxvt*iso14755: False
-URxvt.iso14755_52: false
-
-! urgent
-URxvt*urgentOnBell: true
-URxvt*visualBell:   false
