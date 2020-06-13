@@ -7,6 +7,7 @@ import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||)) -- jump to layo
 import XMonad.Config.Desktop
 import System.Exit
 import qualified XMonad.StackSet as W
+import qualified XMonad as X -- hide NSP
 
 -- data
 import Data.Char (isSpace)
@@ -135,6 +136,19 @@ myManageHook = composeAll
     ] <+> namedScratchpadManageHook myScratchpads
     
 ------------------------------------------------------------------------
+-- Filter NSP scratchpads
+
+------------------------------------------------------------------------
+-- | A map from window names to Windows, given a windowTitler function.
+windowMap' :: (X.WindowSpace -> Window -> X String) -> X (M.Map String Window)
+windowMap' titler = do
+  -- ws <- gets X.windowset
+  ws <- gets X.windowset 
+  M.fromList . concat <$> mapM keyValuePairs (namedScratchpadFilterOutWorkspace . W.workspaces $ ws)
+ where keyValuePairs ws = mapM (keyValuePair ws) $ W.integrate' (W.stack ws)
+       keyValuePair ws w = flip (,) w <$> titler ws w
+
+------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
 
@@ -159,7 +173,7 @@ myKeys =
      , ("M-o", gotoMenu) -- gotoMenu dmenu
      , ("M-i", bringMenu) -- bringMenu dmenu
     ]
-
+    
 ------------------------------------------------------------------------
 -- scratchpads
 ------------------------------------------------------------------------
