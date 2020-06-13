@@ -7,7 +7,6 @@ import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||)) -- jump to layo
 import XMonad.Config.Desktop
 import System.Exit
 import qualified XMonad.StackSet as W
-import qualified XMonad as X -- hide NSP
 
 -- data
 import Data.Char (isSpace)
@@ -38,7 +37,6 @@ import XMonad.Hooks.UrgencyHook
 
 -- actions
 import XMonad.Actions.CopyWindow -- for dwm window style tagging
-import XMonad.Actions.WindowBringer -- dmenu window switcher
 import XMonad.Actions.UpdatePointer -- update mouse postion
 
 -- layout 
@@ -136,17 +134,6 @@ myManageHook = composeAll
     ] <+> namedScratchpadManageHook myScratchpads
     
 ------------------------------------------------------------------------
--- Filter NSP scratchpads for windowBringer
-------------------------------------------------------------------------
-
-windowMap' :: (X.WindowSpace -> Window -> X String) -> X (M.Map String Window)
-windowMap' titler = do
-  ws <- gets X.windowset
-  M.fromList . concat <$> mapM keyValuePairs (namedScratchpadFilterOutWorkspace . W.workspaces $ ws)
- where keyValuePairs ws = mapM (keyValuePair ws) $ W.integrate' (W.stack ws)
-       keyValuePair ws w = flip (,) w <$> titler ws w
-
-------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 ------------------------------------------------------------------------
 
@@ -168,8 +155,6 @@ myKeys =
      , ("S-M-t", withFocused $ windows . W.sink) -- flatten floating window to tiled
      , ("M-C-<Space>", namedScratchpadAction myScratchpads "terminal")
      , ("M-C-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
-     , ("M-o", gotoMenu) -- gotoMenu dmenu
-     , ("M-i", bringMenu) -- bringMenu dmenu
     ]
     
 ------------------------------------------------------------------------
