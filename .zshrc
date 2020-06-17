@@ -146,9 +146,9 @@ ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 
-# XDG_RUNTIME_DIR for mpv hardware accleration
+# XDG_RUNTIME_DIR = ~/.tmp for obs studio and pulseaudio
 if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR=/tmp
+    export XDG_RUNTIME_DIR="$HOME/.tmp"
     if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
         mkdir "$XDG_RUNTIME_DIR"
         chmod 0700 "$XDG_RUNTIME_DIR"
