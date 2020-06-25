@@ -10,7 +10,7 @@
 (setq company-minimum-prefix-length 3)
 (add-hook 'after-init-hook 'global-company-mode)
 
-; start server
+; server start
 (server-start)
 (add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
