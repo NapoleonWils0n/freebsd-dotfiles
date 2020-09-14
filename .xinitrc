@@ -25,21 +25,25 @@ fi
 
 # start some nice programs
 
-if [ -d /usr/local/etc/X11/xinit/xinitrc.d ] ; then
-	for f in /usr/local/etc/X11/xinit/xinitrc.d/?*.sh ; do
-		[ -x "$f" ] && . "$f"
-	done
-	unset f
-fi
+#if [ -d /usr/local/etc/X11/xinit/xinitrc.d ] ; then
+#	for f in /usr/local/etc/X11/xinit/xinitrc.d/?*.sh ; do
+#		[ -x "$f" ] && . "$f"
+#	done
+#	unset f
+#fi
 
 # remap ctrl to alt, alt to super, super to ctrl
-xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
+#xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
 
 # feh set wallpaper
 feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
 
 # set the cursor form xmonad
-xsetroot -cursor_name left_ptr
+#xsetroot -cursor_name left_ptr
 
 # start ssh-agent and window mamager
 exec ssh-agent /usr/local/bin/xmonad
+
+# dwm slstatus
+/usr/local/bin/slstatus &
+exec ssh-agent /usr/local/bin/dwm
