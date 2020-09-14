@@ -45,5 +45,5 @@ feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpape
 exec ssh-agent /usr/local/bin/xmonad
 
 # dwm slstatus
-/usr/local/bin/slstatus &
+#/usr/local/bin/slstatus &
 exec ssh-agent /usr/local/bin/dwm
