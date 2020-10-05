@@ -37,6 +37,12 @@ mkdir -p ~/.config/xmonad/
 :END:
 ** xmonad
 
+xmonad config, xmonad-config and build
+
+*** xmonand config 
+
+xmonad config file
+
 #+NAME: xmonad
 #+Begin_SRC conf
 ------------------------------------------------------------------------
@@ -250,10 +256,7 @@ main = do
           `additionalKeysP` myKeys
 #+END_SRC
 
-*** xmonad tangle
-:PROPERTIES:
-:ORDERED:  t
-:END:
+**** xmonad tangle
 
 + home dir
   
@@ -267,6 +270,89 @@ main = do
 #+NAME: xmonad-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".xmonad/config.hs"
 <<xmonad>>
+#+END_SRC
+
+*** xmonand-config.cabal
+
+xmonad-config.cabal
+
+#+NAME: xmonad-cabal
+#+Begin_SRC conf
+name:          xmonad-config
+version:       0.0
+synopsis:      XMonad Config File
+homepage:      http://xmonad.org
+license:       BSD2
+license-file:  LICENSE
+author:        Peter Jones <pjones@devalot.com>
+maintainer:    Peter Jones <pjones@devalot.com>
+copyright:     Copyright (c) 2016,2017 Peter J. Jones
+category:      Graphics
+build-type:    Simple
+cabal-version: >=1.8
+
+executable xmonad-config
+  main-is: config.hs
+  build-depends: base, xmonad, xmonad-contrib, containers
+#+END_SRC
+
+**** xmonad-config.cabal tangle
+
++ home dir
+  
+#+NAME: xmonad-cabal-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.xmonad/xmonad-config.cabal"
+<<xmonad-cabal>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: xmonad-cabal-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".xmonad/xmonad-config.cabal"
+<<xmonad-cabal>>
+#+END_SRC
+*** xmonand build 
+
+xmonad build file
+
+#+NAME: xmonad-build
+#+Begin_SRC conf
+#!/bin/sh
+
+# must match "executable" line from xmonad-config.cabal
+EXE_NAME=xmonad-config
+
+# xmonad tells us how it want resulting executable to be named
+output_file=$1; shift
+
+CFG_DIR=$HOME/.xmonad
+
+# build the config
+cd $CFG_DIR
+cabal new-configure --enable-optimization --enable-executable-stripping
+cabal new-build
+
+if [ "$output_file" != "" ]; then
+# move resulting binary where it was requested to reside
+find $CFG_DIR/dist-newstyle -type f -perm +111 -name $EXE_NAME \
+     -exec mv '{}' $output_file ';'
+fi
+#+END_SRC
+
+**** xmonad build tangle
+
++ home dir
+  
+#+NAME: xmonad-build-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.xmonad/build"
+<<xmonad-build>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: xmonad-build-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".xmonad/build"
+<<xmonad-build>>
 #+END_SRC
 
 ** xinitrc
