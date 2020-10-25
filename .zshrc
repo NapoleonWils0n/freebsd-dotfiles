@@ -37,6 +37,11 @@ if [ -d "$HOME/.local/bin" ]; then
    PATH="$HOME/.local/bin:$PATH"
 fi
 
+# cabal bin for haskell
+if [ -d "$HOME/.cabal/bin" ]; then
+   PATH="$HOME/.cabal/bin:$PATH"
+fi
+
 # git prompt
 if [ -f "/usr/local/share/git-core/contrib/completion/git-prompt.sh" ]; then
    source "/usr/local/share/git-core/contrib/completion/git-prompt.sh"
@@ -48,7 +53,7 @@ GIT_PS1_SHOWDIRTYSTATE=true
 GIT_PS1_SHOWUNTRACKEDFILES=true
 GIT_PS1_SHOWUPSTREAM="auto verbose name git"
 
-PS1=$'[%n@%M %~]\nYes Master ? '
+PS1=$'[%n@%M %~]'
 RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
 
 # general
@@ -129,12 +134,8 @@ cdpath=(~)
 # hdmi display on - and reset wallpaper
 alias hdmi-on='xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of eDP-1 && ~/.fehbg &>/dev/null'
 
-# hdmi display set to 720p for obs - and reset wallpaper
-alias hdmi-720='xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1280x720 --right-of eDP-1 && ~/.fehbg &>/dev/null'
-
 # hdmi display off - and reset wallpaper
 alias hdmi-off='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off && ~/.fehbg &>/dev/null'
-
 
 # keyboard backlight on
 alias flame-on='sysctl dev.asmc.0.light.control:255'
@@ -175,3 +176,27 @@ case $TERM in
     }
   ;;
 esac
+
+# vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# Fix bugs when switching modes
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
+
+newline=$'\n'
+yesmaster=' Yes Master ? '
+
+function zle-line-init zle-keymap-select {
+    VIM_NORMAL_PROMPT="[% -n]% "
+    VIM_INSERT_PROMPT="[% +i]% "
+    PS1="[%n@%M %~]${newline}${${KEYMAP/vicmd/$VIM_NORMAL_PROMPT}/(main|viins)/$VIM_INSERT_PROMPT}${yesmaster}"
+    zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
