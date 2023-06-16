@@ -1,82 +1,57 @@
-# Lines configured by zsh-newuser-install
+# ~/.zshrc
+
 # ssh zsh fix
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
-HISTFILE=~/.histfile
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
-SAVEHIST=1000
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/djwilcox/.zshrc'
 
-# add custom completion scripts
-fpath=(~/.zsh/completion $fpath) 
+# variables for PS3 prompt
+newline=$'\n'
+yesmaster='Yes Master ? '
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
-# set emacslient as editor
-ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
-EDITOR="/usr/local/bin/emacsclient"; export EDITOR
-VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
-
-# emacsclient function e
-function e {
-/usr/local/bin/emacsclient "$@"
+# PS3 prompt function
+function zle-line-init zle-keymap-select {
+    PS1="[%n@%M %~]${newline}${yesmaster}"
+    zle reset-prompt
 }
 
-# home bin 
-if [ -d "$HOME/bin" ]; then
-   PATH="$HOME/bin:$PATH"
-fi
+# run PS3 prompt function
+zle -N zle-line-init
+zle -N zle-keymap-select
 
-# home local python bin 
-if [ -d "$HOME/.local/bin" ]; then
-   PATH="$HOME/.local/bin:$PATH"
-fi
+# set terminal window title to program name
+case $TERM in
+  (*xterm* | rxvt | rxvt-unicode-256color)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
+esac
 
-# cabal bin for haskell
-if [ -d "$HOME/.cabal/bin" ]; then
-   PATH="$HOME/.cabal/bin:$PATH"
-fi
+# Fix bugs when switching modes
+bindkey -v # vi mode
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
 
-# git prompt
-if [ -f "/usr/local/share/git-core/contrib/completion/git-prompt.sh" ]; then
-   source "/usr/local/share/git-core/contrib/completion/git-prompt.sh"
-fi
-
-# prompt
-setopt prompt_subst
-GIT_PS1_SHOWDIRTYSTATE=true
-GIT_PS1_SHOWUNTRACKEDFILES=true
-GIT_PS1_SHOWUPSTREAM="auto verbose name git"
-
-PS1=$'[%n@%M %~]'
-RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
-
-# general
-#========
-
-# mpd socket
-export MPD_HOST=${HOME}/.mpd/socket
-
-# tell ls to be colourfull
-export LSCOLORS=ExFxCxDxBxegedabagacad
-export CLICOLOR=1
-
-# qt5 
-export QT_QPA_PLATFORMTHEME=qt5ct
-
-# zstyle
-#=======
+# Use modern completion system
+autoload -Uz compinit
+compinit
 
 # Set/unset  shell options
-setopt   notify globdots correct pushdtohome cdablevars autolist
-setopt   correctall recexact longlistjobs
-setopt   autoresume histignoredups pushdsilent noclobber
-setopt   autopushd pushdminus extendedglob rcquotes mailwarning
+setopt notify globdots pushdtohome cdablevars autolist
+setopt recexact longlistjobs
+setopt autoresume histignoredups pushdsilent noclobber
+setopt autopushd pushdminus extendedglob rcquotes mailwarning
+setopt histignorealldups sharehistory
+#setopt auto_cd
+cdpath=($HOME)
 unsetopt bgnice autoparamslash
 
 # Completion Styles
@@ -99,6 +74,10 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
 
+#eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
 # match uppercase from lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
@@ -107,9 +86,7 @@ zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
 # Filename suffixes to ignore during completion (except after rm command)
 zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
-    '*?.old' '*?.pro'
-# the same for old style completion
-#fignore=(.o .c~ .old .pro)
+    '*?.old' '*?.pro' '.hidden'
 
 # ignore completion functions (until the _ignored completer)
 zstyle ':completion:*:functions' ignored-patterns '_*'
@@ -120,30 +97,13 @@ zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34
 # list optiones colour, white + cyan
 zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
 
+# zsh autocompletion for sudo and doas
+zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin
+
 # rehash commands
 zstyle ':completion:*' rehash true
 
-# cdpath
-setopt auto_cd
-#cdpath=($HOME)
-cdpath=(~)
-
-# aliases
-#========
-
-# hdmi display on - and reset wallpaper
-alias hdmi-on='xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of eDP-1 && ~/.fehbg &>/dev/null'
-
-# hdmi display off - and reset wallpaper
-alias hdmi-off='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off && ~/.fehbg &>/dev/null'
-
-# keyboard backlight on
-alias flame-on='sysctl dev.asmc.0.light.control:255'
-
-# keyboard backlight off
-alias flame-off='sysctl dev.asmc.0.light.control:0'
-
-# syntax highlighting
+# highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
@@ -151,52 +111,11 @@ ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 
-# XDG_RUNTIME_DIR = /tmp/${USER} for obs studio and pulseaudio
-if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR="/tmp/${USER}"
-    if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
-        mkdir "$XDG_RUNTIME_DIR"
-        chmod 0700 "$XDG_RUNTIME_DIR"
-    fi
-fi
+# aliases
+#========
 
-# set window title to program name
-case $TERM in
-  (*xterm* | rxvt)
+# keyboard backlight on
+alias backlight-on='sysctl dev.asmc.0.light.control:255'
 
-    # Write some info to terminal title.
-    # This is seen when the shell prompts for input.
-    function precmd {
-      print -Pn "\e]0;zsh%L %(1j,%j job%(2j|s|); ,)%~\a"
-    }
-    # Write command and args to terminal title.
-    # This is seen while the shell waits for a command to complete.
-    function preexec {
-      printf "\033]0;%s\a" "$1"
-    }
-  ;;
-esac
-
-# vi mode
-bindkey -v
-export KEYTIMEOUT=1
-
-# Fix bugs when switching modes
-bindkey "^?" backward-delete-char
-bindkey "^u" backward-kill-line
-bindkey "^a" beginning-of-line
-bindkey "^e" end-of-line
-bindkey "^k" kill-line
-
-newline=$'\n'
-yesmaster=' Yes Master ? '
-
-function zle-line-init zle-keymap-select {
-    VIM_NORMAL_PROMPT="[% -n]% "
-    VIM_INSERT_PROMPT="[% +i]% "
-    PS1="[%n@%M %~]${newline}${${KEYMAP/vicmd/$VIM_NORMAL_PROMPT}/(main|viins)/$VIM_INSERT_PROMPT}${yesmaster}"
-    zle reset-prompt
-}
-
-zle -N zle-line-init
-zle -N zle-keymap-select
+# keyboard backlight off
+alias backlight-off='sysctl dev.asmc.0.light.control:0'

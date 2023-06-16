@@ -1,7 +1,0 @@
-;;; .sessions  -*- mode: emacs-lisp; coding: iso-2022-7bit -*-
-;; This file is generated automatically by emacs-w3m v1.4.632.
-
-(("Crash recovery sessions"
-  (23780 20761 275101 892000)
-  (("about:" nil nil "About emacs-w3m"))
-  nil))

@@ -1,2 +1,0 @@
-# external downloader aria2
---external-downloader aria2c --external-downloader-args "-c -x3"

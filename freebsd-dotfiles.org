@@ -2,7 +2,6 @@
 #+STARTUP: overview hideblocks
 #+OPTIONS: num:nil author:nil
 #+PROPERTY: header-args :mkdirp yes
-
 * tangle dotfiles
 
 ** tangle document
@@ -35,627 +34,653 @@ mkdir -p ~/.config/xmonad/
 :PROPERTIES:
 :VISIBILITY: children
 :END:
-** xmonad
-
-xmonad config, xmonad-config and build
-
-*** xmonand config 
-
-xmonad config file
-
-#+NAME: xmonad
-#+Begin_SRC conf
-------------------------------------------------------------------------
--- import
-------------------------------------------------------------------------
-
-import XMonad hiding ( (|||) ) -- jump to layout
-import XMonad.Layout.LayoutCombinators (JumpToLayout(..), (|||)) -- jump to layout
-import XMonad.Config.Desktop
-import System.Exit
-import qualified XMonad.StackSet as W
-
--- data
-import Data.Char (isSpace)
-import Data.List
-import Data.Monoid
-import Data.Maybe (isJust)
-import Data.Ratio ((%)) -- for video
-import qualified Data.Map as M
-
--- system
-import System.IO (hPutStrLn) -- for xmobar
-
--- util
-import XMonad.Util.Run (safeSpawn, unsafeSpawn, runInTerm, spawnPipe)
-import XMonad.Util.SpawnOnce
-import XMonad.Util.EZConfig (additionalKeysP, additionalMouseBindings)  
-import XMonad.Util.NamedScratchpad
-import XMonad.Util.NamedWindows
-import XMonad.Util.WorkspaceCompare
-
--- hooks
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks (avoidStruts, docksStartupHook, manageDocks, ToggleStruts(..))
-import XMonad.Hooks.EwmhDesktops -- to show workspaces in application switchers
-import XMonad.Hooks.ManageHelpers (isFullscreen, isDialog,  doFullFloat, doCenterFloat, doRectFloat) 
-import XMonad.Hooks.Place (placeHook, withGaps, smart)
-import XMonad.Hooks.UrgencyHook
-
--- actions
-import XMonad.Actions.CopyWindow -- for dwm window style tagging
-import XMonad.Actions.UpdatePointer -- update mouse postion
-
--- layout 
-import XMonad.Layout.Renamed (renamed, Rename(Replace))
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Spacing
-import XMonad.Layout.GridVariants
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.BinarySpacePartition
-
-------------------------------------------------------------------------
--- variables
-------------------------------------------------------------------------
-
-myModMask = mod4Mask -- Sets modkey to super/windows key
-myTerminal = "urxvtc" -- Sets default terminal
-myBorderWidth = 2 -- Sets border width for windows
-myNormalBorderColor = "#839496"
-myFocusedBorderColor = "#268BD2"
-myppCurrent = "#cb4b16"
-myppVisible = "#cb4b16"
-myppHidden = "#268bd2"
-myppHiddenNoWindows = "#93A1A1"
-myppTitle = "#FDF6E3"
-myppUrgent = "#DC322F"
-myWorkspaces = ["1","2","3","4","5","6","7","8","9"]
-windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-
-------------------------------------------------------------------------
--- desktop notifications -- dunst package required
-------------------------------------------------------------------------
-
-data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
-
-instance UrgencyHook LibNotifyUrgencyHook where
-    urgencyHook LibNotifyUrgencyHook w = do
-        name     <- getName w
-        Just idx <- fmap (W.findTag w) $ gets windowset
-
-        safeSpawn "notify-send" [show name, "workspace " ++ idx]
-
-------------------------------------------------------------------------
--- Startup hook
-------------------------------------------------------------------------
-
-myStartupHook = do
-      spawnOnce "urxvtd &" -- start urxvt terminal daemon
-      spawnOnce "emacs &" 
-      spawnOnce "dunst &" 
-      spawnOnce "/usr/local/bin/tint2 -c /home/djwilcox/.config/tint2/tint2rc"
-
-------------------------------------------------------------------------
--- layout
-------------------------------------------------------------------------
-
-myLayout = avoidStruts (full ||| tiled ||| grid ||| bsp)
-  where
-     -- full
-     full = renamed [Replace "Full"] 
-          $ noBorders (Full)
-
-     -- tiled
-     tiled = renamed [Replace "Tall"] 
-           $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True 
-           $ ResizableTall 1 (3/100) (1/2) []
-
-     -- grid
-     grid = renamed [Replace "Grid"] 
-          $ spacingRaw True (Border 10 0 10 0) True (Border 0 10 0 10) True 
-          $ Grid (16/10)
-
-     -- bsp
-     bsp = renamed [Replace "BSP"] 
-         $ emptyBSP
-
-     -- The default number of windows in the master pane
-     nmaster = 1
-     
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
-
-------------------------------------------------------------------------
--- Window rules:
-------------------------------------------------------------------------
-
-myManageHook = composeAll
-    [ className =? "mpv"            --> doRectFloat (W.RationalRect (1 % 4) (1 % 4) (1 % 2) (1 % 2))
-    , className =? "Gimp"           --> doFloat
-    , className =? "Firefox" <&&> resource =? "Toolkit" --> doFloat -- firefox pip
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore 
-    , isFullscreen --> doFullFloat
-    ] <+> namedScratchpadManageHook myScratchpads
-    
-------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
-------------------------------------------------------------------------
-
-myKeys =
-    [("M-" ++ m ++ k, windows $ f i)
-        | (i, k) <- zip (myWorkspaces) (map show [1 :: Int ..])
-        , (f, m) <- [(W.view, ""), (W.shift, "S-"), (copy, "S-C-")]]
-    ++
-    [("S-C-a", windows copyToAll)   -- copy window to all workspaces
-     , ("S-C-z", killAllOtherCopies)  -- kill copies of window on other workspaces
-     , ("M-a", sendMessage MirrorExpand)
-     , ("M-z", sendMessage MirrorShrink)
-     , ("M-s", sendMessage ToggleStruts)
-     , ("M-f", sendMessage $ JumpToLayout "Full")
-     , ("M-t", sendMessage $ JumpToLayout "Tall")
-     , ("M-g", sendMessage $ JumpToLayout "Grid")
-     , ("M-b", sendMessage $ JumpToLayout "BSP")
-     -- , ("M-p", spawn "dmenu_run -p 'Yes Master ?'") -- dmenu
-     , ("M-p", spawn "rofi -show combi -modi combi") -- rofi
-     , ("S-M-t", withFocused $ windows . W.sink) -- flatten floating window to tiled
-     , ("M-C-<Space>", namedScratchpadAction myScratchpads "terminal")
-     , ("M-C-<Return>", namedScratchpadAction myScratchpads "emacs-scratch")
-    ]
-    
-------------------------------------------------------------------------
--- scratchpads
-------------------------------------------------------------------------
-
-myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
-              , NS "emacs-scratch" spawnEmacsScratch findEmacsScratch manageEmacsScratch
-                ] 
-    where
-    role = stringProperty "WM_WINDOW_ROLE"
-    spawnTerm = myTerminal ++  " -name scratchpad"
-    findTerm = resource =? "scratchpad"
-    manageTerm = nonFloating
-    findEmacsScratch = title =? "emacs-scratch"
-    spawnEmacsScratch = "emacsclient -a='' -nc --frame-parameters='(quote (name . \"emacs-scratch\"))'"
-    manageEmacsScratch = nonFloating
-
-------------------------------------------------------------------------
--- main
-------------------------------------------------------------------------
-
-main = do
-    xmproc0 <- spawnPipe "/usr/local/bin/xmobar -x 0 /home/djwilcox/.config/xmobar/xmobarrc"
-    xmproc1 <- spawnPipe "/usr/local/bin/xmobar -x 1 /home/djwilcox/.config/xmobar/xmobarrc"
-    xmonad $ withUrgencyHook LibNotifyUrgencyHook $ ewmh desktopConfig
-        { manageHook = ( isFullscreen --> doFullFloat ) <+> manageDocks <+> myManageHook <+> manageHook desktopConfig
-        , startupHook        = myStartupHook
-        , layoutHook         = myLayout
-        , handleEventHook    = handleEventHook desktopConfig
-        , workspaces         = myWorkspaces
-        , borderWidth        = myBorderWidth
-        , terminal           = myTerminal
-        , modMask            = myModMask
-        , normalBorderColor  = myNormalBorderColor
-        , focusedBorderColor = myFocusedBorderColor
-        , logHook = dynamicLogWithPP xmobarPP  
-                        { ppOutput = \x -> hPutStrLn xmproc0 x >> hPutStrLn xmproc1 x
-                        , ppCurrent = xmobarColor myppCurrent "" . wrap "[" "]" -- Current workspace in xmobar
-                        , ppVisible = xmobarColor myppVisible ""                -- Visible but not current workspace
-                        , ppHidden = xmobarColor myppHidden "" . wrap "+" ""   -- Hidden workspaces in xmobar
-                        , ppHiddenNoWindows = xmobarColor  myppHiddenNoWindows ""        -- Hidden workspaces (no windows)
-                        , ppTitle = xmobarColor  myppTitle "" . shorten 80     -- Title of active window in xmobar
-                        , ppSep =  "<fc=#586E75> | </fc>"                     -- Separators in xmobar
-                        , ppUrgent = xmobarColor  myppUrgent "" . wrap "!" "!"  -- Urgent workspace
-                        , ppExtras  = [windowCount]                           -- # of windows current workspace
-                        , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
-                        } >> updatePointer (0.25, 0.25) (0.25, 0.25)
-          }
-          `additionalKeysP` myKeys
-#+END_SRC
-
-**** xmonad tangle
-
-+ home dir
-  
-#+NAME: xmonad-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xmonad/config.hs"
-<<xmonad>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: xmonad-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xmonad/config.hs"
-<<xmonad>>
-#+END_SRC
-
-*** xmonand-config.cabal
-
-xmonad-config.cabal
-
-#+NAME: xmonad-cabal
-#+Begin_SRC conf
-name:          xmonad-config
-version:       0.0
-synopsis:      XMonad Config File
-homepage:      http://xmonad.org
-license:       BSD2
-license-file:  LICENSE
-author:        Peter Jones <pjones@devalot.com>
-maintainer:    Peter Jones <pjones@devalot.com>
-copyright:     Copyright (c) 2016,2017 Peter J. Jones
-category:      Graphics
-build-type:    Simple
-cabal-version: >=1.8
-
-executable xmonad-config
-  main-is: config.hs
-  build-depends: base, xmonad, xmonad-contrib, containers
-#+END_SRC
-
-**** xmonad-config.cabal tangle
-
-+ home dir
-  
-#+NAME: xmonad-cabal-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xmonad/xmonad-config.cabal"
-<<xmonad-cabal>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: xmonad-cabal-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xmonad/xmonad-config.cabal"
-<<xmonad-cabal>>
-#+END_SRC
-*** xmonand build 
-
-xmonad build file
-
-#+NAME: xmonad-build
-#+Begin_SRC conf
-#!/bin/sh
-
-# must match "executable" line from xmonad-config.cabal
-EXE_NAME=xmonad-config
-
-# xmonad tells us how it want resulting executable to be named
-output_file=$1; shift
-
-CFG_DIR=$HOME/.xmonad
-
-# build the config
-cd $CFG_DIR
-cabal new-configure --enable-optimization --enable-executable-stripping
-cabal new-build
-
-if [ "$output_file" != "" ]; then
-# move resulting binary where it was requested to reside
-find $CFG_DIR/dist-newstyle -type f -perm +111 -name $EXE_NAME \
-     -exec mv '{}' $output_file ';'
-fi
-#+END_SRC
-
-**** xmonad build tangle
-
-+ home dir
-  
-#+NAME: xmonad-build-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xmonad/build"
-<<xmonad-build>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: xmonad-build-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xmonad/build"
-<<xmonad-build>>
-#+END_SRC
-
-** xinitrc
-
-#+NAME: xinitrc
-#+BEGIN_SRC conf
-#!/bin/sh
-
-userresources=$HOME/.Xresources
-usermodmap=$HOME/.Xmodmap
-sysresources=/usr/local/etc/X11/xinit/.Xresources
-sysmodmap=/usr/local/etc/X11/xinit/.Xmodmap
-
-# merge in defaults and keymaps
-
-if [ -f $sysresources ]; then
-    xrdb -merge $sysresources
-fi
-
-if [ -f $sysmodmap ]; then
-    xmodmap $sysmodmap
-fi
-
-if [ -f "$userresources" ]; then
-    xrdb -merge "$userresources"
-fi
-
-if [ -f "$usermodmap" ]; then
-    xmodmap "$usermodmap"
-fi
-
-# start some nice programs
-
-#if [ -d /usr/local/etc/X11/xinit/xinitrc.d ] ; then
-#	for f in /usr/local/etc/X11/xinit/xinitrc.d/?*.sh ; do
-#		[ -x "$f" ] && . "$f"
-#	done
-#	unset f
-#fi
-
-# remap ctrl to alt, alt to super, super to ctrl
-#xkbcomp -I$HOME/.xkb $HOME/.xkb/keymap/keymap.xkb $DISPLAY
-
-# feh set wallpaper
-feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
-
-# set the cursor form xmonad
-xsetroot -cursor_name left_ptr
-
-# dwm - backup window manager
-#exec ssh-agent /usr/local/bin/dwm
-
-# start ssh-agent and window mamager
-exec ssh-agent /usr/local/bin/xmonad
-
-#+END_SRC
-
-*** xinitrc tangle
-
-+ home dir
-
-#+NAME: xinitrc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xinitrc"
-<<xinitrc>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: xinitrc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xinitrc"
-<<xinitrc>>
-#+END_SRC
-
-** Xresources
-
-#+NAME: Xresources
-#+BEGIN_SRC conf
-! font settings
-Xft.dpi:        96
-Xft.antialias:  true
-Xft.rgba:       rgb
-Xft.hinting:    true
-Xft.hintstyle:  hintfull
-
-! urxvt
-URxvt.letterSpace: -1
-URxvt.internalBorder: 4
-URxvt*scrollstyle: plain
-URxvt*scrollBar: False
-URxvt*modifier: mod1
-URxvt*urgentOnBell: true
-URxvt*visualBell:   false
-URxvt*font: xft:Inconsolata:size=14,xft:DejaVu Sans Mono:size=11
-URxvt*perl-ext-common: default,clipboard,selection-to-clipboard,font-size
-URxvt.keysym.Shift-C-C: eval:selection_to_clipboard
-URxvt.keysym.Shift-C-V: eval:paste_clipboard
-URxvt*iso14755: False
-URxvt.iso14755_52: false
-
-! emacs
-Emacs*toolBar: 0
-Emacs.verticalScrollBars: off
-emacs.font: Inconsolata:size=18:weight=regular:antialias=true:hinting=true:hintstyle=hintfull
-
-! color
-,*background: #002b36
-,*foreground: #839496
-,*fadeColor: #002b36
-,*cursorColor: #93a1a1
-,*pointerColorBackground: #586e75
-,*pointerColorForeground: #93a1a1
-
-!! black dark/light
-,*color0: #073642
-,*color8: #002b36
-
-!! red dark/light
-,*color1: #dc322f
-,*color9: #cb4b16
-
-!! green dark/light
-,*color2: #449307
-,*color10: #56B30B
-
-!! yellow dark/light
-,*color3: #b58900
-,*color11: #657b83
-
-!! blue dark/light
-,*color4: #268bd2
-,*color12: #839496
-
-!! magenta dark/light
-,*color5: #d33682
-,*color13: #6c71c4
-
-!! cyan dark/light
-,*color6: #2aa198
-,*color14: #93a1a1
-
-!! white dark/light
-,*color7: #eee8d5
-,*color15: #fdf6e3
-#+END_SRC
-
-*** Xresources tangle
-
-+ home dir
-
-#+NAME: Xresources-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.Xresources"
-<<Xresources>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: Xresources-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".Xresources"
-<<Xresources>>
-#+END_SRC
-
-** feh
-
-#+NAME: feh
-#+BEGIN_SRC sh
-#!/bin/sh
-feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpaper/freebsd.png' 
-#+END_SRC
-
-*** feh tangle
-
-+ home dir
-
-#+NAME: feh-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.fehbg" :tangle-mode (identity #o755)
-<<feh>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: feh-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".fehbg" :tangle-mode (identity #o755)
-<<feh>>
-#+END_SRC
-
 ** emacs
+*** emacs config
+**** init.el
 
-#+NAME: emacs
-#+BEGIN_SRC conf
-; melpa rackages
+#+NAME: init.el
+#+BEGIN_SRC emacs-lisp
+;; ----------------------------------------------------------------------------------
+;; emacs init.el - also using early-init.el
+;; ----------------------------------------------------------------------------------
+
+;; Use a hook so the message doesn't get clobbered by other messages.
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "Emacs ready in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
+
+
+;; ----------------------------------------------------------------------------------
+;; melpa packages
+;; ----------------------------------------------------------------------------------
+
+;; package-selected-packages
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil)
+ '(connection-local-criteria-alist
+   '(((:application eshell)
+      eshell-connection-default-profile)
+     ((:application tramp :protocol "flatpak")
+      tramp-container-connection-local-default-flatpak-profile)
+     ((:application tramp)
+      tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
+ '(connection-local-profile-alist
+   '((eshell-connection-default-profile
+      (eshell-path-env-list))
+     (tramp-container-connection-local-default-flatpak-profile
+      (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin" "/local/bin" "/local/freeware/bin" "/local/gnu/bin" "/usr/freeware/bin" "/usr/pkg/bin" "/usr/contrib/bin" "/opt/bin" "/opt/sbin" "/opt/local/bin"))
+     (tramp-connection-local-darwin-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,uid,user,gid,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state=abcde" "-o" "ppid,pgid,sess,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etime,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . tramp-ps-time)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-busybox-ps-profile
+      (tramp-process-attributes-ps-args "-o" "pid,user,group,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "stat=abcde" "-o" "ppid,pgid,tty,time,nice,etime,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (user . string)
+       (group . string)
+       (comm . 52)
+       (state . 5)
+       (ppid . number)
+       (pgrp . number)
+       (ttname . string)
+       (time . tramp-ps-time)
+       (nice . number)
+       (etime . tramp-ps-time)
+       (args)))
+     (tramp-connection-local-bsd-ps-profile
+      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,euid,user,egid,egroup,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state,ppid,pgid,sid,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etimes,pcpu,pmem,args")
+      (tramp-process-attributes-ps-format
+       (pid . number)
+       (euid . number)
+       (user . string)
+       (egid . number)
+       (group . string)
+       (comm . 52)
+       (state . string)
+       (ppid . number)
+       (pgrp . number)
+       (sess . number)
+       (ttname . string)
+       (tpgid . number)
+       (minflt . number)
+       (majflt . number)
+       (time . tramp-ps-time)
+       (pri . number)
+       (nice . number)
+       (vsize . number)
+       (rss . number)
+       (etime . number)
+       (pcpu . number)
+       (pmem . number)
+       (args)))
+     (tramp-connection-local-default-shell-profile
+      (shell-file-name . "/bin/sh")
+      (shell-command-switch . "-c"))
+     (tramp-connection-local-default-system-profile
+      (path-separator . ":")
+      (null-device . "/dev/null"))))
+ '(custom-safe-themes
+   '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "" default))
+ '(package-selected-packages
+   '(all-the-icons doom-themes doom-modeline ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-collection evil-leader evil-surround fd-dired flycheck git-commit git-auto-commit-mode hydra iedit magit-section mpv ob-async openwith orderless rg s shrink-path undo-tree vertico wgrep which-key yaml-mode))
+ '(warning-suppress-types '((comp)))
+ '(youtube-sub-extractor-timestamps 'left-side-text))
+
+;; require package
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("elpy" . "http://jorgenschaefer.github.io/packages/"))
-(package-initialize)
-(elpy-enable)
 
-; company auto complete
+;; package archive
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
+
+;; package initialize
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(package-install-selected-packages)
+
+
+;; ----------------------------------------------------------------------------------
+;; general settings
+;; ----------------------------------------------------------------------------------
+
+;; Save all tempfiles in $TMPDIR/emacs$UID/                                                        
+(defconst emacs-tmp-dir (expand-file-name (format "emacs%d" (user-uid)) temporary-file-directory))
+(setq backup-directory-alist
+    `((".*" . ,emacs-tmp-dir)))
+(setq auto-save-file-name-transforms
+    `((".*" ,emacs-tmp-dir t)))
+(setq auto-save-list-file-prefix
+    emacs-tmp-dir)
+
+
+;; dont backup files opened by sudo or doas
+(setq backup-enable-predicate
+      (lambda (name)
+        (and (normal-backup-enable-predicate name)
+             (not
+              (let ((method (file-remote-p name 'method)))
+                (when (stringp method)
+                  (member method '("su" "sudo" "doas"))))))))
+
+
+;; save
+(save-place-mode 1)         ;; save cursor position
+(desktop-save-mode 1)       ;; Save the desktop session
+(savehist-mode 1)           ;; save history
+(global-auto-revert-mode 1) ;; revert buffers when the underlying file has changed
+
+;; scrolling
+(pixel-scroll-precision-mode 1)
+
+
+;; ----------------------------------------------------------------------------------
+;; fonts
+;; ----------------------------------------------------------------------------------
+
+(defvar efs/default-font-size 180)
+(defvar efs/default-variable-font-size 180)
+
+
+;; ----------------------------------------------------------------------------------
+;; set-face-attribute
+;; ----------------------------------------------------------------------------------
+
+;; Set the default pitch face
+(set-face-attribute 'default nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the fixed pitch face
+(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height efs/default-font-size)
+
+;; Set the variable pitch face
+(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+
+;; tab bar background
+(set-face-attribute 'tab-bar nil
+                    :foreground "#93a1a1")
+
+;; active tab
+(set-face-attribute 'tab-bar-tab nil
+                    :foreground "#51AFEF")
+
+;; inactive tab
+(set-face-attribute 'tab-bar-tab-inactive nil
+                    :foreground "grey50")
+
+
+;; ----------------------------------------------------------------------------------
+;; doom-modeline 
+;; ----------------------------------------------------------------------------------
+
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;; M-x nerd-icons-install-fonts
+(setq doom-modeline-icon t)
+
+;; doom modeline truncate text
+(setq doom-modeline-buffer-file-name-style 'truncate-except-project)
+
+;; hide the time icon
+(setq doom-modeline-time-icon nil)
+
+;; dont display the buffer encoding.
+(setq doom-modeline-buffer-encoding nil)
+
+
+;; ----------------------------------------------------------------------------------
+;; TAB bar mode 
+;; ----------------------------------------------------------------------------------
+
+(setq tab-bar-show 1)                     ;; hide bar if <= 1 tabs open
+(setq tab-bar-close-button-show nil)      ;; hide close tab button
+(setq tab-bar-new-button-show nil)        ;; hide new tab button
+(setq tab-bar-new-tab-choice "*scratch*") ;; default tab scratch
+(setq tab-bar-close-last-tab-choice 'tab-bar-mode-disable) 
+(setq tab-bar-close-tab-select 'recent)
+(setq tab-bar-new-tab-to 'right)
+(setq tab-bar-tab-hints nil)
+(setq tab-bar-separator " ")
+
+;; Customize the tab bar format to add the global mode line string
+(setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator tab-bar-format-align-right tab-bar-format-global))
+
+;; menubar in tab bar
+(add-to-list 'tab-bar-format #'tab-bar-format-menu-bar)
+
+;; Turn on tab bar mode after startup
+(tab-bar-mode 1)
+
+;; tab bar menu bar button
+(setq tab-bar-menu-bar-button "👾")
+
+
+;; ----------------------------------------------------------------------------------
+;; evil
+;; ----------------------------------------------------------------------------------
+
+;; evil
+(setq evil-want-keybinding nil)
+
+;; fix tab in evil for org mode
+(setq evil-want-C-i-jump nil)
+
+;; evil
+(require 'evil)
+(evil-collection-init)
+(evil-mode 1)
+
+;; dired use h and l
+(evil-collection-define-key 'normal 'dired-mode-map
+    "e" 'dired-find-file
+    "h" 'dired-up-directory
+    "l" 'dired-find-file)
+
+
+;; ----------------------------------------------------------------------------------
+;; require
+;; ----------------------------------------------------------------------------------
+
+;; tree-sitter
+(require 'treesit)
+
+;; ob-async
+(require 'ob-async)
+
+;; which key
+(require 'which-key)
+(which-key-mode)
+
+;; undo tree
+(require 'undo-tree)
+(global-undo-tree-mode 1)
+(setq undo-tree-visualizer-timestamps t)
+(setq undo-tree-visualizer-diff t)
+
+(require 'openwith)
+;; nohup dont close launched programs when emacs quits
+(setq openwith-associations
+      (list
+       (list (openwith-make-extension-regexp
+              '("mpg" "mpeg" "mp3" "mp4" "m4v"
+                "avi" "wmv" "wav" "mov" "flv"
+                "ogm" "ogg" "mkv" "webm"))
+             "nohup 1>/dev/null 2>/dev/null mpv --fs --fs-screen=1"
+             '(file))
+       (list (openwith-make-extension-regexp
+              '("pdf"))
+             "nohup 1>/dev/null 2>/dev/null evince"
+             '(file))))
+
+(openwith-mode 1)
+
+
+;; ----------------------------------------------------------------------------------
+;; tree-sitter
+;; ----------------------------------------------------------------------------------
+
+;; M-x treesit-install-language-grammar bash
+(add-to-list
+ 'treesit-language-source-alist
+ '(bash "https://github.com/tree-sitter/tree-sitter-bash.git"))
+
+;; sh-mode use bash-ts-mode
+(add-to-list 'major-mode-remap-alist
+             '(sh-mode . bash-ts-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; setq
+;; ----------------------------------------------------------------------------------
+
+;; general
+(setq version-control t)
+(setq vc-make-backup-files t)
+(setq backup-by-copying t)
+(setq delete-old-versions t)
+(setq kept-new-versions 6)
+(setq kept-old-versions 2)
+(setq create-lockfiles nil)
+(setq undo-tree-auto-save-history nil)
+
+;; pinentry
+(defvar epa-pinentry-mode)
+(setq epa-pinentry-mode 'loopback)
+
+;; display time in mode line, hide load average
+(setq display-time-format "%H:%M")
+(setq display-time-default-load-average nil)
+(display-time-mode 1)       ;; display time
+
+;; change prompt from yes or no, to y or n
+(setq use-short-answers t)
+
+;; turn off blinking cursor
+(setq blink-cursor-mode nil)
+
+;; suppress large file prompt
+(setq large-file-warning-threshold nil)
+
+;; always follow symlinks
+(setq vc-follow-symlinks t)
+
+;; case insensitive search
+(setq read-file-name-completion-ignore-case t)
+(setq completion-ignore-case t)
+
+;; M-n, M-p recall previous mini buffer commands
+(setq history-length 25)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+
+;; revert dired and other buffers
+(setq global-auto-revert-non-file-buffers t)
+
+;; eww browser text width
+(setq shr-width 80)
+
+;; emacs 28 - dictionary server
+;;(setq dictionary-server "dict.org")
+
+;; company auto complete
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 3)
-(add-hook 'after-init-hook 'global-company-mode)
 
-; server start
-(server-start)
-(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+;; ediff
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
 
-; ido mode
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;; disable ring bell
+(setq ring-bell-function 'ignore)
 
-; fixing elpy keybinding
-(define-key yas-minor-mode-map (kbd "C-c k") 'yas-expand)
-(define-key global-map (kbd "C-c o") 'iedit-mode)
-;; For elpy
-(setq elpy-rpc-python-command "python3")
-;; For interactive shell
-(setq python-shell-interpreter "python3")
+;; ----------------------------------------------------------------------------------
+;; completion
+;; ----------------------------------------------------------------------------------
 
+;; Vertico
+(require 'vertico)
+(require 'vertico-directory)
+
+(with-eval-after-load 'evil
+  (define-key vertico-map (kbd "C-j") 'vertico-next)
+  (define-key vertico-map (kbd "C-k") 'vertico-previous)
+  (define-key vertico-map (kbd "M-h") 'vertico-directory-up))
+
+;; Cycle back to top/bottom result when the edge is reached
+(customize-set-variable 'vertico-cycle t)
+
+;; Start Vertico
+(vertico-mode 1)
+
+;;; Marginalia
+(require 'marginalia)
+(customize-set-variable 'marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+(marginalia-mode 1)
+
+
+;; consult
+(global-set-key (kbd "C-s") 'consult-line)
+(define-key minibuffer-local-map (kbd "C-r") 'consult-history)
+
+;; remap switch-to-buffer "C-x b" to consult-buffer
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
+
+(setq completion-in-region-function #'consult-completion-in-region)
+
+
+;;; Orderless
+
+;; Set up Orderless for better fuzzy matching
+(require 'orderless)
+(customize-set-variable 'completion-styles '(orderless basic))
+(customize-set-variable 'completion-category-overrides '((file (styles . (partial-completion)))))
+
+
+;;; Embark
+(require 'embark)
+(require 'embark-consult)
+
+(global-set-key [remap describe-bindings] #'embark-bindings)
+(global-set-key (kbd "C-,") 'embark-act)
+
+;; Use Embark to show bindings in a key prefix with `C-h`
+(setq prefix-help-command #'embark-prefix-help-command)
+
+(with-eval-after-load 'embark-consult
+  (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
+
+
+;; ----------------------------------------------------------------------------------
+;; keymap-global-set
+;; ----------------------------------------------------------------------------------
+
+;; magit
+(keymap-global-set "C-x g" 'magit-status)
+
+;; org-capture
+(keymap-global-set "C-c c" 'org-capture)
+
+;; press M-/ and invoke hippie-expand
+(keymap-global-set "M-/" 'hippie-expand)
+
+
+;; ----------------------------------------------------------------------------------
+;; keymap-set
+;; ----------------------------------------------------------------------------------
+
+(keymap-set global-map "C-c o" 'iedit-mode)
+(keymap-set global-map "C-c l" 'org-store-link)
+(keymap-set global-map "C-c a" 'org-agenda)
+
+
+;; ----------------------------------------------------------------------------------
+;; dired 
+;; ----------------------------------------------------------------------------------
+
+;; Toggle Hidden Files in Emacs dired with C-x M-o
+(require 'dired-x)
+
+;; kill the current buffer when selecting a new directory to display
+(setq dired-kill-when-opening-new-dired-buffer t)
+
+;; dired directory listing options for ls
+(setq dired-listing-switches "-ahlv")
+
+;; hide dotfiles
+(setq dired-omit-mode t)
+
+;; recursive delete and copy
+(setq dired-recursive-copies 'always)
+(setq dired-recursive-deletes 'always)
+
+;; dired hide free space
+(setq dired-free-space nil)
+
+;; dired dwim
+(setq dired-dwim-target t)
+
+;; hide dotfiles
+(setq dired-omit-files
+      (concat dired-omit-files "\\|^\\..+$"))
+
+
+;; dired hide long listing by default
+(defun my-dired-mode-setup ()
+  "show less information in dired buffers"
+  (dired-hide-details-mode 1))
+(add-hook 'dired-mode-hook 'my-dired-mode-setup)
+
+;; dired omit
+(add-hook 'dired-mode-hook (lambda () (dired-omit-mode 1)))
+
+;; dired hide aync output buffer
+(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+
+
+;; ----------------------------------------------------------------------------------
+;; dired-fd
+;; ----------------------------------------------------------------------------------
+
+;; switch to buffer results automatically
+
+(defcustom fd-dired-display-in-current-window nil
+  "Whether display result"
+  :type 'boolean
+  :safe #'booleanp
+  :group 'fd-dired)
+
+
+;; ----------------------------------------------------------------------------------
+;; rip-grep
+;; ----------------------------------------------------------------------------------
+
+;; rip-grep automatically switch to results buffer
+;; https://github.com/dajva/rg.el/issues/142
+
+(with-eval-after-load 'rg
+  (advice-add 'rg-run :after
+              #'(lambda (_pattern _files _dir &optional _literal _confirm _flags) (pop-to-buffer (rg-buffer-name)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; tramp
+;; ----------------------------------------------------------------------------------
+
+;; tramp
+(require 'tramp)
+
+;; tramp setq
+(setq tramp-default-method "ssh")
+
+;; tramp ssh
 (tramp-set-completion-function "ssh"
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-(setq tramp-default-method "ssh")
+;; set tramp shell to sh to avoid zsh problems
+(with-eval-after-load 'tramp '(setenv "SHELL" "/bin/sh"))
 
-(add-to-list 'backup-directory-alist
-				 (cons tramp-file-name-regexp nil))
+;; tramp backup directory
+(add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
 
-(setq tramp-ssh-controlmaster-options
-                (concat
-                  "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
-                  "-o ControlMaster=auto -o ControlPersist=yes"))
 
-;; dont backup files opened by doas
-     (setq backup-enable-predicate
-           (lambda (name)
-             (and (normal-backup-enable-predicate name)
-                  (not
-                   (let ((method (file-remote-p name 'method)))
-                     (when (stringp method)
-                       (member method '("su" "doas"))))))))
+;; ----------------------------------------------------------------------------------
+;; org mode
+;; ----------------------------------------------------------------------------------
 
-;Tell emacs where is your personal elisp lib dir
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-(load "org-protocol-capture-html")
-
-; hide start up screen
-(setq inhibit-startup-screen t)
-(setq inhibit-startup-message t) 
-(setq initial-scratch-message nil)
-
-; move settings to ~/.Xresources
-; hide toolbar
-;(tool-bar-mode -1)
-; hide scrollbar
-;(scroll-bar-mode -1)
-
-; visual line mode
-(add-hook 'text-mode-hook 'visual-line-mode)
-
-; backup directory
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-(setq delete-old-versions -1)
-(setq version-control t)
-(setq vc-make-backup-files t)
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-
-; change prompt from yes or no, to y or n
-(fset 'yes-or-no-p 'y-or-n-p)
-
-; case insensitive search
-(setq read-file-name-completion-ignore-case t)
-(setq pcomplete-ignore-case t)
-
-; place headers on the left
-(setq markdown-asymmetric-header t)
-
-; markdown preview using pandoc
-(setq markdown-command "pandoc -f markdown -t html -s -S --mathjax --highlight-style=pygments -c ~/git/pandoc-css/pandoc.css")
-
-; gfm mode
-(setq auto-mode-alist (cons '("\\.mdt$" . gfm-mode) auto-mode-alist))
-; fix tab in evil for org mode
-(setq evil-want-C-i-jump nil)
-(require 'evil)
-(evil-mode 1)
-
-; org mode
+;; org mode
 (require 'org)
+(require 'org-tempo)
 (require 'org-protocol)
 (require 'org-capture)
-(require 'org-protocol-capture-html)
-(setq org-agenda-files '("~/git/org/"))
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
+(setq org-agenda-files '("~/git/personal/org/"))
 
-; dont show images full size
+;; org babel supress do you want to execute code message
+(setq org-confirm-babel-evaluate nil
+      org-src-fontify-natively t
+      org-src-tab-acts-natively t)
+
+;; org hide markup
+(setq org-hide-emphasis-markers t)
+
+;; org column spacing for tags
+(setq org-tags-column 0)
+
+;; dont indent src block for export
+(setq org-src-preserve-indentation t)
+
+;; org src to use the current window
+(setq org-src-window-setup 'current-window)
+
+;; dont show images full size
 (setq org-image-actual-width nil)
 
 ;; prevent demoting heading also shifting text inside sections
 (setq org-adapt-indentation nil)
 
-; org-capture
-(global-set-key "\C-cc" 'org-capture)
+;; asynchronous tangle
+(setq org-export-async-debug t)
+
+(setq org-capture-templates
+    '(("w" "web site" entry
+      (file+olp "~/git/personal/bookmarks/bookmarks.org" "sites")
+      (file "~/git/personal/bookmarks/templates/tpl-web.txt")
+       :empty-lines-before 1)))
+
+;; refile
+(setq org-refile-targets '((nil :maxlevel . 2)
+                                (org-agenda-files :maxlevel . 2)))
+(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
+(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
+
+;; ox-pandoc export
+(setq org-pandoc-options-for-latex-pdf '((latex-engine . "xelatex")))
+
+;; Prepare stuff for org-export-backends
+(setq org-export-backends '(org md html latex icalendar odt ascii))
+
+;; todo keywords
+(setq org-todo-keywords
+      '((sequence "TODO(t@/!)" "IN-PROGRESS(p/!)" "WAITING(w@/!)" "|" "DONE(d@)")))
+(setq org-log-done t)
+
+;; Fast Todo Selection - Changing a task state is done with C-c C-t KEY
+(setq org-use-fast-todo-selection t)
+
+;; org todo logbook
+(setq org-log-into-drawer t)
+
+;; org open files
+(setq org-file-apps
+     (quote
+     ((auto-mode . emacs)
+     ("\\.mm\\'" . default)
+     ("\\.x?html?\\'" . default)
+     ("\\.mkv\\'" . "mpv %s")
+     ("\\.mp4\\'" . "mpv %s")
+     ("\\.mov\\'" . "mpv %s")
+     ("\\.pdf\\'" . default))))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-link ((t (:inherit link :underline nil)))))
 
 (defadvice org-capture
     (after make-full-window-frame activate)
@@ -669,237 +694,1036 @@ feh --no-fehbg --bg-center --image-bg '#353535' '/home/djwilcox/.config/wallpape
   (if (equal "emacs-capture" (frame-parameter nil 'name))
       (delete-frame)))
 
-; org capture templates
-(setq org-capture-templates
-    '(("t" "todo" entry
-      (file+headline "~/git/org/todo.org" "Tasks")
-      (file "~/git/org/templates/tpl-todo.txt")
-      :empty-lines-before 1)
-      ("w" "web site" entry (file+olp "~/git/org/web.org" "sites")
-      (file "~/git/org/templates/tpl-web.txt")
-      :empty-lines-before 1)))
-
-; refile
-(setq org-refile-targets '((nil :maxlevel . 2)
-                                (org-agenda-files :maxlevel . 2)))
-(setq org-outline-path-complete-in-steps nil)         ; Refile in a single go
-(setq org-refile-use-outline-path t)                  ; Show full paths for refiling
-
-; custom faces
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(menu ((t (:background "black" :foreground "white"))))
- '(org-link ((t (:inherit link :underline nil)))))
-
-; Prepare stuff for org-export-backends
-(setq org-export-backends '(org md html latex icalendar odt ascii))
-
-; org hide markup
-(setq org-hide-emphasis-markers t)
-
-; org spacing
-;(setq org-cycle-separator-lines 1)
-
-; org column spacing for tags
-(setq org-tags-column 0)
-
-; todo keywords
-(setq org-todo-keywords
-      '((sequence "TODO(t@/!)" "IN-PROGRESS(p/!)" "WAITING(w@/!)" "|" "DONE(d@)")))
-(setq org-log-done t)
-
-; Fast Todo Selection - Changing a task state is done with C-c C-t KEY
-(setq org-use-fast-todo-selection t)
-
-; org todo logbook
-(setq org-log-into-drawer t)
-
-; org-babel graphviz
+; org-babel shell script
 (org-babel-do-load-languages
 'org-babel-load-languages
-'((dot . t)
-  (shell . t))) ; this line activates bash shell script
+'((shell . t))) 
 
-; powerline-evil
-(require 'powerline)
-(powerline-default-theme)
-(display-time-mode t)
+;; yank-media--registered-handlers org mode
+(with-eval-after-load 'org
+  (setq yank-media--registered-handlers '(("image/.*" . #'org-mode--image-yank-handler))))
 
-; magit 
-(global-set-key (kbd "C-x g") 'magit-status)
+;; org mode image yank handler
+(yank-media-handler "image/.*" #'org-mode--image-yank-handler)
 
-; git-auto-commit-mode auto push to head
-;(setq-default gac-automatically-push-p t)
+;; org-mode insert image as file link from the clipboard
+(defun org-mode--image-yank-handler (type image)
+  (let ((file (read-file-name (format "Save %s image to: " type))))
+    (when (file-directory-p file)
+      (user-error "%s is a directory"))
+    (when (and (file-exists-p file)
+               (not (yes-or-no-p (format "%s exists; overwrite?" file))))
+      (user-error "%s exists"))
+    (with-temp-buffer
+      (set-buffer-multibyte nil)
+      (insert image)
+      (write-region (point-min) (point-max) file))
+    (insert (format "[[file:%s]]\n" (file-relative-name file)))))
 
-; undo tree
-(require 'undo-tree)
-(global-undo-tree-mode 1)
 
-; ox-pandoc export
-(setq org-pandoc-options-for-markdown '((atx-headers . t)))
-(setq org-pandoc-options-for-latex-pdf '((latex-engine . "xelatex")))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auth-source-save-behavior nil)
- '(package-selected-packages
-   '(flycheck json-mode graphviz-dot-mode elpy powerline ox-pandoc markdown-mode magit git-auto-commit-mode evil-surround evil-leader emmet-mode ob-async)))
+;; ----------------------------------------------------------------------------------
+;; mutt
+;; ----------------------------------------------------------------------------------
 
-;(setq org-latex-listings 'minted)
-(setq org-latex-listings 'minted
-    org-latex-packages-alist '(("" "minted"))
-    org-latex-pdf-process
-    '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
 
-(setq org-latex-minted-options
-    '(("frame" "lines") ("linenos=true")) )
 
-; always follow symlinks
-(setq vc-follow-symlinks t)
+;; ----------------------------------------------------------------------------------
+;; add-hook
+;; ----------------------------------------------------------------------------------
 
-; flycheck syntax linting
+;; Make shebang (#!) file executable when saved
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+
+;; global company mode
+;;(add-hook 'after-init-hook 'global-company-mode)
+
+;; visual line mode
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+;; h1 line mode
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+
+;; flycheck syntax linting
 (add-hook 'sh-mode-hook 'flycheck-mode)
 
-; dont indent src block for export
-(setq org-src-preserve-indentation t)
 
-; dired ls
-(setq dired-use-ls-dired nil)
+;; ----------------------------------------------------------------------------------
+;; mpv.el
+;; ----------------------------------------------------------------------------------
 
-; dired directory listing options for ls
-(setq dired-listing-switches "-ahl")
+(org-link-set-parameters "mpv" :follow #'mpv-play)
+(defun org-mpv-complete-link (&optional arg)
+  (replace-regexp-in-string
+   "file:" "mpv:"
+   (org-link-complete-file arg)
+   t t))
 
-; dired hide aync output buffer
-(add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
+;; M-RET will insert a new item with the timestamp of the current playback position
+(defun my:mpv/org-metareturn-insert-playback-position ()
+  (when-let ((item-beg (org-in-item-p)))
+    (when (and (not org-timer-start-time)
+               (mpv-live-p)
+               (save-excursion
+                 (goto-char item-beg)
+                 (and (not (org-invisible-p)) (org-at-item-timer-p))))
+      (my/mpv-insert-playback-position t))))
+(add-hook 'org-metareturn-hook #'my:mpv/org-metareturn-insert-playback-position)
 
-; org babel supress do you want to execute code message
-(setq org-confirm-babel-evaluate nil
-      org-src-fontify-natively t
-      org-src-tab-acts-natively t)
+;; mpv insert playback position
+(with-eval-after-load 'mpv
+  (defun my/mpv-insert-playback-position (&optional arg)
+    "Insert the current playback position at point.
 
-; ob-async
-(require 'ob-async)
+  When called with a non-nil ARG, insert a timer list item like `org-timer-item'."
+    (interactive "P")
+    (let ((time (mpv-get-playback-position)))
+      (funcall
+       (if arg #'mpv--position-insert-as-org-item #'insert)
+       (my/org-timer-secs-to-hms (float time))))))
 
-; org open files
-(setq org-file-apps
-     (quote
-     ((auto-mode . emacs)
-     ("\\.mm\\'" . default)
-     ("\\.x?html?\\'" . default)
-     ("\\.mkv\\'" . "mpv %s")
-     ("\\.mp4\\'" . "mpv %s")
-     ("\\.mov\\'" . "mpv %s")
-     ("\\.png\\'" . "sxiv %s")
-     ("\\.jpg\\'" . "sxiv %s")
-     ("\\.jpeg\\'" . "sxiv %s")
-     ("\\.pdf\\'" . default))))
+
+;; seek to position
+(with-eval-after-load 'mpv
+  (defun my/mpv-seek-to-position-at-point ()
+    "Jump to playback position as inserted by `mpv-insert-playback-position'.
+
+  This can be used with the `org-open-at-point-functions' hook."
+    (interactive)
+    (save-excursion
+      (skip-chars-backward ":[:digit:]" (point-at-bol))
+      (when (looking-at "[0-9]+:[0-9]\\{2\\}:[0-9]\\{2\\}\\([.]?[0-9]\\{0,3\\}\\)"))
+        (let ((secs (my/org-timer-hms-to-secs (match-string 0))))
+          (when (>= secs 0)
+            (mpv-seek secs))))))
+
+;; mpv seek to position at point
+(keymap-set global-map "C-x ," 'my/mpv-seek-to-position-at-point)
+
+
+;; ----------------------------------------------------------------------------------
+;; org-timer milliseconds for mpv
+;; ----------------------------------------------------------------------------------
+
+;; org-timer covert seconds and milliseconds to hours, minutes, seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-secs-to-hms (s)
+    "Convert integer S into hh:mm:ss.m
+  If the integer is negative, the string will start with \"-\"."
+    (let (sign m h)
+      (setq x (number-to-string s)
+            seconds (car (split-string x "[.]"))
+            milliseconds (cadr (split-string x "[.]"))
+            sec (string-to-number seconds)
+            ms (string-to-number milliseconds))
+      (setq sign (if (< sec 0) "-" "")
+          sec (abs sec)
+          m (/ sec 60) sec (- sec (* 60 m))
+          h (/ m 60) m (- m (* 60 h)))
+      (format "%s%02d:%02d:%02d.%02d" sign h m sec ms))))
+
+;; org-timer covert hours, minutes, seconds, milliseconds to seconds, milliseconds
+(with-eval-after-load 'org-timer
+  (defun my/org-timer-hms-to-secs (hms)
+    "Convert h:mm:ss string to an integer time.
+  If the string starts with a minus sign, the integer will be negative."
+    (if (not (string-match
+            "\\([-+]?[0-9]+\\):\\([0-9]\\{2\\}\\):\\([0-9]\\{2\\}\\)\\([.]?[0-9]\\{0,3\\}\\)"
+            hms))
+        0
+      (let* ((h (string-to-number (match-string 1 hms)))
+           (m (string-to-number (match-string 2 hms)))
+           (s (string-to-number (match-string 3 hms)))
+           (ms (string-to-number (match-string 4 hms)))
+           (sign (equal (substring (match-string 1 hms) 0 1) "-")))
+        (setq h (abs h))
+        (* (if sign -1 1) (+ s (+ ms (* 60 (+ m (* 60 h))))))))))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv commands
+;; ----------------------------------------------------------------------------------
+
+;; frame step forward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-step ()
+    "Step one frame forward."
+    (interactive)
+    (mpv--enqueue '("frame-step") #'ignore)))
+
+
+;; frame step backward
+(with-eval-after-load 'mpv
+  (defun mpv-frame-back-step ()
+    "Step one frame backward."
+    (interactive)
+    (mpv--enqueue '("frame-back-step") #'ignore)))
+
+
+;; mpv take a screenshot
+(with-eval-after-load 'mpv
+  (defun mpv-screenshot ()
+    "Take a screenshot"
+    (interactive)
+    (mpv--enqueue '("screenshot") #'ignore)))
+
+
+;; mpv show osd
+(with-eval-after-load 'mpv
+  (defun mpv-osd ()
+    "Show the osd"
+    (interactive)
+    (mpv--enqueue '("set_property" "osd-level" "3") #'ignore)))
+
+
+;; add a newline in the current document
+(defun end-of-line-and-indented-new-line ()
+  (interactive)
+  (end-of-line)
+  (newline-and-indent))
+
+
+;; ----------------------------------------------------------------------------------
+;; hydra
+;; ----------------------------------------------------------------------------------
+
+(defhydra hydra-mpv (global-map "<f2>")
+  "
+  ^Seek^                    ^Actions^                ^General^
+  ^^^^^^^^---------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position
+  _j_: seek back -60        _._: forward frame       _n_: insert a newline
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd
+  ^
+  "
+  ("h" mpv-seek-backward "-5")
+  ("j" mpv-seek-backward "-60")
+  ("k" mpv-seek-forward "60")
+  ("l" mpv-seek-forward "5")
+  ("," mpv-frame-back-step)
+  ("." mpv-frame-step)
+  ("SPC" mpv-pause)
+  ("q" mpv-kill)
+  ("s" mpv-screenshot)
+  ("i" my/mpv-insert-playback-position)
+  ("o" mpv-osd)
+  ("n" end-of-line-and-indented-new-line))
+
+
+;; ----------------------------------------------------------------------------------
+;; emacs desktop notification center
+;; ----------------------------------------------------------------------------------
+
+;; start ednc-mode
+(ednc-mode 1)
+
+;; open notications
+(defun show-notification-in-buffer (old new)
+  (let ((name (format "Notification %d" (ednc-notification-id (or old new)))))
+    (with-current-buffer (get-buffer-create name)
+      (if new (let ((inhibit-read-only t))
+                (if old (erase-buffer) (ednc-view-mode))
+                (insert (ednc-format-notification new t))
+                (pop-to-buffer (current-buffer)))
+        (kill-buffer)))))
+
+
+;; notifications hook
+(add-hook 'ednc-notification-presentation-functions
+          #'show-notification-in-buffer)
+
+
+;; ednc evil - normal mode
+(defun noevil ()
+  (evil-define-key 'normal ednc-view-mode-map "d" 'ednc-dismiss-notification)
+  (evil-define-key 'normal ednc-view-mode-map (kbd "RET") 'ednc-invoke-action)
+)
+
+(add-hook 'ednc-view-mode-hook 'noevil)
+
+
+;; ----------------------------------------------------------------------------------
+;; elfeed
+;; ----------------------------------------------------------------------------------
+
+; elfeed
+(require 'elfeed)
+(require 'elfeed-org)
+(elfeed-org)
+(setq elfeed-db-directory "~/.config/emacs/elfeed") ;; elfeed db location
+(setq rmh-elfeed-org-files (list "~/git/personal/feeds/feeds.org"))
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(require 'elfeed-tube)
+(elfeed-tube-setup)
+(define-key elfeed-show-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-show-mode-map [remap save-buffer] 'elfeed-tube-save)
+(define-key elfeed-search-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-search-mode-map [remap save-buffer] 'elfeed-tube-save)
+
+(require 'elfeed-tube-mpv)
+(define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
+(define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
+
+;; play video with mpv
+(define-key elfeed-show-mode-map (kbd "C-c C-d") 'elfeed-tube-mpv)
+
+;; mpv play fullscreen on second display
+(setq elfeed-tube-mpv-options
+  '("--cache=yes" "--force-window=yes" "--fs" "--fs-screen=1"))
+
+; elfeed evil
+(add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
+(add-to-list 'evil-motion-state-modes 'elfeed-show-mode)
+
+;; evil elfeed-search-mode-map
+(evil-collection-define-key 'normal 'elfeed-search-mode-map
+     "l" 'elfeed-search-show-entry        ;; l opens entry
+     "s" #'prot-elfeed-search-tag-filter  ;; s prot search tags
+     "R" 'elfeed-mark-all-as-read         ;; R mark all as read
+     "u" 'elfeed-update                   ;; u elfeed update
+     "b" #'elfeed-search-browse-url       ;; b open in browser
+     "r" 'elfeed-search-untag-all-unread) ;; r mark as read
+
+
+;; evil elfeed-show-mode-map
+(evil-collection-define-key 'normal 'elfeed-show-mode-map
+     "b" #'shr-browse-url)                ;; b open in browser
+
+; elfeed search filter 
+(setq-default elfeed-search-filter "@1-week-ago +unread")
+
+; mark all as read
+(defun elfeed-mark-all-as-read ()
+      (interactive)
+      (mark-whole-buffer)
+      (elfeed-search-untag-all-unread))
+
+
+;; ----------------------------------------------------------------------------------
+;; prot elfeed - requires ~/.config/emacs/lisp/prot-common.el
+;; ----------------------------------------------------------------------------------
+
+(eval-when-compile (require 'subr-x))
+;;(require 'elfeed nil t)
+(require 'url-util)
+(require 'prot-common)
+
+(defgroup prot-elfeed ()
+  "Personal extensions for Elfeed."
+  :group 'elfeed)
+
+;;;; Utilities
+(defvar prot-elfeed--tag-hist '()
+  "History of inputs for `prot-elfeed-toggle-tag'.")
+
+(defun prot-elfeed--character-prompt (tags)
+  "Helper of `prot-elfeed-toggle-tag' to read TAGS."
+  (let ((def (car prot-elfeed--tag-hist)))
+    (completing-read
+     (format "Toggle tag [%s]: " def)
+     tags nil t nil 'prot-elfeed--tag-hist def)))
+
+(defvar elfeed-show-entry)
+(declare-function elfeed-tagged-p "elfeed")
+(declare-function elfeed-search-toggle-all "elfeed")
+(declare-function elfeed-show-tag "elfeed")
+(declare-function elfeed-show-untag "elfeed")
+
+;;;###autoload
+(defun prot-elfeed-toggle-tag (tag)
+  "Toggle TAG for the current item.
+
+When the region is active in the `elfeed-search-mode' buffer, all
+entries encompassed by it are affected.  Otherwise the item at
+point is the target.  For `elfeed-show-mode', the current entry
+is always the target.
+
+The list of tags is provided by `prot-elfeed-search-tags'."
+  (interactive
+   (list
+    (intern
+     (prot-elfeed--character-prompt prot-elfeed-search-tags))))
+  (if (derived-mode-p 'elfeed-show-mode)
+      (if (elfeed-tagged-p tag elfeed-show-entry)
+          (elfeed-show-untag tag)
+        (elfeed-show-tag tag))
+    (elfeed-search-toggle-all tag)))
+
+(defvar elfeed-show-truncate-long-urls)
+(declare-function elfeed-entry-title "elfeed")
+(declare-function elfeed-show-refresh "elfeed")
+
+;;;; General commands
+(defvar elfeed-search-filter-active)
+(defvar elfeed-search-filter)
+(declare-function elfeed-db-get-all-tags "elfeed")
+(declare-function elfeed-search-update "elfeed")
+(declare-function elfeed-search-clear-filter "elfeed")
+
+(defun prot-elfeed--format-tags (tags sign)
+  "Prefix SIGN to each tag in TAGS."
+  (mapcar (lambda (tag)
+            (format "%s%s" sign tag))
+          tags))
+
+;;;###autoload
+(defun prot-elfeed-search-tag-filter ()
+  "Filter Elfeed search buffer by tags using completion.
+
+Completion accepts multiple inputs, delimited by `crm-separator'.
+Arbitrary input is also possible, but you may have to exit the
+minibuffer with something like `exit-minibuffer'."
+  (interactive)
+  (unwind-protect
+      (elfeed-search-clear-filter)
+    (let* ((elfeed-search-filter-active :live)
+           (db-tags (elfeed-db-get-all-tags))
+           (plus-tags (prot-elfeed--format-tags db-tags "+"))
+           (minus-tags (prot-elfeed--format-tags db-tags "-"))
+           (all-tags (delete-dups (append plus-tags minus-tags)))
+           (tags (completing-read-multiple
+                  "Apply one or more tags: "
+                  all-tags #'prot-common-crm-exclude-selected-p t))
+           (input (string-join `(,elfeed-search-filter ,@tags) " ")))
+      (setq elfeed-search-filter input))
+    (elfeed-search-update :force)))
+
+(provide 'prot-elfeed)
+
+
+;; ----------------------------------------------------------------------------------
+;; garbage collection
+;; ----------------------------------------------------------------------------------
+
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
 #+END_SRC
 
+**** early-init.el
+
+#+NAME: early-init.el
+#+begin_src emacs-lisp
+;;; early-init.el -*- lexical-binding: t; -*-
+
+;;; Garbage collection
+;; Increase the GC threshold for faster startup
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;;; UI configuration
+;; Remove some unneeded UI elements (the user can turn back on anything they wish)
+(setq inhibit-startup-message t)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+
+;; general settings
+(setq initial-scratch-message nil)
+
+;; Don’t compact font caches during GC.
+(setq inhibit-compacting-font-caches t)
+
+;; load theme
+(add-hook 'after-init-hook (lambda () (load-theme 'doom-solarized-dark)))
+
+;; start the initial frame maximized
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+;; start every frame maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;;Tell emacs where is your personal elisp lib dir
+(add-to-list 'load-path "~/.config/emacs/lisp/")
+
+;; Make the initial buffer load faster by setting its mode to fundamental-mode
+(customize-set-variable 'initial-major-mode 'fundamental-mode)
+#+end_src
+
+**** bookmarks config
+
+#+NAME: emacs-bookmarks
+#+BEGIN_SRC emacs-lisp
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("bookmarks"
+ (filename . "~/git/personal/bookmarks/bookmarks.org")
+ (front-context-string . "#+STARTUP: overv")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25703 35089 410375 479000))
+("feeds"
+ (filename . "~/git/personal/feeds/feeds.org")
+ (front-context-string . "* elfeed :elfeed")
+ (rear-context-string . "TARTUP: content\n")
+ (position . 20)
+ (last-modified 25692 54791 894815 365000))
+("dotfiles"
+ (filename . "~/git/fedora/fedora-dotfiles/fedora-dotfiles.org")
+ (front-context-string . "* fedora dotfile")
+ (rear-context-string . "g\")'\n#+end_src\n\n")
+ (position . 374))
+("org-refile-last-stored"
+ (filename . "~/git/personal/org/web.org")
+ (front-context-string . "** [[https://its")
+ (rear-context-string . "lview\" program.\n")
+ (position . 173198))
+("root"
+ (filename . "/")
+ (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ")
+ (position . 197))
+("home"
+ (filename . "~/")
+ (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ")
+ (position . 178))
+("desktop"
+ (filename . "~/Desktop/")
+ (front-context-string . "zshrc-linux\n  -r")
+ (rear-context-string . "45 Jan 18 17:53 ")
+ (position . 236)
+ (annotation . ""))
+("cerberus"
+ (filename . "~/git/cerberus/")
+ (front-context-string . "7zip\n  drwxr-xr-")
+ (rear-context-string . "96 Jan  4  2016 ")
+ (position . 249))
+)
+#+END_SRC
+
+**** lisp
+***** prot-common
+
+#+NAME: prot-common
+#+BEGIN_SRC emacs-lisp
+;;; prot-common.el --- Common functions for my dotemacs -*- lexical-binding: t -*-
+
+;; Copyright (C) 2020-2023  Protesilaos Stavrou
+
+;; Author: Protesilaos Stavrou <info@protesilaos.com>
+;; URL: https://protesilaos.com/emacs/dotemacs
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "30.1"))
+
+;; This file is NOT part of GNU Emacs.
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; Common functions for my Emacs: <https://protesilaos.com/emacs/dotemacs/>.
+;;
+;; Remember that every piece of Elisp that I write is for my own
+;; educational and recreational purposes.  I am not a programmer and I
+;; do not recommend that you copy any of this if you are not certain of
+;; what it does.
+
+;;; Code:
+
+(eval-when-compile
+  (require 'subr-x))
+
+(defgroup prot-common ()
+  "Auxiliary functions for my dotemacs."
+  :group 'editing)
+
+;;;###autoload
+(defun prot-common-number-even-p (n)
+  "Test if N is an even number."
+  (if (numberp n)
+      (= (% n 2) 0)
+    (error "%s is not a number" n)))
+
+;;;###autoload
+(defun prot-common-number-integer-p (n)
+  "Test if N is an integer."
+  (if (integerp n)
+      n
+    (error "%s is not an integer" n)))
+
+;;;###autoload
+(defun prot-common-number-integer-positive-p (n)
+  "Test if N is a positive integer."
+  (if (prot-common-number-integer-p n)
+      (> n 0)
+    (error "%s is not a positive integer" n)))
+
+;; Thanks to Gabriel for providing a cleaner version of
+;; `prot-common-number-negative': <https://github.com/gabriel376>.
+;;;###autoload
+(defun prot-common-number-negative (n)
+  "Make N negative."
+  (if (and (numberp n) (> n 0))
+      (* -1 n)
+    (error "%s is not a valid positive number" n)))
+
+;;;###autoload
+(defun prot-common-reverse-percentage (number percent change-p)
+  "Determine the original value of NUMBER given PERCENT.
+
+CHANGE-P should specify the increase or decrease.  For simplicity,
+nil means decrease while non-nil stands for an increase.
+
+NUMBER must satisfy `numberp', while PERCENT must be `natnump'."
+  (unless (numberp number)
+    (user-error "NUMBER must satisfy numberp"))
+  (unless (natnump percent)
+    (user-error "PERCENT must satisfy natnump"))
+  (let* ((pc (/ (float percent) 100))
+         (pc-change (if change-p (+ 1 pc) pc))
+         (n (if change-p pc-change (float (- 1 pc-change)))))
+    ;; FIXME 2021-12-21: If float, round to 4 decimal points.
+    (/ number n)))
+
+;;;###autoload
+(defun prot-common-percentage-change (n-original n-final)
+  "Find percentage change between N-ORIGINAL and N-FINAL numbers.
+
+When the percentage is not an integer, it is rounded to 4
+floating points: 16.666666666666664 => 16.667."
+  (unless (numberp n-original)
+    (user-error "N-ORIGINAL must satisfy numberp"))
+  (unless (numberp n-final)
+    (user-error "N-FINAL must satisfy numberp"))
+  (let* ((difference (float (abs (- n-original n-final))))
+         (n (* (/ difference n-original) 100))
+         (round (floor n)))
+    ;; FIXME 2021-12-21: Any way to avoid the `string-to-number'?
+    (if (> n round) (string-to-number (format "%0.4f" n)) round)))
+
+;; REVIEW 2023-04-07 07:43 +0300: I just wrote the conversions from
+;; seconds.  Hopefully they are correct, but I need to double check.
+(defun prot-common-seconds-to-minutes (seconds)
+  "Convert a number representing SECONDS to MM:SS notation."
+  (let ((minutes (/ seconds 60))
+        (seconds (% seconds 60)))
+    (format "%.2d:%.2d" minutes seconds)))
+
+(defun prot-common-seconds-to-hours (seconds)
+  "Convert a number representing SECONDS to HH:MM:SS notation."
+  (let* ((hours (/ seconds 3600))
+         (minutes (/ (% seconds 3600) 60))
+         (seconds (% seconds 60)))
+    (format "%.2d:%.2d:%.2d" hours minutes seconds)))
+
+;;;###autoload
+(defun prot-common-seconds-to-minutes-or-hours (seconds)
+  "Convert SECONDS to either minutes or hours, depending on the value."
+  (if (> seconds 3599)
+      (prot-common-seconds-to-hours seconds)
+    (prot-common-seconds-to-minutes seconds)))
+
+;;;###autoload
+(defun prot-common-rotate-list-of-symbol (symbol)
+  "Rotate list value of SYMBOL by moving its car to the end.
+Return the first element before performing the rotation.
+
+This means that if `sample-list' has an initial value of `(one
+two three)', this function will first return `one' and update the
+value of `sample-list' to `(two three one)'.  Subsequent calls
+will continue rotating accordingly."
+  (unless (symbolp symbol)
+    (user-error "%s is not a symbol" symbol))
+  (when-let* ((value (symbol-value symbol))
+              (list (and (listp value) value))
+              (first (car list)))
+    (set symbol (append (cdr list) (list first)))
+    first))
+
+;;;###autoload
+(defun prot-common-empty-buffer-p ()
+  "Test whether the buffer is empty."
+  (or (= (point-min) (point-max))
+      (save-excursion
+        (goto-char (point-min))
+        (while (and (looking-at "^\\([a-zA-Z]+: ?\\)?$")
+                    (zerop (forward-line 1))))
+        (eobp))))
+
+;;;###autoload
+(defun prot-common-minor-modes-active ()
+  "Return list of active minor modes for the current buffer."
+  (let ((active-modes))
+    (mapc (lambda (m)
+            (when (and (boundp m) (symbol-value m))
+              (push m active-modes)))
+          minor-mode-list)
+    active-modes))
+
+;;;###autoload
+(defun prot-common-truncate-lines-silently ()
+  "Toggle line truncation without printing messages."
+  (let ((inhibit-message t))
+    (toggle-truncate-lines t)))
+
+;;;###autoload
+(defun prot-common-disable-hl-line ()
+  "Disable Hl-Line-Mode (for hooks)."
+  (hl-line-mode -1))
+
+;;;###autoload
+(defun prot-common-window-bounds ()
+  "Determine start and end points in the window."
+  (list (window-start) (window-end)))
+
+;;;###autoload
+(defun prot-common-page-p ()
+  "Return non-nil if there is a `page-delimiter' in the buffer."
+  (or (save-excursion (re-search-forward page-delimiter nil t))
+      (save-excursion (re-search-backward page-delimiter nil t))))
+
+;;;###autoload
+(defun prot-common-read-data (file)
+  "Read Elisp data from FILE."
+  (with-temp-buffer
+    (insert-file-contents file)
+    (read (current-buffer))))
+
+;; Thanks to Omar Antolín Camarena for providing this snippet!
+;;;###autoload
+(defun prot-common-completion-table (category candidates)
+  "Pass appropriate metadata CATEGORY to completion CANDIDATES.
+
+This is intended for bespoke functions that need to pass
+completion metadata that can then be parsed by other
+tools (e.g. `embark')."
+  (lambda (string pred action)
+    (if (eq action 'metadata)
+        `(metadata (category . ,category))
+      (complete-with-action action candidates string pred))))
+
+;; Thanks to Igor Lima for the `prot-common-crm-exclude-selected-p':
+;; <https://github.com/0x462e41>.
+;; This is used as a filter predicate in the relevant prompts.
+(defvar crm-separator)
+
+;;;###autoload
+(defun prot-common-crm-exclude-selected-p (input)
+  "Filter out INPUT from `completing-read-multiple'.
+Hide non-destructively the selected entries from the completion
+table, thus avoiding the risk of inputting the same match twice.
+
+To be used as the PREDICATE of `completing-read-multiple'."
+  (if-let* ((pos (string-match-p crm-separator input))
+            (rev-input (reverse input))
+            (element (reverse
+                      (substring rev-input 0
+                                 (string-match-p crm-separator rev-input))))
+            (flag t))
+      (progn
+        (while pos
+          (if (string= (substring input 0 pos) element)
+              (setq pos nil)
+            (setq input (substring input (1+ pos))
+                  pos (string-match-p crm-separator input)
+                  flag (when pos t))))
+        (not flag))
+    t))
+
+;; The `prot-common-line-regexp-p' and `prot-common--line-regexp-alist'
+;; are contributed by Gabriel: <https://github.com/gabriel376>.  They
+;; provide a more elegant approach to using a macro, as shown further
+;; below.
+(defvar prot-common--line-regexp-alist
+  '((empty . "[\s\t]*$")
+    (indent . "^[\s\t]+")
+    (non-empty . "^.+$")
+    (list . "^\\([\s\t#*+]+\\|[0-9]+[^\s]?[).]+\\)")
+    (heading . "^[=-]+"))
+  "Alist of regexp types used by `prot-common-line-regexp-p'.")
+
+(defun prot-common-line-regexp-p (type &optional n)
+  "Test for TYPE on line.
+TYPE is the car of a cons cell in
+`prot-common--line-regexp-alist'.  It matches a regular
+expression.
+
+With optional N, search in the Nth line from point."
+  (save-excursion
+    (goto-char (line-beginning-position))
+    (and (not (bobp))
+         (or (beginning-of-line n) t)
+         (save-match-data
+           (looking-at
+            (alist-get type prot-common--line-regexp-alist))))))
+
+;; The `prot-common-shell-command-with-exit-code-and-output' function is
+;; courtesy of Harold Carr, who also sent a patch that improved
+;; `prot-eww-download-html' (from the `prot-eww.el' library).
+;;
+;; More about Harold: <http://haroldcarr.com/about/>.
+(defun prot-common-shell-command-with-exit-code-and-output (command &rest args)
+  "Run COMMAND with ARGS.
+Return the exit code and output in a list."
+  (with-temp-buffer
+    (list (apply 'call-process command nil (current-buffer) nil args)
+          (buffer-string))))
+
+(defvar prot-common-url-regexp
+  (concat
+   "~?\\<\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]*\\)"
+   "[.@]"
+   "\\([-a-zA-Z0-9+&@#/%?=~_|!:,.;]+\\)\\>/?")
+  "Regular expression to match (most?) URLs or email addresses.")
+
+(autoload 'auth-source-search "auth-source")
+
+;;;###autoload
+(defun prot-common-auth-get-field (host prop)
+  "Find PROP in `auth-sources' for HOST entry."
+  (when-let ((source (auth-source-search :host host)))
+    (if (eq prop :secret)
+        (funcall (plist-get (car source) prop))
+      (plist-get (flatten-list source) prop))))
+
+;;;###autoload
+(defun prot-common-parse-file-as-list (file)
+  "Return the contents of FILE as a list of strings.
+Strings are split at newline characters and are then trimmed for
+negative space.
+
+Use this function to provide a list of candidates for
+completion (per `completing-read')."
+  (split-string
+   (with-temp-buffer
+     (insert-file-contents file)
+     (buffer-substring-no-properties (point-min) (point-max)))
+   "\n" :omit-nulls "[\s\f\t\n\r\v]+"))
+
+(provide 'prot-common)
+;;; prot-common.el ends here
+
+#+end_src
+
 *** emacs tangle
+**** init.el
 
 + home dir
 
-#+NAME: emacs-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.emacs"
-<<emacs>>
+#+NAME: emacs-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/init.el"
+<<init.el>>
 #+END_SRC
 
 + current dir
 
-#+NAME: emacs-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".emacs"
-<<emacs>>
+#+NAME: emacs-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/init.el"
+<<init.el>>
 #+END_SRC
 
-** zshrc
+**** early-init.el
+
++ home dir
+
+#+NAME: emacs-early-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-early-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/early-init.el"
+<<early-init.el>>
+#+END_SRC
+
+**** bookmark tangle
+
++ home dir
+
+#+NAME: emacs-bookmarks-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
++ current dir
+
+#+NAME: emacs-bookmarks-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/bookmarks"
+<<emacs-bookmarks>>
+#+END_SRC
+
+**** lisp
+***** prot-common
+
++ home dir
+
+#+NAME: prot-common-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/lisp/prot-common.el"
+<<prot-common>>
+#+END_SRC
+
++ current dir
+
+#+NAME: prot-common-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/lisp/prot-common.el"
+<<prot-common>>
+#+END_SRC
+
+** alacritty
+*** alacritty config
+
+#+NAME: alacritty
+#+BEGIN_SRC yaml
+# alacritty
+env:
+  TERM: xterm-256color
+
+window:
+  padding:
+    x: 4
+    y: 4
+
+  decoration: none
+  startup_mode: Windowed
+
+# Font configuration
+font:
+  normal:
+    family: Fira Code
+    style: Regular
+
+  # Bold font face
+  bold:
+    family: Fira Code
+    style: Bold
+
+  # Italic font face
+  italic:
+    family: Fira Code
+    style: Italic
+
+  # Bold italic font face
+  bold_italic:
+    family: Fira Code
+    style: Bold Italic
+
+  # Point size
+  size: 16.0
+
+# Colors (Solarized Dark)
+colors:
+  # Default colors
+  primary:
+    background: '0x002b36'
+    foreground: '0x839496'
+
+  # Normal colors
+  normal:
+    black:   '0x073642'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0xd33682'
+    cyan:    '0x2aa198'
+    white:   '0xeee8d5'
+
+  # Bright colors
+  bright:
+    black:   '0x002b36'
+    red:     '0xcb4b16'
+    green:   '0x586e75'
+    yellow:  '0x657b83'
+    blue:    '0x839496'
+    magenta: '0x6c71c4'
+    cyan:    '0x93a1a1'
+    white:   '0xfdf6e3'
+#+END_SRC
+
+*** alacritty tangle
+
++ home dir
+
+#+NAME: alacritty-home-dir
+#+BEGIN_SRC yaml :noweb yes :tangle "~/.config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
++ current dir
+
+#+NAME: alacritty-current-dir
+#+BEGIN_SRC yaml :noweb yes :tangle ".config/alacritty/alacritty.yml"
+<<alacritty>>
+#+END_SRC
+
+** zsh
+*** zsh config
+**** zshrc
 
 #+NAME: zshrc
 #+BEGIN_SRC conf
-# Lines configured by zsh-newuser-install
+# ~/.zshrc
+
 # ssh zsh fix
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
-HISTFILE=~/.histfile
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
 HISTSIZE=1000
-SAVEHIST=1000
-bindkey -e
-# End of lines configured by zsh-newuser-install
-# The following lines were added by compinstall
-zstyle :compinstall filename '/home/djwilcox/.zshrc'
 
-# add custom completion scripts
-fpath=(~/.zsh/completion $fpath) 
+# variables for PS3 prompt
+newline=$'\n'
+yesmaster='Yes Master ? '
 
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
-
-# set emacslient as editor
-ALTERNATE_EDITOR=""; export ALTERNATE_EDITOR
-EDITOR="/usr/local/bin/emacsclient"; export EDITOR
-VISUAL="/usr/local/bin/emacsclient -c -a emacs"; export VISUAL
-
-# emacsclient function e
-function e {
-/usr/local/bin/emacsclient "$@"
+# PS3 prompt function
+function zle-line-init zle-keymap-select {
+    PS1="[%n@%M %~]${newline}${yesmaster}"
+    zle reset-prompt
 }
 
-# home bin 
-if [ -d "$HOME/bin" ]; then
-   PATH="$HOME/bin:$PATH"
-fi
+# run PS3 prompt function
+zle -N zle-line-init
+zle -N zle-keymap-select
 
-# home local python bin 
-if [ -d "$HOME/.local/bin" ]; then
-   PATH="$HOME/.local/bin:$PATH"
-fi
+# set terminal window title to program name
+case $TERM in
+  (*xterm* | rxvt | rxvt-unicode-256color)
+    function precmd {
+      print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
+    }
+    function preexec {
+      printf "\033]0;%s\a" "$1"
+    }
+  ;;
+esac
 
-# cabal bin for haskell
-if [ -d "$HOME/.cabal/bin" ]; then
-   PATH="$HOME/.cabal/bin:$PATH"
-fi
+# Fix bugs when switching modes
+bindkey -v # vi mode
+bindkey "^?" backward-delete-char
+bindkey "^u" backward-kill-line
+bindkey "^a" beginning-of-line
+bindkey "^e" end-of-line
+bindkey "^k" kill-line
 
-# git prompt
-if [ -f "/usr/local/share/git-core/contrib/completion/git-prompt.sh" ]; then
-   source "/usr/local/share/git-core/contrib/completion/git-prompt.sh"
-fi
-
-# prompt
-setopt prompt_subst
-GIT_PS1_SHOWDIRTYSTATE=true
-GIT_PS1_SHOWUNTRACKEDFILES=true
-GIT_PS1_SHOWUPSTREAM="auto verbose name git"
-
-PS1=$'[%n@%M %~]'
-RPROMPT=$'%F{cyan}$(__git_ps1 "%s")%f'
-
-# general
-#========
-
-# mpd socket
-export MPD_HOST=${HOME}/.mpd/socket
-
-# tell ls to be colourfull
-export LSCOLORS=ExFxCxDxBxegedabagacad
-export CLICOLOR=1
-
-# qt5 
-export QT_QPA_PLATFORMTHEME=qt5ct
-
-# zstyle
-#=======
+# Use modern completion system
+autoload -Uz compinit
+compinit
 
 # Set/unset  shell options
-setopt   notify globdots correct pushdtohome cdablevars autolist
-setopt   correctall recexact longlistjobs
-setopt   autoresume histignoredups pushdsilent noclobber
-setopt   autopushd pushdminus extendedglob rcquotes mailwarning
+setopt notify globdots pushdtohome cdablevars autolist
+setopt recexact longlistjobs
+setopt autoresume histignoredups pushdsilent noclobber
+setopt autopushd pushdminus extendedglob rcquotes mailwarning
+setopt histignorealldups sharehistory
+#setopt auto_cd
+cdpath=($HOME)
 unsetopt bgnice autoparamslash
 
 # Completion Styles
@@ -922,6 +1746,10 @@ zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
 
+#eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+
 # match uppercase from lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
@@ -930,9 +1758,7 @@ zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
 # Filename suffixes to ignore during completion (except after rm command)
 zstyle ':completion:*:*:(^rm):*:*files' ignored-patterns '*?.o' '*?.c~' \
-    '*?.old' '*?.pro'
-# the same for old style completion
-#fignore=(.o .c~ .old .pro)
+    '*?.old' '*?.pro' '.hidden'
 
 # ignore completion functions (until the _ignored completer)
 zstyle ':completion:*:functions' ignored-patterns '_*'
@@ -943,30 +1769,13 @@ zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34
 # list optiones colour, white + cyan
 zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
 
+# zsh autocompletion for sudo and doas
+zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin
+
 # rehash commands
 zstyle ':completion:*' rehash true
 
-# cdpath
-setopt auto_cd
-#cdpath=($HOME)
-cdpath=(~)
-
-# aliases
-#========
-
-# hdmi display on - and reset wallpaper
-alias hdmi-on='xrandr --output eDP-1 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of eDP-1 && ~/.fehbg &>/dev/null'
-
-# hdmi display off - and reset wallpaper
-alias hdmi-off='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off && ~/.fehbg &>/dev/null'
-
-# keyboard backlight on
-alias flame-on='sysctl dev.asmc.0.light.control:255'
-
-# keyboard backlight off
-alias flame-off='sysctl dev.asmc.0.light.control:0'
-
-# syntax highlighting
+# highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ZSH_HIGHLIGHT_STYLES[suffix-alias]=fg=cyan,underline
 ZSH_HIGHLIGHT_STYLES[precommand]=fg=cyan,underline
@@ -974,58 +1783,66 @@ ZSH_HIGHLIGHT_STYLES[arg0]=fg=cyan
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 ZSH_HIGHLIGHT_PATTERNS=('rm -rf *' 'fg=white,bold,bg=red')
 
-# XDG_RUNTIME_DIR = /tmp/${USER} for obs studio and pulseaudio
-if [ -z "$XDG_RUNTIME_DIR" ]; then
-    export XDG_RUNTIME_DIR="/tmp/${USER}"
-    if [ ! -d  "$XDG_RUNTIME_DIR" ]; then
-        mkdir "$XDG_RUNTIME_DIR"
-        chmod 0700 "$XDG_RUNTIME_DIR"
-    fi
-fi
+# aliases
+#========
 
-# set window title to program name
-case $TERM in
-  (*xterm* | rxvt)
+# keyboard backlight on
+alias backlight-on='sysctl dev.asmc.0.light.control:255'
 
-    # Write some info to terminal title.
-    # This is seen when the shell prompts for input.
-    function precmd {
-      print -Pn "\e]0;zsh%L %(1j,%j job%(2j|s|); ,)%~\a"
-    }
-    # Write command and args to terminal title.
-    # This is seen while the shell waits for a command to complete.
-    function preexec {
-      printf "\033]0;%s\a" "$1"
-    }
-  ;;
-esac
-
-# vi mode
-bindkey -v
-export KEYTIMEOUT=1
-
-# Fix bugs when switching modes
-bindkey "^?" backward-delete-char
-bindkey "^u" backward-kill-line
-bindkey "^a" beginning-of-line
-bindkey "^e" end-of-line
-bindkey "^k" kill-line
-
-newline=$'\n'
-yesmaster=' Yes Master ? '
-
-function zle-line-init zle-keymap-select {
-    VIM_NORMAL_PROMPT="[% -n]% "
-    VIM_INSERT_PROMPT="[% +i]% "
-    PS1="[%n@%M %~]${newline}${${KEYMAP/vicmd/$VIM_NORMAL_PROMPT}/(main|viins)/$VIM_INSERT_PROMPT}${yesmaster}"
-    zle reset-prompt
-}
-
-zle -N zle-line-init
-zle -N zle-keymap-select
+# keyboard backlight off
+alias backlight-off='sysctl dev.asmc.0.light.control:0'
 #+END_SRC
 
-*** zshrc tangle
+**** zshenv
+
+#+NAME: zshenv
+#+begin_src sh
+# ~/.zshenv
+
+# Path
+typeset -U PATH path
+path=("$HOME/bin" "$path[@]")
+export PATH
+
+# xdg directories
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# firefox
+export MOZ_ENABLE_WAYLAND=1
+
+# qt5
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+# ssh-add
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+
+# less
+export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
+export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
+
+# wget
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+
+# set emacsclient as editor
+#export ALTERNATE_EDITOR=""
+#export EDITOR="emacsclient -a emacs"
+#export VISUAL="emacsclient -a emacs"
+
+# tell ls to be colourfull
+#export LSCOLORS=ExFxCxDxBxegedabagacad
+#export CLICOLOR=1
+
+# vi mode
+export KEYTIMEOUT=1
+
+# mpd host variable for mpc
+export MPD_HOST="/home/djwilcox/.config/mpd/socket"
+#+end_src
+
+*** zsh tangle
+**** zshrc tangle
 
 + home dir
 
@@ -1041,8 +1858,172 @@ zle -N zle-keymap-select
 <<zshrc>>
 #+END_SRC
 
-** mpv
+**** zshenv tangle
 
++ home dir
+
+#+NAME: zshenv-home-dir
+#+BEGIN_SRC sh :noweb yes :tangle "~/.zshenv"
+<<zshenv>>
+#+END_SRC
+
++ current dir
+
+#+NAME: zshenv-current-dir
+#+BEGIN_SRC sh :noweb yes :tangle ".zshenv"
+<<zshenv>>
+#+END_SRC
+
+** tmux
+*** tmux config
+
+#+NAME: tmux
+#+BEGIN_SRC conf
+# .tmux.conf
+
+# vi mode
+set-window-option -g mode-keys vi
+
+# Some tweaks to the status line
+set -g status-right "%H:%M"
+set -g status-right-style fg=color245
+
+# If running inside tmux ($TMUX is set), then change the status line to red
+%if #{TMUX}
+set -g status-bg red
+%endif
+
+# Enable RGB colour if running in xterm(1)
+set-option -sa terminal-overrides ",xterm*:Tc"
+
+# Change the default $TERM to screen
+set -g default-terminal "xterm-256color"
+
+# No bells at all
+set -g bell-action none
+
+# close panes after command has finished
+set -g remain-on-exit off
+
+# Change the prefix key to C-a
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
+
+# Turn the mouse on, but without copy mode dragging
+set -g mouse on
+
+# multiple places
+bind F set -w window-size
+
+# Keys to toggle monitoring activity in a window and the synchronize-panes option
+bind m set monitor-activity
+bind y set synchronize-panes\; display 'synchronize-panes #{?synchronize-panes,on,off}'
+
+# Start windows and panes at 1, not 0
+set -g base-index 1
+setw -g pane-base-index 1
+
+# reload ~/.tmux.conf using PREFIX r
+bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
+
+# default statusbar colors
+set -g status-style bg=default,fg=yellow #yellow
+
+# default window title colors
+set -g window-status-style fg=brightblue,bg=default
+
+# active window title colors
+set -g window-status-current-style fg=black,bg=blue
+
+# pane border
+set -g pane-border-style fg=black #base02
+set -g pane-active-border-style fg=black #base01
+
+# message text
+set -g message-style bg=black,fg=brightred #orange
+
+# pane number display
+set-option -g display-panes-active-colour blue #blue
+set-option -g display-panes-colour brightred #orange
+
+# clock
+set-window-option -g clock-mode-colour green #green
+
+# vim key bindings
+setw -g mode-keys vi
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+bind-key -r C-h select-window -t :-
+bind-key -r C-l select-window -t :+
+
+# resize panes using PREFIX H, J, K, L
+bind H resize-pane -L 5
+bind J resize-pane -D 5
+bind K resize-pane -U 5
+bind L resize-pane -R 5
+
+# copy and paste
+set-window-option -g automatic-rename on
+
+# toggle statusbar
+bind-key s set -g status
+
+# copying selection vim style
+# requires xsel and xclip
+bind-key Escape copy-mode			# enter copy mode; default [
+bind-key p paste-buffer				# paste; (default hotkey: ] )
+bind-key P choose-buffer 			# tmux clipboard history
+bind-key + delete-buffer \; display-message "Deleted current Tmux Clipboard History"
+
+# Send To Tmux Clipboard or System Clipboard
+bind-key < run-shell "tmux set-buffer -- \"$(xsel -o -b)\"" \; display-message "Copy To Tmux Clipboard"
+bind-key > run-shell 'tmux show-buffer | xsel -i -b' \; display-message "Copy To System Clipboard"
+
+# Note: rectangle-toggle (aka Visual Block Mode) > hit v then C-v to trigger it
+bind-key -T copy-mode-vi v send-keys -X begin-selection
+bind-key -T copy-mode-vi V send-keys -X select-line
+bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+bind-key -T choice-mode-vi h send-keys -X tree-collapse
+bind-key -T choice-mode-vi l send-keys -X tree-expand
+bind-key -T choice-mode-vi H send-keys -X tree-collapse-all
+bind-key -T choice-mode-vi L send-keys -X tree-expand-all
+bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe "xclip -in -selection clipboard"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe "xclip -in -selection clipboard"
+
+# urlscan as context and url view
+bind-key u capture-pane \; save-buffer /tmp/tmux-buffer \; \
+new-window -n "urlscan" '$SHELL -c "urlscan < /tmp/tmux-buffer"'
+
+# copy mode - emulate right click "search google for {text}" like you do in GUI web browsers. 
+bind-key -T copy-mode-vi 'o' send-keys -X copy-selection \; \
+new-window -n google \; send-keys -t google 'sr -browser=w3m google "$(tmux show-buffer)" && tmux kill-window' 'Enter'
+
+# tmux auto rename pane 
+set-option -g status-interval 1
+set-option -g automatic-rename on
+set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_current_path},#{pane_current_command}}"
+#+END_SRC
+
+*** tmux tangle
+
++ home dir
+
+#+NAME: tmux-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
++ current dir
+
+#+NAME: tmux-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
+<<tmux>>
+#+END_SRC
+
+** mpv
 *** input.conf
 
 #+NAME: input.conf
@@ -1052,19 +2033,69 @@ l seek  5
 h seek -5
 k seek  60
 j seek -60
+
+# subtitles
+J cycle sub 
+K cycle sub down
+
+# Audio filters:
+F1 show-text "F2: loudnorm | F3: dynaudnorm | F4: low Bass | F5: low Treble" 2000
+
+# loudnorm:
+F2 af toggle lavfi=[loudnorm=I=-16:TP=-3:LRA=4]
+
+# dynaudnorm:
+F3 af toggle lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5]
+
+# lowered bass:
+F4  af toggle "superequalizer=6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2:13b=2:14b=2:15b=2:16b=2:17b=2:18b=2"
+
+# lowered treble:
+F5  af toggle "superequalizer=1b=2:2b=2:3b=2:4b=2:5b=2:6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2"
 #+END_SRC
 
 *** mpv.conf
 
 #+NAME: mpv.conf
 #+BEGIN_SRC conf
-msg-level=ffmpeg=fatal
+# mpv.conf
+
+# list profiles with: mpv --profile=help
+
+# load hwdec profile automatically
+profile=hwdec 
+
+# hardware acceleration profile
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
 vo=gpu
 hwdec=vaapi
-ytdl-format=bestvideo[height<=?1080][fps<=?30][vcodec!=?vp9]+bestaudio/best
+msg-level=ffmpeg=fatal
+
+# cache no for internet streams
+cache=no
+
+# yt-dlp best format 1080 or less
+ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+
+# show milliseconds in the on screen display
 osd-fractions
-# force starting with centered window
-geometry=33%
+
+# alsa pipewire audio device
+#audio-device=alsa/pipewire
+
+# youtube subs - J to switch to subs
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='Noto Color Emoji'
+
+# cache profile: mpv --profile=cache
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
 #+END_SRC
 
 **** mpv tangle
@@ -1100,28 +2131,41 @@ geometry=33%
 <<mpv.conf>>
 #+END_SRC
 
-** youtube-dl
+** yt-dlp
+*** yt-dlp config
 
-#+NAME: youtube-dl
+#+NAME: yt-dlp
 #+BEGIN_SRC conf
+# download 1080p video in mp4 format
+#-f 'bestvideo[height<=1080][vcodec!=?vp9]+bestaudio[acodec!=?opus]'
+
 # external downloader aria2
---external-downloader aria2c --external-downloader-args "-c -x3"
+--downloader aria2c --downloader-args aria2c:'-c -j 3 -x 3 -s 3 -k 1M'
+
+# native downloader for dash and m3u8
+--downloader 'dash,m3u8:native'
+
+# restrict filenames
+--restrict-filenames
+
+# merge output format mkv
+--merge-output-format mkv
 #+END_SRC
 
-*** youtube-dl tangle
+*** yt-dlp tangle
 
 + home dir
 
-#+NAME: youtube-dl-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/youtube-dl/config"
-<<youtube-dl>>
+#+NAME: yt-dlp-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/yt-dlp/config"
+<<yt-dlp>>
 #+END_SRC
 
 + current dir
 
-#+NAME: youtube-dl-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/youtube-dl/config"
-<<youtube-dl>>
+#+NAME: yt-dlp-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/yt-dlp/config"
+<<yt-dlp>>
 #+END_SRC
 
 ** ncmpc
@@ -1303,697 +2347,6 @@ color alert = 7/8,bold
 #+NAME: ncmpc-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/ncmpc/config"
 <<ncmpc>>
-#+END_SRC
-
-** weechat
-
-#+NAME: weechat.conf
-#+BEGIN_SRC conf
-#
-# weechat -- weechat.conf
-#
-# WARNING: It is NOT recommended to edit this file by hand,
-# especially if WeeChat is running.
-#
-# Use /set or similar command to change settings in WeeChat.
-#
-# For more info, see: https://weechat.org/doc/quickstart
-#
-
-[debug]
-
-[startup]
-command_after_plugins = ""
-command_before_plugins = ""
-display_logo = off
-display_version = on
-sys_rlimit = ""
-
-[look]
-align_end_of_lines = message
-align_multiline_words = on
-bar_more_down = "++"
-bar_more_left = "<<"
-bar_more_right = ">>"
-bar_more_up = "--"
-bare_display_exit_on_input = on
-bare_display_time_format = "%H:%M"
-buffer_auto_renumber = on
-buffer_notify_default = all
-buffer_position = end
-buffer_search_case_sensitive = off
-buffer_search_force_default = off
-buffer_search_regex = off
-buffer_search_where = prefix_message
-buffer_time_format = "[%H:%M]"
-color_basic_force_bold = off
-color_inactive_buffer = on
-color_inactive_message = on
-color_inactive_prefix = on
-color_inactive_prefix_buffer = on
-color_inactive_time = off
-color_inactive_window = on
-color_nick_offline = off
-color_pairs_auto_reset = 5
-color_real_white = off
-command_chars = ""
-command_incomplete = off
-confirm_quit = off
-confirm_upgrade = off
-day_change = on
-day_change_message_1date = "-- %a, %d %b %Y --"
-day_change_message_2dates = "-- %%a, %%d %%b %%Y (%a, %d %b %Y) --"
-eat_newline_glitch = off
-emphasized_attributes = ""
-highlight = ""
-highlight_regex = ""
-highlight_tags = ""
-hotlist_add_conditions = "${away} || ${buffer.num_displayed} == 0"
-hotlist_buffer_separator = ", "
-hotlist_count_max = 2
-hotlist_count_min_msg = 2
-hotlist_names_count = 3
-hotlist_names_length = 0
-hotlist_names_level = 12
-hotlist_names_merged_buffers = off
-hotlist_prefix = "H: "
-hotlist_remove = merged
-hotlist_short_names = on
-hotlist_sort = group_time_asc
-hotlist_suffix = ""
-hotlist_unique_numbers = on
-input_cursor_scroll = 20
-input_share = none
-input_share_overwrite = off
-input_undo_max = 32
-item_away_message = on
-item_buffer_filter = "*"
-item_buffer_zoom = "!"
-item_mouse_status = "M"
-item_time_format = "%H:%M"
-jump_current_to_previous_buffer = on
-jump_previous_buffer_when_closing = on
-jump_smart_back_to_buffer = on
-key_bind_safe = on
-key_grab_delay = 800
-mouse = off
-mouse_timer_delay = 100
-nick_color_force = ""
-nick_color_hash = djb2
-nick_color_stop_chars = "_|["
-nick_prefix = ""
-nick_suffix = ""
-paste_auto_add_newline = on
-paste_bracketed = on
-paste_bracketed_timer_delay = 10
-paste_max_lines = 1
-prefix_action = " *"
-prefix_align = none
-prefix_align_max = 15
-prefix_align_min = 0
-prefix_align_more = "+"
-prefix_align_more_after = on
-prefix_buffer_align = right
-prefix_buffer_align_max = 0
-prefix_buffer_align_more = "+"
-prefix_buffer_align_more_after = on
-prefix_error = "=!="
-prefix_join = "-->"
-prefix_network = "--"
-prefix_quit = "<--"
-prefix_same_nick = ""
-prefix_suffix = "|"
-quote_nick_prefix = "<"
-quote_nick_suffix = ">"
-quote_time_format = "%H:%M:%S"
-read_marker = line
-read_marker_always_show = off
-read_marker_string = "- "
-save_config_on_exit = on
-save_config_with_fsync = off
-save_layout_on_exit = none
-scroll_amount = 3
-scroll_bottom_after_switch = off
-scroll_page_percent = 100
-search_text_not_found_alert = on
-separator_horizontal = "-"
-separator_vertical = ""
-tab_width = 1
-time_format = "%a, %d %b %Y %T"
-window_auto_zoom = off
-window_separator_horizontal = on
-window_separator_vertical = on
-window_title = "WeeChat ${info:version}"
-word_chars_highlight = "!\u00A0,-,_,|,alnum"
-word_chars_input = "!\u00A0,-,_,|,alnum"
-
-[palette]
-
-[color]
-bar_more = lightmagenta
-chat = default
-chat_bg = default
-chat_buffer = default
-chat_channel = white
-chat_day_change = cyan
-chat_delimiters = 2
-chat_highlight = default
-chat_highlight_bg = 1
-chat_host = cyan
-chat_inactive_buffer = default
-chat_inactive_window = default
-chat_nick = default
-chat_nick_colors = "cyan,magenta,green,brown,lightblue,default,lightcyan,lightmagenta,lightgreen,blue"
-chat_nick_offline = default
-chat_nick_offline_highlight = default
-chat_nick_offline_highlight_bg = blue
-chat_nick_other = cyan
-chat_nick_prefix = green
-chat_nick_self = default
-chat_nick_suffix = green
-chat_prefix_action = white
-chat_prefix_buffer = brown
-chat_prefix_buffer_inactive_buffer = default
-chat_prefix_error = yellow
-chat_prefix_join = lightgreen
-chat_prefix_more = lightmagenta
-chat_prefix_network = magenta
-chat_prefix_quit = lightred
-chat_prefix_suffix = green
-chat_read_marker = default
-chat_read_marker_bg = default
-chat_server = brown
-chat_tags = red
-chat_text_found = yellow
-chat_text_found_bg = default
-chat_time = default
-chat_time_delimiters = 2
-chat_value = cyan
-chat_value_null = blue
-emphasized = default
-emphasized_bg = default
-input_actions = lightgreen
-input_text_not_found = red
-item_away = yellow
-nicklist_away = cyan
-nicklist_group = green
-separator = darkgray
-status_count_highlight = magenta
-status_count_msg = brown
-status_count_other = default
-status_count_private = green
-status_data_highlight = default
-status_data_msg = yellow
-status_data_other = default
-status_data_private = default
-status_filter = green
-status_more = yellow
-status_mouse = green
-status_name = white
-status_name_ssl = lightgreen
-status_nicklist_count = default
-status_number = yellow
-status_time = default
-
-[completion]
-base_word_until_cursor = on
-command_inline = on
-default_template = "%(nicks)|%(irc_channels)"
-nick_add_space = on
-nick_case_sensitive = off
-nick_completer = ":"
-nick_first_only = off
-nick_ignore_chars = "[]`_-^"
-partial_completion_alert = on
-partial_completion_command = off
-partial_completion_command_arg = off
-partial_completion_count = on
-partial_completion_other = off
-partial_completion_templates = "config_options"
-
-[history]
-display_default = 5
-max_buffer_lines_minutes = 0
-max_buffer_lines_number = 4096
-max_commands = 100
-max_visited_buffers = 50
-
-[proxy]
-
-[network]
-connection_timeout = 60
-gnutls_ca_file = "/usr/local/share/certs/ca-root-nss.crt"
-gnutls_handshake_timeout = 30
-proxy_curl = ""
-
-[plugin]
-autoload = "*,!tcl,!ruby,!python2,!lua,!aspell"
-debug = off
-extension = ".so,.dll"
-path = "%h/plugins"
-save_config_on_unload = on
-
-[bar]
-buflist.color_bg = default
-buflist.color_delim = default
-buflist.color_fg = default
-buflist.conditions = ""
-buflist.filling_left_right = vertical
-buflist.filling_top_bottom = columns_vertical
-buflist.hidden = off
-buflist.items = "buflist"
-buflist.position = left
-buflist.priority = 0
-buflist.separator = on
-buflist.size = 0
-buflist.size_max = 0
-buflist.type = root
-fset.color_bg = default
-fset.color_delim = cyan
-fset.color_fg = default
-fset.conditions = "${buffer.full_name} == fset.fset"
-fset.filling_left_right = vertical
-fset.filling_top_bottom = horizontal
-fset.hidden = off
-fset.items = "fset"
-fset.position = top
-fset.priority = 0
-fset.separator = on
-fset.size = 3
-fset.size_max = 3
-fset.type = window
-input.color_bg = default
-input.color_delim = cyan
-input.color_fg = default
-input.conditions = ""
-input.filling_left_right = vertical
-input.filling_top_bottom = horizontal
-input.hidden = off
-input.items = "[input_prompt]+(away),[input_search],[input_paste],input_text"
-input.position = bottom
-input.priority = 1000
-input.separator = off
-input.size = 1
-input.size_max = 0
-input.type = window
-isetbar.color_bg = default
-isetbar.color_delim = cyan
-isetbar.color_fg = default
-isetbar.conditions = ""
-isetbar.filling_left_right = vertical
-isetbar.filling_top_bottom = horizontal
-isetbar.hidden = on
-isetbar.items = "isetbar_help"
-isetbar.position = top
-isetbar.priority = 0
-isetbar.separator = on
-isetbar.size = 3
-isetbar.size_max = 3
-isetbar.type = window
-nicklist.color_bg = default
-nicklist.color_delim = cyan
-nicklist.color_fg = default
-nicklist.conditions = "${nicklist}"
-nicklist.filling_left_right = vertical
-nicklist.filling_top_bottom = columns_vertical
-nicklist.hidden = off
-nicklist.items = "buffer_nicklist"
-nicklist.position = right
-nicklist.priority = 200
-nicklist.separator = on
-nicklist.size = 0
-nicklist.size_max = 0
-nicklist.type = window
-status.color_bg = 0
-status.color_delim = cyan
-status.color_fg = default
-status.conditions = ""
-status.filling_left_right = vertical
-status.filling_top_bottom = horizontal
-status.hidden = off
-status.items = "[time],[buffer_last_number],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_zoom+buffer_filter,scroll,[lag],[hotlist],completion"
-status.position = bottom
-status.priority = 500
-status.separator = off
-status.size = 1
-status.size_max = 0
-status.type = window
-title.color_bg = 0
-title.color_delim = cyan
-title.color_fg = default
-title.conditions = ""
-title.filling_left_right = vertical
-title.filling_top_bottom = horizontal
-title.hidden = off
-title.items = "buffer_title"
-title.position = top
-title.priority = 500
-title.separator = off
-title.size = 1
-title.size_max = 0
-title.type = window
-
-[layout]
-
-[notify]
-
-[filter]
-
-[key]
-ctrl-? = "/input delete_previous_char"
-ctrl-A = "/input move_beginning_of_line"
-ctrl-B = "/input move_previous_char"
-ctrl-C_ = "/input insert \x1F"
-ctrl-Cb = "/input insert \x02"
-ctrl-Cc = "/input insert \x03"
-ctrl-Ci = "/input insert \x1D"
-ctrl-Co = "/input insert \x0F"
-ctrl-Cv = "/input insert \x16"
-ctrl-D = "/input delete_next_char"
-ctrl-E = "/input move_end_of_line"
-ctrl-F = "/input move_next_char"
-ctrl-H = "/input delete_previous_char"
-ctrl-I = "/input complete_next"
-ctrl-J = "/input return"
-ctrl-K = "/input delete_end_of_line"
-ctrl-L = "/window refresh"
-ctrl-M = "/input return"
-ctrl-N = "/buffer +1"
-ctrl-P = "/buffer -1"
-ctrl-R = "/input search_text_here"
-ctrl-Sctrl-U = "/input set_unread"
-ctrl-T = "/input transpose_chars"
-ctrl-U = "/input delete_beginning_of_line"
-ctrl-W = "/input delete_previous_word"
-ctrl-X = "/input switch_active_buffer"
-ctrl-Y = "/input clipboard_paste"
-meta-meta-OP = "/bar scroll buflist * b"
-meta-meta-OQ = "/bar scroll buflist * e"
-meta-meta2-1~ = "/window scroll_top"
-meta-meta2-23~ = "/bar scroll nicklist * b"
-meta-meta2-24~ = "/bar scroll nicklist * e"
-meta-meta2-4~ = "/window scroll_bottom"
-meta-meta2-5~ = "/window scroll_up"
-meta-meta2-6~ = "/window scroll_down"
-meta-meta2-7~ = "/window scroll_top"
-meta-meta2-8~ = "/window scroll_bottom"
-meta-meta2-A = "/buffer -1"
-meta-meta2-B = "/buffer +1"
-meta-meta2-C = "/buffer +1"
-meta-meta2-D = "/buffer -1"
-meta-- = "/filter toggle @"
-meta-/ = "/input jump_last_buffer_displayed"
-meta-0 = "/buffer *10"
-meta-1 = "/buffer *1"
-meta-2 = "/buffer *2"
-meta-3 = "/buffer *3"
-meta-4 = "/buffer *4"
-meta-5 = "/buffer *5"
-meta-6 = "/buffer *6"
-meta-7 = "/buffer *7"
-meta-8 = "/buffer *8"
-meta-9 = "/buffer *9"
-meta-< = "/input jump_previously_visited_buffer"
-meta-= = "/filter toggle"
-meta-> = "/input jump_next_visited_buffer"
-meta-OA = "/input history_global_previous"
-meta-OB = "/input history_global_next"
-meta-OC = "/input move_next_word"
-meta-OD = "/input move_previous_word"
-meta-OF = "/input move_end_of_line"
-meta-OH = "/input move_beginning_of_line"
-meta-OP = "/bar scroll buflist * -100%"
-meta-OQ = "/bar scroll buflist * +100%"
-meta-Oa = "/input history_global_previous"
-meta-Ob = "/input history_global_next"
-meta-Oc = "/input move_next_word"
-meta-Od = "/input move_previous_word"
-meta2-15~ = "/buffer -1"
-meta2-17~ = "/buffer +1"
-meta2-18~ = "/window -1"
-meta2-19~ = "/window +1"
-meta2-1;3A = "/buffer -1"
-meta2-1;3B = "/buffer +1"
-meta2-1;3C = "/buffer +1"
-meta2-1;3D = "/buffer -1"
-meta2-1;3F = "/window scroll_bottom"
-meta2-1;3H = "/window scroll_top"
-meta2-1;5A = "/input history_global_previous"
-meta2-1;5B = "/input history_global_next"
-meta2-1;5C = "/input move_next_word"
-meta2-1;5D = "/input move_previous_word"
-meta2-1~ = "/input move_beginning_of_line"
-meta2-200~ = "/input paste_start"
-meta2-201~ = "/input paste_stop"
-meta2-20~ = "/bar scroll title * -30%"
-meta2-21~ = "/bar scroll title * +30%"
-meta2-23;3~ = "/bar scroll nicklist * b"
-meta2-23~ = "/bar scroll nicklist * -100%"
-meta2-24;3~ = "/bar scroll nicklist * e"
-meta2-24~ = "/bar scroll nicklist * +100%"
-meta2-3~ = "/input delete_next_char"
-meta2-4~ = "/input move_end_of_line"
-meta2-5;3~ = "/window scroll_up"
-meta2-5~ = "/window page_up"
-meta2-6;3~ = "/window scroll_down"
-meta2-6~ = "/window page_down"
-meta2-7~ = "/input move_beginning_of_line"
-meta2-8~ = "/input move_end_of_line"
-meta2-A = "/input history_previous"
-meta2-B = "/input history_next"
-meta2-C = "/input move_next_char"
-meta2-D = "/input move_previous_char"
-meta2-F = "/input move_end_of_line"
-meta2-G = "/window page_down"
-meta2-H = "/input move_beginning_of_line"
-meta2-I = "/window page_up"
-meta2-Z = "/input complete_previous"
-meta2-[E = "/buffer -1"
-meta-_ = "/input redo"
-meta-a = "/input jump_smart"
-meta-b = "/input move_previous_word"
-meta-d = "/input delete_next_word"
-meta-f = "/input move_next_word"
-meta-h = "/input hotlist_clear"
-meta-jmeta-f = "/buffer -"
-meta-jmeta-l = "/buffer +"
-meta-jmeta-r = "/server raw"
-meta-jmeta-s = "/server jump"
-meta-j01 = "/buffer *1"
-meta-j02 = "/buffer *2"
-meta-j03 = "/buffer *3"
-meta-j04 = "/buffer *4"
-meta-j05 = "/buffer *5"
-meta-j06 = "/buffer *6"
-meta-j07 = "/buffer *7"
-meta-j08 = "/buffer *8"
-meta-j09 = "/buffer *9"
-meta-j10 = "/buffer *10"
-meta-j11 = "/buffer *11"
-meta-j12 = "/buffer *12"
-meta-j13 = "/buffer *13"
-meta-j14 = "/buffer *14"
-meta-j15 = "/buffer *15"
-meta-j16 = "/buffer *16"
-meta-j17 = "/buffer *17"
-meta-j18 = "/buffer *18"
-meta-j19 = "/buffer *19"
-meta-j20 = "/buffer *20"
-meta-j21 = "/buffer *21"
-meta-j22 = "/buffer *22"
-meta-j23 = "/buffer *23"
-meta-j24 = "/buffer *24"
-meta-j25 = "/buffer *25"
-meta-j26 = "/buffer *26"
-meta-j27 = "/buffer *27"
-meta-j28 = "/buffer *28"
-meta-j29 = "/buffer *29"
-meta-j30 = "/buffer *30"
-meta-j31 = "/buffer *31"
-meta-j32 = "/buffer *32"
-meta-j33 = "/buffer *33"
-meta-j34 = "/buffer *34"
-meta-j35 = "/buffer *35"
-meta-j36 = "/buffer *36"
-meta-j37 = "/buffer *37"
-meta-j38 = "/buffer *38"
-meta-j39 = "/buffer *39"
-meta-j40 = "/buffer *40"
-meta-j41 = "/buffer *41"
-meta-j42 = "/buffer *42"
-meta-j43 = "/buffer *43"
-meta-j44 = "/buffer *44"
-meta-j45 = "/buffer *45"
-meta-j46 = "/buffer *46"
-meta-j47 = "/buffer *47"
-meta-j48 = "/buffer *48"
-meta-j49 = "/buffer *49"
-meta-j50 = "/buffer *50"
-meta-j51 = "/buffer *51"
-meta-j52 = "/buffer *52"
-meta-j53 = "/buffer *53"
-meta-j54 = "/buffer *54"
-meta-j55 = "/buffer *55"
-meta-j56 = "/buffer *56"
-meta-j57 = "/buffer *57"
-meta-j58 = "/buffer *58"
-meta-j59 = "/buffer *59"
-meta-j60 = "/buffer *60"
-meta-j61 = "/buffer *61"
-meta-j62 = "/buffer *62"
-meta-j63 = "/buffer *63"
-meta-j64 = "/buffer *64"
-meta-j65 = "/buffer *65"
-meta-j66 = "/buffer *66"
-meta-j67 = "/buffer *67"
-meta-j68 = "/buffer *68"
-meta-j69 = "/buffer *69"
-meta-j70 = "/buffer *70"
-meta-j71 = "/buffer *71"
-meta-j72 = "/buffer *72"
-meta-j73 = "/buffer *73"
-meta-j74 = "/buffer *74"
-meta-j75 = "/buffer *75"
-meta-j76 = "/buffer *76"
-meta-j77 = "/buffer *77"
-meta-j78 = "/buffer *78"
-meta-j79 = "/buffer *79"
-meta-j80 = "/buffer *80"
-meta-j81 = "/buffer *81"
-meta-j82 = "/buffer *82"
-meta-j83 = "/buffer *83"
-meta-j84 = "/buffer *84"
-meta-j85 = "/buffer *85"
-meta-j86 = "/buffer *86"
-meta-j87 = "/buffer *87"
-meta-j88 = "/buffer *88"
-meta-j89 = "/buffer *89"
-meta-j90 = "/buffer *90"
-meta-j91 = "/buffer *91"
-meta-j92 = "/buffer *92"
-meta-j93 = "/buffer *93"
-meta-j94 = "/buffer *94"
-meta-j95 = "/buffer *95"
-meta-j96 = "/buffer *96"
-meta-j97 = "/buffer *97"
-meta-j98 = "/buffer *98"
-meta-j99 = "/buffer *99"
-meta-k = "/input grab_key_command"
-meta-l = "/window bare"
-meta-m = "/mute mouse toggle"
-meta-n = "/window scroll_next_highlight"
-meta-p = "/window scroll_previous_highlight"
-meta-r = "/input delete_line"
-meta-s = "/mute aspell toggle"
-meta-u = "/window scroll_unread"
-meta-wmeta-meta2-A = "/window up"
-meta-wmeta-meta2-B = "/window down"
-meta-wmeta-meta2-C = "/window right"
-meta-wmeta-meta2-D = "/window left"
-meta-wmeta2-1;3A = "/window up"
-meta-wmeta2-1;3B = "/window down"
-meta-wmeta2-1;3C = "/window right"
-meta-wmeta2-1;3D = "/window left"
-meta-wmeta-b = "/window balance"
-meta-wmeta-s = "/window swap"
-meta-x = "/input zoom_merged_buffer"
-meta-z = "/window zoom"
-ctrl-_ = "/input undo"
-
-[key_search]
-ctrl-I = "/input search_switch_where"
-ctrl-J = "/input search_stop_here"
-ctrl-M = "/input search_stop_here"
-ctrl-Q = "/input search_stop"
-ctrl-R = "/input search_switch_regex"
-meta2-A = "/input search_previous"
-meta2-B = "/input search_next"
-meta-c = "/input search_switch_case"
-
-[key_cursor]
-ctrl-J = "/cursor stop"
-ctrl-M = "/cursor stop"
-meta-meta2-A = "/cursor move area_up"
-meta-meta2-B = "/cursor move area_down"
-meta-meta2-C = "/cursor move area_right"
-meta-meta2-D = "/cursor move area_left"
-meta2-1;3A = "/cursor move area_up"
-meta2-1;3B = "/cursor move area_down"
-meta2-1;3C = "/cursor move area_right"
-meta2-1;3D = "/cursor move area_left"
-meta2-A = "/cursor move up"
-meta2-B = "/cursor move down"
-meta2-C = "/cursor move right"
-meta2-D = "/cursor move left"
-@item(buffer_nicklist):K = "/window ${_window_number};/kickban ${nick}"
-@item(buffer_nicklist):b = "/window ${_window_number};/ban ${nick}"
-@item(buffer_nicklist):k = "/window ${_window_number};/kick ${nick}"
-@item(buffer_nicklist):q = "/window ${_window_number};/query ${nick};/cursor stop"
-@item(buffer_nicklist):w = "/window ${_window_number};/whois ${nick}"
-@chat:Q = "hsignal:chat_quote_time_prefix_message;/cursor stop"
-@chat:m = "hsignal:chat_quote_message;/cursor stop"
-@chat:q = "hsignal:chat_quote_prefix_message;/cursor stop"
-
-[key_mouse]
-@bar(buflist):ctrl-wheeldown = "hsignal:buflist_mouse"
-@bar(buflist):ctrl-wheelup = "hsignal:buflist_mouse"
-@bar(input):button2 = "/input grab_mouse_area"
-@bar(nicklist):button1-gesture-down = "/bar scroll nicklist ${_window_number} +100%"
-@bar(nicklist):button1-gesture-down-long = "/bar scroll nicklist ${_window_number} e"
-@bar(nicklist):button1-gesture-up = "/bar scroll nicklist ${_window_number} -100%"
-@bar(nicklist):button1-gesture-up-long = "/bar scroll nicklist ${_window_number} b"
-@chat(fset.fset):button1 = "/window ${_window_number};/fset -go ${_chat_line_y}"
-@chat(fset.fset):button2* = "hsignal:fset_mouse"
-@chat(fset.fset):wheeldown = "/fset -down 5"
-@chat(fset.fset):wheelup = "/fset -up 5"
-@chat(perl.iset):button1 = "hsignal:iset_mouse"
-@chat(perl.iset):button2* = "hsignal:iset_mouse"
-@chat(perl.iset):wheeldown = "/repeat 5 /iset **down"
-@chat(perl.iset):wheelup = "/repeat 5 /iset **up"
-@chat(script.scripts):button1 = "/window ${_window_number};/script go ${_chat_line_y}"
-@chat(script.scripts):button2 = "/window ${_window_number};/script go ${_chat_line_y};/script installremove -q ${script_name_with_extension}"
-@chat(script.scripts):wheeldown = "/script down 5"
-@chat(script.scripts):wheelup = "/script up 5"
-@item(buffer_nicklist):button1 = "/window ${_window_number};/query ${nick}"
-@item(buffer_nicklist):button1-gesture-left = "/window ${_window_number};/kick ${nick}"
-@item(buffer_nicklist):button1-gesture-left-long = "/window ${_window_number};/kickban ${nick}"
-@item(buffer_nicklist):button2 = "/window ${_window_number};/whois ${nick}"
-@item(buffer_nicklist):button2-gesture-left = "/window ${_window_number};/ban ${nick}"
-@item(buflist):button1* = "hsignal:buflist_mouse"
-@item(buflist):button2* = "hsignal:buflist_mouse"
-@item(buflist2):button1* = "hsignal:buflist_mouse"
-@item(buflist2):button2* = "hsignal:buflist_mouse"
-@item(buflist3):button1* = "hsignal:buflist_mouse"
-@item(buflist3):button2* = "hsignal:buflist_mouse"
-@bar:wheeldown = "/bar scroll ${_bar_name} ${_window_number} +20%"
-@bar:wheelup = "/bar scroll ${_bar_name} ${_window_number} -20%"
-@chat:button1 = "/window ${_window_number}"
-@chat:button1-gesture-left = "/window ${_window_number};/buffer -1"
-@chat:button1-gesture-left-long = "/window ${_window_number};/buffer 1"
-@chat:button1-gesture-right = "/window ${_window_number};/buffer +1"
-@chat:button1-gesture-right-long = "/window ${_window_number};/input jump_last_buffer"
-@chat:ctrl-wheeldown = "/window scroll_horiz -window ${_window_number} +10%"
-@chat:ctrl-wheelup = "/window scroll_horiz -window ${_window_number} -10%"
-@chat:wheeldown = "/window scroll_down -window ${_window_number}"
-@chat:wheelup = "/window scroll_up -window ${_window_number}"
-@*:button3 = "/cursor go ${_x},${_y}"
-
-#+END_SRC
-
-*** weechat tangle
-
-+ home dir
-
-#+NAME: weechat.conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.weechat/weechat.conf"
-<<weechat.conf>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: weechat.conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".weechat/weechat.conf"
-<<weechat.conf>>
 #+END_SRC
 
 ** aria2
@@ -2237,417 +2590,31 @@ meta2-D = "/cursor move left"
 <<aria2>>
 #+END_SRC
 
-** newsboat
+** gitconfig
 
-*** config
-
-#+NAME: newsboat-config
+#+NAME: gitconfig
 #+BEGIN_SRC conf
-# general settings
-auto-reload yes
-max-items 50 
-
-# externel browser
-browser "/usr/local/bin/w3m %u"
-macro m set browser "/usr/local/bin/mpv %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-#macro l set browser "/usr/local/bin/chrome %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-macro l set browser "/usr/local/bin/firefox %u"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-
-# cvlc send stand error to /dev/null and run in background
-#macro . set browser "/usr/local/bin/cvlc --quiet %u 2>/dev/null &"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-
-# mpc get enclosure url with youtube-dl and add to queue
-macro . set browser "/usr/local/bin/mpc add $(youtube-dl -g %u)"; open-in-browser ; set browser "/usr/local/bin/w3m %u"
-
-# unbind keys
-unbind-key ENTER
-unbind-key j
-unbind-key k
-unbind-key J
-unbind-key K
-
-# bind keys - vim style
-bind-key j down
-bind-key k up
-bind-key l open
-bind-key h quit
-
-# podboat
-download-path "~/downloads/%n"
-player "mpv"
-
-# colours
-color background         default   default
-color listnormal         default   default
-color listnormal_unread  default   default
-color listfocus          black     blue
-color listfocus_unread   black     blue
-color info               black   blue
-color article            default   default
-
-# highlights
-highlight article "^(Feed|Title|Link|Date|Author):.*$" color12 color8
-highlight article "https?://[^ ]+" color4 color8 protect
-
+[user]
+name = Daniel J Wilcox
+email = danieljwilcox@gmail.com
+[color]
+ui = true
 #+END_SRC
 
-*** urls
-
-#+NAME: newsboat-urls
-#+BEGIN_SRC conf :tangle ".newsboat/urls"
-# News
-https://www.howtogeek.com/feed/ text
-http://feeds.arstechnica.com/arstechnica/index text
-http://www.makeuseof.com/rss text
-https://www.omgubuntu.co.uk/feed text
-https://itsfoss.com/feed/ text
-http://feeds.feedburner.com/Torrentfreak text
-
-# footy links
-https://www.footybite.com/feed/ "~Footybrite" text
-
-# newcastle chronicle
-https://www.chroniclelive.co.uk/all-about/newcastle%20united%20fc?service=rss "~Chronicle live"
-
-# The Magpie Channel
-https://www.youtube.com/feeds/videos.xml?channel_id=UCzbwOixfdDkOEl4c2Gy1Xow video
-
-# Newcastle Fans TV
-https://www.youtube.com/feeds/videos.xml?channel_id=UC7GG4HsvV8hvKSjl_VWW5rg video
-
-# youtube
-https://www.youtube.com/feeds/videos.xml?playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa "a closer look" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg "distrotube" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UClx4eJ_EP9MJdz19JUjKD1w "Gaming Careers" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCjyDzADaZy1WFUWqFmfcHJg "Streamgeeks" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCRBHiacaQb5S70pljtJYB2g "Eposvox" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCQGZ_5x1j7Q8rXvUXO608oA "Joe Jackson Snr" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCg6gPGh8HU2U01vaFCAsvmQ "Chris Titus Tech" video
-https://www.youtube.com/feeds/videos.xml?channel_id=UCRE3NFNtdjR96-H4QG4U1Fg "Hexdsl" video
-
-# newcastle podcast
-https://rss.acast.com/thechronicle "~Everything Black and White" audio
-#+END_SRC
-
-**** newsboat tangle
-
-***** config tangle
+*** gitconfig tangle
 
 + home dir
 
-#+NAME: newsboat-config-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/config"
-<<newsboat-config>>
+#+NAME: gitconfig-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/git/config"
+<<gitconfig>>
 #+END_SRC
 
 + current dir
 
-#+NAME: newsboat-config-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/config"
-<<newsboat-config>>
-#+END_SRC
-
-***** urls tangle
-
-+ home dir
-
-#+NAME: newsboat-urls-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/newsboat/urls"
-<<newsboat-urls>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: newsboat-urls-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/newsboat/urls"
-<<newsboat-urls>>
-#+END_SRC
-
-** w3m
-
-*** bookmark.html
-
-#+NAME: w3m-bookmark.html
-#+BEGIN_SRC conf
-<html><head><title>Bookmarks</title></head>
-<META http-equiv='Content-Type' content='text/html; charset=UTF-8'>
-<body>
-<h1>Bookmarks</h1>
-<ul>
-<li><a href="https://duckduckgo.com/">DuckDuckgo</a></li>
-<li><a href="https://google.com/">Google</a></li>
-<li><a href="https://www.youtube.com/">YouTube</a></li>
-<li><a href="https://www.bbc.co.uk/iplayer">BBC iPlayer</a>
-<li><a href="https://ixirc.com/">ixirc</a></li>
-<li><a href="http://www.xdcc.eu/">xdcc</a></li>
-</ul>
-</body>
-</html>
-#+END_SRC
-
-*** config
-
-#+NAME: w3m-config
-#+BEGIN_SRC conf
-tabstop 8
-indent_incr 4
-pixel_per_char 9
-pixel_per_line 19
-frame 0
-target_self 0
-open_tab_blank 0
-open_tab_dl_list 0
-display_link 0
-display_link_number 0
-decode_url 0
-display_lineinfo 0
-ext_dirlist 1
-dirlist_cmd file:///$LIB/dirlist.cgi
-use_dictcommand 1
-dictcommand file:///$LIB/w3mdict.cgi
-multicol 0
-alt_entity 0
-graphic_char 0
-display_borders 0
-fold_textarea 0
-display_ins_del 1
-ignore_null_img_alt 1
-view_unseenobject 0
-display_image 0
-pseudo_inlines 0
-auto_image 0
-max_load_image 4
-ext_image_viewer 1
-image_scale 100
-imgdisplay 
-image_map_list 1
-fold_line 0
-show_lnum 0
-show_srch_str 1
-label_topline 0
-nextpage_topline 0
-color 1
-basic_color terminal
-anchor_color blue
-image_color green
-form_color red
-mark_color cyan
-bg_color terminal
-active_style 0
-active_color cyan
-visited_anchor 0
-visited_color magenta
-pagerline 10000
-use_history 1
-history 100
-save_hist 0
-confirm_qq 1
-close_tab_back 0
-mark 0
-emacs_like_lineedit 0
-vi_prec_num 0
-mark_all_pages 0
-wrap_search 0
-ignorecase_search 1
-use_mouse 0
-reverse_mouse 0
-relative_wheel_scroll 0
-relative_wheel_scroll_ratio 30
-fixed_wheel_scroll_count 5
-clear_buffer 1
-decode_cte 0
-auto_uncompress 0
-preserve_timestamp 1
-keymap_file keymap
-document_root 
-personal_document_root 
-cgi_bin 
-index_file 
-mime_types ~/.mime.types, /usr/local/etc/mime.types
-mailcap ~/.w3m/mailcap, /usr/local/etc/w3m/mailcap
-urimethodmap ~/.w3m/urimethodmap, /usr/local/etc/w3m/urimethodmap
-editor /usr/local/bin/emacsclient
-mailto_options 1
-mailer 
-extbrowser /usr/local/bin/mpv %s &
-extbrowser2 /usr/home/djwilcox/bin/pinch -i %s &
-extbrowser3 ~/.local/bin/youtube-dl %s
-extbrowser4 
-extbrowser5 
-extbrowser6 
-extbrowser7 
-extbrowser8 
-extbrowser9 
-bgextviewer 0
-use_lessopen 0
-passwd_file ~/.w3m/passwd
-disable_secret_security_check 0
-ftppasswd 
-ftppass_hostnamegen 1
-pre_form_file ~/.w3m/pre_form
-siteconf_file ~/.w3m/siteconf
-user_agent
-no_referer 0
-accept_language en;q=1.0
-accept_encoding gzip, compress, bzip, bzip2, deflate
-accept_media text/html, text/*;q=0.5, image/*
-argv_is_url 1
-retry_http 1
-default_url 1
-follow_redirection 10
-meta_refresh 0
-dns_order 0
-nntpserver 
-nntpmode 
-max_news 50
-use_proxy 1
-http_proxy 
-https_proxy 
-ftp_proxy 
-no_proxy 
-noproxy_netaddr 1
-no_cache 0
-ssl_forbid_method 2, 3
-ssl_verify_server 1
-ssl_cert_file 
-ssl_key_file 
-ssl_ca_path 
-ssl_ca_file 
-use_cookie 0
-show_cookie 0
-accept_cookie 0
-accept_bad_cookie 0
-cookie_reject_domains 
-cookie_accept_domains 
-cookie_avoid_wrong_number_of_dots 
-display_charset UTF-8
-document_charset UTF-8
-auto_detect 2
-system_charset UTF-8
-follow_locale 1
-ext_halfdump 0
-use_wide 1
-use_combining 1
-east_asian_width 0
-use_language_tag 1
-ucs_conv 1
-pre_conv 0
-search_conv 1
-fix_width_conv 1
-use_gb12345_map 0
-use_jisx0201 0
-use_jisc6226 0
-use_jisx0201k 0
-use_jisx0212 0
-use_jisx0213 0
-strict_iso2022 1
-gb18030_as_ucs 0
-simple_preserve_space 0
-
-#+END_SRC
-
-*** keymap
-
-#+NAME: w3m-keymap
-#+BEGIN_SRC conf
-keymap ,-m EXTERN_LINK
-#+END_SRC
-
-*** mailcap
-
-#+NAME: w3m-mailcap
-#+BEGIN_SRC conf
-image/*; sxiv %s
-#+END_SRC
-
-**** w3m tangle
-
-***** bookmark.html
-
-+ home dir
-
-#+NAME: w3m-bookmark.html-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.w3m/bookmark.html"
-<<w3m-bookmark.html>>
-#+END_SRC
-
-+ current dir
-  
-#+NAME: w3m-bookmark.html-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".w3m/bookmark.html"
-<<w3m-bookmark.html>>
-#+END_SRC
-
-***** config
-
-+ home dir
-
-#+NAME: w3m-config-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.w3m/config"
-<<w3m-config>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: w3m-config-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".w3m/config"
-<<w3m-config>>
-#+END_SRC
-
-***** keymap
-
-
-+ home dir
-
-#+NAME: w3m-keymap-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.w3m/keymap"
-<<w3m-keymap>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: w3m-keymap-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".w3m/keymap"
-<<w3m-keymap>>
-#+END_SRC
-
-***** mailcap
-
-+ home dir
-
-#+NAME: w3m-mailcap-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.w3m/mailcap"
-<<w3m-mailcap>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: w3m-mailcap-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".w3m/mailcap"
-<<w3m-mailcap>>
-#+END_SRC
-
-** Xmodmap
-
-#+NAME: Xmodmap
-#+BEGIN_SRC conf
-pointer = 1 2 3 5 4 6 7 8 9 10
-#+END_SRC
-
-*** Xmodmap tangle
-
-+ home dir
-  
-#+NAME: Xmodmap-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.Xmodmap"
-<<Xmodmap>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: Xmodmap-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".Xmodmap"
-<<Xmodmap>>
+#+NAME: gitconfig-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/git/config"
+<<gitconfig>>
 #+END_SRC
 
 ** muttrc
@@ -2829,192 +2796,6 @@ set my_pgp_id="3B2C8BA1"
 <<muttrc>>
 #+END_SRC
 
-** rtorrent.rc
-
-#+NAME: rtorrent.rc
-#+BEGIN_SRC conf 
-# This is an example resource file for rTorrent. Copy to
-# ~/.rtorrent.rc and enable/modify the options as needed. Remember to
-# uncomment the options you wish to enable.
-
-# Maximum and minimum number of peers to connect to per torrent.
-#
-#throttle.min_peers.normal.set = 40
-#throttle.max_peers.normal.set = 100
-
-# Same as above but for seeding completed torrents (-1 = same as downloading)
-#
-#throttle.min_peers.seed.set = 10
-#throttle.max_peers.seed.set = 50
-
-# Maximum number of simultanious uploads per torrent.
-#
-#throttle.max_uploads.set = 15
-
-# Global upload and download rate in KiB. "0" for unlimited.
-#
-#throttle.global_down.max_rate.set_kb = 0
-#throttle.global_up.max_rate.set_kb = 0
-
-# Default directory to save the downloaded torrents.
-directory.default.set = /home/djwilcox/downloads
-
-# Default session directory. Make sure you don't run multiple instance
-# of rtorrent using the same session directory. Perhaps using a
-# relative path?
-#
-session.path.set = /home/djwilcox/.session
-
-# Watch a directory for new torrents, and stop those that have been
-# deleted.
-#
-schedule2 = watch_directory,5,5,load.start=/home/djwilcox/downloads/*.torrent
-#schedule2 = untied_directory,5,5,stop_untied=
-
-# Close torrents when diskspace is low.
-#
-#schedule2 = low_diskspace,5,60,close_low_diskspace=100M
-
-# The ip address reported to the tracker.
-#
-#network.local_address.set = 127.0.0.1
-#network.local_address.set = rakshasa.no
-
-# The ip address the listening socket and outgoing connections is
-# bound to.
-#
-#network.bind_address.set = 127.0.0.1
-#network.bind_address.set = rakshasa.no
-
-# Port range to use for listening.
-#
-network.port_range.set = 6881-6881
-
-# Start opening ports at a random position within the port range.
-#
-#network.port_random.set = no
-
-# Check hash for finished torrents. Might be usefull until the bug is
-# fixed that causes lack of diskspace not to be properly reported.
-#
-#pieces.hash.on_completion.set = no
-
-# Set whether the client should try to connect to UDP trackers.
-#
-trackers.use_udp.set = yes
-
-# Alternative calls to bind and ip that should handle dynamic ip's.
-#
-#schedule2 = ip_tick,0,1800,ip=rakshasa
-#schedule2 = bind_tick,0,1800,bind=rakshasa
-
-# Encryption options, set to none (default) or any combination of the following:
-# allow_incoming, try_outgoing, require, require_RC4, enable_retry, prefer_plaintext
-#
-# The example value allows incoming encrypted connections, starts unencrypted
-# outgoing connections but retries with encryption if they fail, preferring
-# plaintext to RC4 encryption after the encrypted handshake
-#
-# protocol.encryption.set = allow_incoming,enable_retry,prefer_plaintext
-protocol.encryption.set = allow_incoming,enable_retry
-
-# Enable DHT support for trackerless torrents or when all trackers are down.
-# May be set to "disable" (completely disable DHT), "off" (do not start DHT),
-# "auto" (start and stop DHT as needed), or "on" (start DHT immediately).
-# The default is "off". For DHT to work, a session directory must be defined.
-# 
-dht.mode.set = auto
-
-# UDP port to use for DHT. 
-#
-dht.port.set = 6882
-
-# Enable peer exchange (for torrents not marked private)
-#
-#protocol.pex.set = yes
-
-# Set downlad list layout style. ("full", "compact")
-#
-#ui.torrent_list.layout.set = "full"
-
-# SCGI Connectivity (for alternative rtorrent interfaces, XMLRPC)
-#
-# Use a IP socket with scgi_port, or a Unix socket with scgi_local.
-# schedule can be used to set permissions on the unix socket.
-#
-#scgi_port = 127.0.0.1:5000
-#scgi_local = /home/user/rtorrent/rpc.socket
-#schedule = scgi_permission,0,0,"execute.nothrow=chmod,\"g+w,o=\",/home/user/rtorrent/rpc.socket"
-#+END_SRC
-
-*** rtorrent.rc tangle
-
-+ home dir
-
-#+NAME: rtorrent.rc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rtorrent/rtorrent.rc"
-<<rtorrent.rc>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: rtorrent.rc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/rtorrent/rtorrent.rc"
-<<rtorrent.rc>>
-#+END_SRC
-
-** emacs-capture
-
-#+NAME: emacs-capture
-#+BEGIN_SRC conf
-[Desktop Entry]
-Name=Emacs Client
-Exec=/home/djwilcox/bin/emacs-capture %u 
-Icon=emacs-icon
-Type=Application
-Terminal=false
-MimeType=x-scheme-handler/org-protocol;
-#+END_SRC
-
-*** emacs-capture tangle
-
-+ home dir
-
-#+NAME: emacs-capture-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacs-capture.desktop"
-<<emacs-capture>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: emacs-capture-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacs-capture.desktop"
-<<emacs-capture>>
-#+END_SRC
-
-** Mouse-Xmodmap
-
-#+NAME: Mouse-Xmodmap
-#+BEGIN_SRC conf
-pointer = 1 2 3 4 5 6 7 8 9 10
-#+END_SRC
-
-*** Mouse-Xmodmap tangle
-
-+ home dir
-  
-#+NAME: Mouse-Xmodmap-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.Mouse-Xmodmap"
-<<Mouse-Xmodmap>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: Mouse-Xmodmap-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".Mouse-Xmodmap"
-<<Mouse-Xmodmap>>
-#+END_SRC
-
 ** profile
 
 #+NAME: profile
@@ -3060,30 +2841,6 @@ ENV=$HOME/.shrc; export ENV
 <<profile>>
 #+END_SRC
 
-** mimeinfo 
-
-#+NAME: mimeinfo
-#+BEGIN_SRC conf
-[MIME Cache]
-x-scheme-handler/org-protocol=emacs-capture.desktop;
-#+END_SRC
-
-*** mimeinfo tangle
-
-+ home dir
-
-#+NAME: mimeinfo-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/mimeinfo.cache"
-<<mimeinfo>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: mimeinfo-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/mimeinfo.cache"
-<<mimeinfo>>
-#+END_SRC
-
 ** login_conf
 
 #+NAME: login_conf
@@ -3108,33 +2865,6 @@ me:\
 #+NAME: login_conf-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".login_conf"
 <<login_conf>>
-#+END_SRC
-
-** gitconfig
-
-#+NAME: gitconfig
-#+BEGIN_SRC conf
-[user]
-name = Daniel J Wilcox
-email = danieljwilcox@gmail.com
-[color]
-ui = true
-#+END_SRC
-
-*** gitconfig tangle
-
-+ home dir
-
-#+NAME: gitconfig-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/git/config"
-<<gitconfig>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: gitconfig-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/git/config"
-<<gitconfig>>
 #+END_SRC
 
 ** xkb
@@ -5089,342 +4819,6 @@ xkb_symbols "alt_win_ctrl" {
 <<xkb-custom>>
 #+END_SRC
 
-** dunst
-
-#+NAME: dunst
-#+BEGIN_SRC conf
-[global]
-    ### Display ###
-    monitor = 0
-    follow = mouse
-    geometry = "300x5-10+30"
-    indicate_hidden = yes
-    shrink = no
-    transparency = 0
-    notification_height = 0
-    separator_height = 2
-    padding = 8
-    horizontal_padding = 8
-    frame_width = 2
-    frame_color = "#eee8d5"
-    separator_color = frame
-    sort = yes
-    idle_threshold = 120
-
-    ### Text ###
-
-    font = Inconsolata 14
-    line_height = 0
-    markup = full
-    format = "<b>%s</b>\n%b"
-    alignment = left
-    show_age_threshold = 60
-    word_wrap = yes
-    ellipsize = middle
-    ignore_newline = no
-    stack_duplicates = true
-    hide_duplicate_count = false
-    show_indicators = yes
-
-    ### Icons ###
-
-    # Align icons left/right/off
-    icon_position = off
-    max_icon_size = 32
-    icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/
-
-    ### History ###
-
-    sticky_history = yes
-    history_length = 20
-
-    ### Misc/Advanced ###
-
-    dmenu = /usr/local/bin/dmenu -p dunst:
-    browser = /usr/local/bin/firefox -new-tab
-    always_run_script = true
-    title = Dunst
-    class = Dunst
-    startup_notification = false
-
-    # Manage dunsts desire for talking
-    verbosity = mesg
-    corner_radius = 0
-
-    ### Legacy
-
-    force_xinerama = false
-
-    # mouse
-
-    mouse_left_click = close_current
-    mouse_middle_click = do_action
-    mouse_right_click = close_all
-
-[experimental]
-    per_monitor_dpi = false
-
-[shortcuts]
-
-    # Shortcuts are specified as [modifier+][modifier+]...key
-    # Available modifiers are "ctrl", "mod1" (the alt-key), "mod2",
-    # "mod3" and "mod4" (windows-key).
-    # Xev might be helpful to find names for keys.
-
-    # Close notification.
-    close = ctrl+space
-
-    # Close all notifications.
-    close_all = ctrl+shift+space
-
-    # Redisplay last message(s).
-    # On the US keyboard layout "grave" is normally above TAB and left
-    # of "1". Make sure this key actually exists on your keyboard layout,
-    # e.g. check output of 'xmodmap -pke'
-    history = ctrl+grave
-
-    # Context menu.
-    context = ctrl+shift+period
-
-[urgency_low]
-    # IMPORTANT: colors have to be defined in quotation marks.
-    # Otherwise the "#" and following would be interpreted as a comment.
-    background = "#b58900"
-    foreground = "#eee8d5"
-    timeout = 10
-    # Icon for notifications with low urgency, uncomment to enable
-    #icon = /path/to/icon
-
-[urgency_normal]
-    background = "#b58900"
-    foreground = "#eee8d5"
-    timeout = 10
-    # Icon for notifications with normal urgency, uncomment to enable
-    #icon = /path/to/icon
-
-[urgency_critical]
-    background = "#b58900"
-    foreground = "#eee8d5"
-    frame_color = "#ff0000"
-    timeout = 0
-    # Icon for notifications with critical urgency, uncomment to enable
-    #icon = /path/to/icon
-
-# Every section that isn't one of the above is interpreted as a rules to
-# override settings for certain messages.
-#
-# Messages can be matched by
-#    appname (discouraged, see desktop_entry)
-#    body
-#    category
-#    desktop_entry
-#    icon
-#    match_transient
-#    msg_urgency
-#    stack_tag
-#    summary
-#
-# and you can override the
-#    background
-#    foreground
-#    format
-#    frame_color
-#    fullscreen
-#    new_icon
-#    set_stack_tag
-#    set_transient
-#    timeout
-#    urgency
-#
-# Shell-like globbing will get expanded.
-#
-# Instead of the appname filter, it's recommended to use the desktop_entry filter.
-# GLib based applications export their desktop-entry name. In comparison to the appname,
-# the desktop-entry won't get localized.
-#
-# SCRIPTING
-# You can specify a script that gets run when the rule matches by
-# setting the "script" option.
-# The script will be called as follows:
-#   script appname summary body icon urgency
-# where urgency can be "LOW", "NORMAL" or "CRITICAL".
-#
-# NOTE: if you don't want a notification to be displayed, set the format
-# to "".
-# NOTE: It might be helpful to run dunst -print in a terminal in order
-# to find fitting options for rules.
-
-# Disable the transient hint so that idle_threshold cannot be bypassed from the
-# client
-#[transient_disable]
-#    match_transient = yes
-#    set_transient = no
-#
-# Make the handling of transient notifications more strict by making them not
-# be placed in history.
-#[transient_history_ignore]
-#    match_transient = yes
-#    history_ignore = yes
-
-# fullscreen values
-# show: show the notifications, regardless if there is a fullscreen window opened
-# delay: displays the new notification, if there is no fullscreen window active
-#        If the notification is already drawn, it won't get undrawn.
-# pushback: same as delay, but when switching into fullscreen, the notification will get
-#           withdrawn from screen again and will get delayed like a new notification
-#[fullscreen_delay_everything]
-#    fullscreen = delay
-#[fullscreen_show_critical]
-#    msg_urgency = critical
-#    fullscreen = show
-
-#[espeak]
-#    summary = "*"
-#    script = dunst_espeak.sh
-
-#[script-test]
-#    summary = "*script*"
-#    script = dunst_test.sh
-
-#[ignore]
-#    # This notification will not be displayed
-#    summary = "foobar"
-#    format = ""
-
-#[history-ignore]
-#    # This notification will not be saved in history
-#    summary = "foobar"
-#    history_ignore = yes
-
-#[skip-display]
-#    # This notification will not be displayed, but will be included in the history
-#    summary = "foobar"
-#    skip_display = yes
-
-#[signed_on]
-#    appname = Pidgin
-#    summary = "*signed on*"
-#    urgency = low
-#
-#[signed_off]
-#    appname = Pidgin
-#    summary = *signed off*
-#    urgency = low
-#
-#[says]
-#    appname = Pidgin
-#    summary = *says*
-#    urgency = critical
-#
-#[twitter]
-#    appname = Pidgin
-#    summary = *twitter.com*
-#    urgency = normal
-#
-#[stack-volumes]
-#    appname = "some_volume_notifiers"
-#    set_stack_tag = "volume"
-#
-# vim: ft=cfg
-#+END_SRC
-
-*** dunst tangle
-
-+ home dir
-
-#+NAME: dunst-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/dunst/dunstrc"
-<<dunst>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: dunst-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/dunst/dunstrc"
-<<dunst>>
-#+END_SRC
-
-** tmux
-
-#+NAME: tmux
-#+BEGIN_SRC conf
-# make tmux display things in 256 colors
-#set -g default-terminal "screen-256color"
-
-# reload ~/.tmux.conf using PREFIX r
-bind r source-file ~/.tmux.conf \; display "Reloaded!"
-
-# use ctrl a
-set -g prefix C-a
-unbind C-b
-bind C-a send-prefix
-
-# make the first window number start at 1
-set -g base-index 1
-
-# status bar
-set-option -g status on 
-set -g status-right ""
-
-# default statusbar colors
-set -g status-style bg=default,fg=yellow #yellow
-
-# default window title colors
-set -g window-status-style fg=brightblue,bg=default
-
-# active window title colors
-set -g window-status-current-style fg=black,bg=colour6 #teal
-
-# pane border
-set -g pane-border-style fg=black #base02
-set -g pane-active-border-style fg=black #base01
-
-# message text
-set -g message-style bg=black,fg=brightred #orange
-
-# pane number display
-set-option -g display-panes-active-colour blue #blue
-set-option -g display-panes-colour brightred #orange
-
-# clock
-set-window-option -g clock-mode-colour green #green
-
-# vim key bindings
-setw -g mode-keys vi
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
-bind-key -r C-h select-window -t :-
-bind-key -r C-l select-window -t :+
-
-# resize panes using PREFIX H, J, K, L
-bind H resize-pane -L 5
-bind J resize-pane -D 5
-bind K resize-pane -U 5
-bind L resize-pane -R 5
-
-# copy and paste
-set-window-option -g automatic-rename off
-
-#+END_SRC
-
-*** tmux tangle
-
-+ home dir
-
-#+NAME: tmux-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tmux/tmux.conf"
-<<tmux>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: tmux-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
-<<tmux>>
-#+END_SRC
-
 ** chrome
 
 #+NAME: chrome
@@ -5481,358 +4875,3 @@ gtk-theme-name = Adwaita-dark
 <<gtk>>
 #+END_SRC
 
-** barrier
-
-#+NAME: barrier
-#+BEGIN_SRC conf
-section: screens
-	# three hosts named:  moe, larry, and curly
-	pollux:
-	macmini:
-end
-
-section: links
-	# larry is to the right of moe and curly is above moe
-	pollux:
-		right = macmini
-
-	# moe is to the left of larry and curly is above larry.
-	# note that curly is above both moe and larry and moe
-	# and larry have a symmetric connection (they're in
-	# opposite directions of each other).
-	macmini:
-		left  = pollux
-end
-
-section: options
-	keystroke(super+`) = switchInDirection(right)
-	keystroke(super+shift+`) = switchInDirection(left)
-end
-#+END_SRC
-
-*** barrier tangle
-
-+ home dir
-  
-#+NAME: barrier-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/barrier/barrier.conf"
-<<barrier>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: barrier-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/barrier/barrier.conf"
-<<barrier>>
-#+END_SRC
-
-** rofi
-
-#+NAME: rofi
-#+BEGIN_SRC conf
-configuration {
- modi: "window,drun,combi";
- font: "Inconsolata 14";
- terminal: "urxvtc";
- show-icons: true;
- combi-modi: "window,drun";
- }
-@import "/usr/local/share/rofi/themes/Arc-Dark.rasi"
-#+END_SRC
-
-*** rofi tangle
-
-+ home dir
-  
-#+NAME: rofi-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/rofi/config.rasi"
-<<rofi>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: rofi-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/rofi/config.rasi"
-<<rofi>>
-#+END_SRC
-** tint2
-
-#+NAME: tint2
-#+BEGIN_SRC conf
-#---- Generated by tint2conf 1e57 ----
-# See https://gitlab.com/o9000/tint2/wikis/Configure for 
-# full documentation of the configuration options.
-#-------------------------------------
-# Gradients
-#-------------------------------------
-# Backgrounds
-# Background 1: 
-rounded = 0
-border_width = 0
-border_sides = TBLR
-border_content_tint_weight = 0
-background_content_tint_weight = 0
-background_color = #000000 60
-border_color = #000000 30
-background_color_hover = #000000 60
-border_color_hover = #000000 30
-background_color_pressed = #000000 60
-border_color_pressed = #000000 30
-
-# Background 2: Default task, Iconified task
-rounded = 4
-border_width = 1
-border_sides = TBLR
-border_content_tint_weight = 0
-background_content_tint_weight = 0
-background_color = #777777 20
-border_color = #777777 30
-background_color_hover = #aaaaaa 22
-border_color_hover = #eaeaea 44
-background_color_pressed = #555555 4
-border_color_pressed = #eaeaea 44
-
-# Background 3: Active task
-rounded = 4
-border_width = 1
-border_sides = TBLR
-border_content_tint_weight = 0
-background_content_tint_weight = 0
-background_color = #777777 20
-border_color = #ffffff 40
-background_color_hover = #aaaaaa 22
-border_color_hover = #eaeaea 44
-background_color_pressed = #555555 4
-border_color_pressed = #eaeaea 44
-
-# Background 4: Urgent task
-rounded = 4
-border_width = 1
-border_sides = TBLR
-border_content_tint_weight = 0
-background_content_tint_weight = 0
-background_color = #aa4400 100
-border_color = #aa7733 100
-background_color_hover = #cc7700 100
-border_color_hover = #aa7733 100
-background_color_pressed = #555555 4
-border_color_pressed = #aa7733 100
-
-# Background 5: Tooltip
-rounded = 1
-border_width = 1
-border_sides = TBLR
-border_content_tint_weight = 0
-background_content_tint_weight = 0
-background_color = #222222 100
-border_color = #333333 100
-background_color_hover = #ffffaa 100
-border_color_hover = #000000 100
-background_color_pressed = #ffffaa 100
-border_color_pressed = #000000 100
-
-#-------------------------------------
-# Panel
-panel_items = TLSC
-panel_size = 100% 30
-panel_margin = 0 0
-panel_padding = 2 0 2
-panel_background_id = 0
-wm_menu = 1
-panel_dock = 0
-panel_pivot_struts = 0
-panel_position = top center horizontal
-panel_layer = normal
-panel_monitor = all
-panel_shrink = 1
-autohide = 0
-autohide_show_timeout = 0
-autohide_hide_timeout = 0.5
-autohide_height = 2
-strut_policy = follow_size
-panel_window_name = tint2
-disable_transparency = 1
-mouse_effects = 1
-font_shadow = 0
-mouse_hover_icon_asb = 100 0 10
-mouse_pressed_icon_asb = 100 0 0
-scale_relative_to_dpi = 0
-scale_relative_to_screen_height = 0
-
-#-------------------------------------
-# Taskbar
-taskbar_mode = multi_desktop
-taskbar_hide_if_empty = 1
-taskbar_padding = 0 0 2
-taskbar_background_id = 0
-taskbar_active_background_id = 0
-taskbar_name = 1
-taskbar_hide_inactive_tasks = 0
-taskbar_hide_different_monitor = 0
-taskbar_hide_different_desktop = 0
-taskbar_always_show_all_desktop_tasks = 0
-taskbar_name_padding = 4 2
-taskbar_name_background_id = 0
-taskbar_name_active_background_id = 0
-taskbar_name_font = Inconsolata Bold 12
-taskbar_name_font_color = #e3e3e3 100
-taskbar_name_active_font_color = #ffffff 100
-taskbar_distribute_size = 1
-taskbar_sort_order = none
-task_align = left
-
-#-------------------------------------
-# Task
-task_text = 1
-task_icon = 1
-task_centered = 1
-urgent_nb_of_blink = 100000
-task_maximum_size = 150 35
-task_padding = 2 2 4
-task_font = Inconsolata Bold 12
-task_tooltip = 1
-task_thumbnail = 0
-task_thumbnail_size = 210
-task_font_color = #ffffff 100
-task_background_id = 2
-task_active_background_id = 3
-task_urgent_background_id = 4
-task_iconified_background_id = 2
-mouse_left = toggle_iconify
-mouse_middle = none
-mouse_right = close
-mouse_scroll_up = toggle
-mouse_scroll_down = iconify
-
-#-------------------------------------
-# System tray (notification area)
-systray_padding = 0 4 2
-systray_background_id = 0
-systray_sort = ascending
-systray_icon_size = 24
-systray_icon_asb = 100 0 0
-systray_monitor = 1
-systray_name_filter = 
-
-#-------------------------------------
-# Launcher
-launcher_padding = 2 4 2
-launcher_background_id = 0
-launcher_icon_background_id = 0
-launcher_icon_size = 24
-launcher_icon_asb = 100 0 0
-launcher_icon_theme = Papirus-Dark
-launcher_icon_theme_override = 0
-startup_notifications = 1
-launcher_tooltip = 1
-
-#-------------------------------------
-# Clock
-time1_format = %H:%M
-time2_format = 
-time1_font = Inconsolata Bold 12
-time1_timezone = 
-time2_timezone = 
-clock_font_color = #ffffff 100
-clock_padding = 2 0
-clock_background_id = 0
-clock_tooltip = 
-clock_tooltip_timezone = 
-clock_lclick_command = 
-clock_rclick_command = orage
-clock_mclick_command = 
-clock_uwheel_command = 
-clock_dwheel_command = 
-
-#-------------------------------------
-# Battery
-battery_tooltip = 1
-battery_low_status = 10
-battery_low_cmd = xmessage 'tint2: Battery low!'
-battery_full_cmd = 
-battery_font_color = #ffffff 100
-bat1_format = 
-bat2_format = 
-battery_padding = 1 0
-battery_background_id = 0
-battery_hide = 101
-battery_lclick_command = 
-battery_rclick_command = 
-battery_mclick_command = 
-battery_uwheel_command = 
-battery_dwheel_command = 
-ac_connected_cmd = 
-ac_disconnected_cmd = 
-
-#-------------------------------------
-# Tooltip
-tooltip_show_timeout = 0.5
-tooltip_hide_timeout = 0.1
-tooltip_padding = 4 4
-tooltip_background_id = 5
-tooltip_font_color = #dddddd 100
-
-#+END_SRC
-
-*** tint2 tangle
-
-+ home dir
-  
-#+NAME: tint2-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tint2/tint2rc"
-<<tint2>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: tint2-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/tint2/tint2rc"
-<<tint2>>
-#+END_SRC
-
-** xmobar
-
-#+NAME: xmobar
-#+BEGIN_SRC conf
-Config { font = "xft:Inconsolata:size=12:lcdfilter=lcddefault:hintstyle=hintnone:rgba=rgb:antialias=true:autohint=false:style=bold"
-       , additionalFonts = []
-       , borderColor = "#292929"
-       , border = TopB
-       , bgColor = "#292929"
-       , fgColor = "#FDF6E3"
-       , alpha = 255
-       , position = Top
-       , textOffset = -1
-       , iconOffset = -1
-       , lowerOnStart = True
-       , pickBroadest = False
-       , persistent = False
-       , hideOnStart = False
-       , iconRoot = "."
-       , allDesktops = True
-       , overrideRedirect = True
-       , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
-		    , Run StdinReader
-                    ]
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%StdinReader% }\
-                    \{ <fc=#cccccc>%date%</fc>"
-       }
-#+END_SRC
-
-*** xmobar tangle
-
-+ home dir
-  
-#+NAME: xmobar-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/xmobar/xmobarrc"
-<<xmobar>>
-#+END_SRC
-  
-+ current dir
-
-#+NAME: xmobar-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/xmobar/xmobarrc"
-<<xmobar>>
-#+END_SRC
