@@ -237,6 +237,9 @@
 ;; setq
 ;; ----------------------------------------------------------------------------------
 
+(setq native-comp-deferred-compilation nil
+comp-enable-subr-trampolines nil)
+
 ;; general
 (setq version-control t)
 (setq vc-make-backup-files t)
