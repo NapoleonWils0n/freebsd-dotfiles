@@ -26,7 +26,7 @@
  '(custom-safe-themes
    '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "" default))
  '(package-selected-packages
-   '(all-the-icons doom-themes doom-modeline ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-collection evil-leader evil-surround fd-dired flycheck git-commit git-auto-commit-mode hydra iedit magit-section mpv ob-async openwith orderless rg s shrink-path undo-tree vertico wgrep which-key yaml-mode))
+   '(magit async evil-collection google-translate ednc elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-leader fd-dired git-auto-commit-mode hydra iedit mpv ob-async openwith rg s shrink-path undo-tree marginalia orderless embark vertico wgrep which-key yaml-mode doom-themes doom-modeline nerd-icons))
  '(warning-suppress-types '((comp)))
  '(youtube-sub-extractor-timestamps 'left-side-text))
 
@@ -42,6 +42,7 @@
 (unless package-archive-contents
   (package-refresh-contents))
 (package-install-selected-packages)
+
 
 
 ;; ----------------------------------------------------------------------------------
@@ -70,7 +71,7 @@
 
 ;; save
 (save-place-mode 1)         ;; save cursor position
-(desktop-save-mode 1)       ;; Save the desktop session
+(desktop-save-mode 0)       ;; dont save the desktop session
 (savehist-mode 1)           ;; save history
 (global-auto-revert-mode 1) ;; revert buffers when the underlying file has changed
 
@@ -178,7 +179,7 @@
 (evil-collection-define-key 'normal 'dired-mode-map
     "e" 'dired-find-file
     "h" 'dired-up-directory
-    "l" 'dired-find-file)
+    "l" 'dired-find-file-mpv)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -201,23 +202,21 @@
 (setq undo-tree-visualizer-timestamps t)
 (setq undo-tree-visualizer-diff t)
 
-(require 'openwith)
-;; nohup dont close launched programs when emacs quits
-(setq openwith-associations
-      (list
-       (list (openwith-make-extension-regexp
-              '("mpg" "mpeg" "mp3" "mp4" "m4v"
-                "avi" "wmv" "wav" "mov" "flv"
-                "ogm" "ogg" "mkv" "webm"))
-             "nohup 1>/dev/null 2>/dev/null mpv --fs --fs-screen=1"
-             '(file))
-       (list (openwith-make-extension-regexp
-              '("pdf"))
-             "nohup 1>/dev/null 2>/dev/null evince"
-             '(file))))
-
-(openwith-mode 1)
-
+;;(require 'openwith)
+;;(setq openwith-associations
+;;      (list
+;;;;       (list (openwith-make-extension-regexp
+;;;;              '("mpg" "mpeg" "mp3" "mp4" "m4v"
+;;;;                "avi" "wmv" "wav" "mov" "flv"
+;;;;                "ogm" "ogg" "mkv" "webm"))
+;;;;          "mpv --fs --fs-screen=1"
+;;;;          '(file))
+;;       (list (openwith-make-extension-regexp
+;;              '("pdf"))
+;;             "evince"
+;;             '(file))))
+;;
+;;(openwith-mode 1)
 
 ;; ----------------------------------------------------------------------------------
 ;; tree-sitter
@@ -233,12 +232,16 @@
              '(sh-mode . bash-ts-mode))
 
 
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+   '("^*tree-sitter explorer *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.40)))
+
+
 ;; ----------------------------------------------------------------------------------
 ;; setq
 ;; ----------------------------------------------------------------------------------
-
-(setq native-comp-deferred-compilation nil
-comp-enable-subr-trampolines nil)
 
 ;; general
 (setq version-control t)
@@ -290,9 +293,6 @@ comp-enable-subr-trampolines nil)
 ;; eww browser text width
 (setq shr-width 80)
 
-;; emacs 28 - dictionary server
-;;(setq dictionary-server "dict.org")
-
 ;; company auto complete
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 3)
@@ -303,6 +303,52 @@ comp-enable-subr-trampolines nil)
 
 ;; disable ring bell
 (setq ring-bell-function 'ignore)
+
+;; side windows
+(setq switch-to-buffer-obey-display-actions t)
+
+;; hippie expand
+(setq hippie-expand-try-functions-list
+      '(try-expand-all-abbrevs
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-from-kill
+        try-expand-dabbrev-all-buffers
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
+
+;; ----------------------------------------------------------------------------------
+;; emacs 28 - dictionary server
+;; ----------------------------------------------------------------------------------
+
+(setq dictionary-server "dict.org")
+
+;; mandatory, as the dictionary misbehaves!
+(add-to-list 'display-buffer-alist
+   '("^\\*Dictionary\\*" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+
+
+;; ----------------------------------------------------------------------------------
+;; functions
+;; ----------------------------------------------------------------------------------
+
+;; clear the kill ring
+(defun clear-kill-ring ()
+  "Clear the results on the kill ring."
+  (interactive)
+  (setq kill-ring nil))
+
+;; reload init.el
+(defun my-reload-init ()
+  "reload init.el"
+  (interactive)
+  (load-file "~/.config/emacs/init.el"))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; completion
@@ -338,6 +384,11 @@ comp-enable-subr-trampolines nil)
 
 (setq completion-in-region-function #'consult-completion-in-region)
 
+;; consult-yank-pop
+(global-set-key (kbd "M-y") 'consult-yank-pop)
+
+;; It lets you use a new minibuffer when you're in the minibuffer
+(setq enable-recursive-minibuffers t)
 
 ;;; Orderless
 
@@ -374,6 +425,8 @@ comp-enable-subr-trampolines nil)
 ;; press M-/ and invoke hippie-expand
 (keymap-global-set "M-/" 'hippie-expand)
 
+;; window-toggle-side-windows
+(keymap-global-set "C-x x w" 'window-toggle-side-windows)
 
 ;; ----------------------------------------------------------------------------------
 ;; keymap-set
@@ -390,6 +443,10 @@ comp-enable-subr-trampolines nil)
 
 ;; Toggle Hidden Files in Emacs dired with C-x M-o
 (require 'dired-x)
+
+;; dired-async
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
 
 ;; kill the current buffer when selecting a new directory to display
 (setq dired-kill-when-opening-new-dired-buffer t)
@@ -427,6 +484,10 @@ comp-enable-subr-trampolines nil)
 ;; dired hide aync output buffer
 (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 
+;; ob-async sentinel fix
+(defun no-hide-overlays (orig-fun &rest args)
+(setq org-babel-hide-result-overlays nil))
+(advice-add 'ob-async-org-babel-execute-src-block :before #'no-hide-overlays)
 
 ;; ----------------------------------------------------------------------------------
 ;; dired-fd
@@ -468,8 +529,9 @@ comp-enable-subr-trampolines nil)
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-;; set tramp shell to sh to avoid zsh problems
-(with-eval-after-load 'tramp '(setenv "SHELL" "/bin/sh"))
+;; set tramp shell to bash to avoid zsh problems
+(setenv "SHELL" "/usr/bin/bash")
+(setq tramp-allow-unsafe-temporary-files t)
 
 ;; tramp backup directory
 (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
@@ -515,8 +577,8 @@ comp-enable-subr-trampolines nil)
 (setq org-capture-templates
     '(("w" "web site" entry
       (file+olp "~/git/personal/bookmarks/bookmarks.org" "sites")
-      (file "~/git/personal/bookmarks/templates/tpl-web.txt")
-       :empty-lines-before 1)))
+      "** [[%c][%^{link-description}]]"
+       :empty-lines-after 1)))
 
 ;; refile
 (setq org-refile-targets '((nil :maxlevel . 2)
@@ -552,6 +614,7 @@ comp-enable-subr-trampolines nil)
      ("\\.mov\\'" . "mpv %s")
      ("\\.pdf\\'" . default))))
 
+  
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -630,12 +693,24 @@ comp-enable-subr-trampolines nil)
 ;; mpv.el
 ;; ----------------------------------------------------------------------------------
 
-(org-link-set-parameters "mpv" :follow #'mpv-play)
+;; mpv-default-options play fullscreen on second display
+(setq mpv-default-options '("--fs" "--fs-screen=1"))
+
+;; org-link-set-parameters
+;;(org-link-set-parameters "mpv" :follow #'mpv-play)
+;;(defun org-mpv-complete-link (&optional arg)
+;;  (replace-regexp-in-string
+;;   "file:" "mpv:"
+;;   (org-link-complete-file arg)
+;;   t t))
+
 (defun org-mpv-complete-link (&optional arg)
   (replace-regexp-in-string
    "file:" "mpv:"
    (org-link-complete-file arg)
    t t))
+(org-link-set-parameters "mpv"
+  :follow #'mpv-play :complete #'org-mpv-complete-link)
 
 ;; M-RET will insert a new item with the timestamp of the current playback position
 (defun my:mpv/org-metareturn-insert-playback-position ()
@@ -762,17 +837,146 @@ comp-enable-subr-trampolines nil)
 
 
 ;; ----------------------------------------------------------------------------------
+;; mpv dired
+;; ----------------------------------------------------------------------------------
+
+;; video and audio mime types
+(defvar supported-mime-types
+  '("video/quicktime"
+    "video/x-matroska"
+    "video/mp4"
+    "video/webm"
+    "video/x-m4v"
+    "video/x-msvideo"
+    "audio/x-wav"
+    "audio/mpeg"
+    "audio/x-hx-aac-adts"
+    "audio/mp4"
+    "audio/flac"
+    "audio/ogg"))
+
+;; subr-x
+(load "subr-x")
+
+;; get files mime type
+(defun get-mimetype (filepath)
+  (string-trim
+   (shell-command-to-string (concat "file -b --mime-type "
+                                    (shell-quote-argument filepath)))))
+
+;; dired-find-file-mpv
+(defun dired-find-file-mpv ()
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (member (get-mimetype file) supported-mime-types)
+        (mpv-play-dired file)
+      (dired-find-file))))
+
+
+;; mpv-play-dired
+(with-eval-after-load 'mpv
+  (defun mpv-play-dired (path)
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+    (if (not mpv--process)
+        ;; mpv isnt running play file
+        (mpv-start (expand-file-name path))
+        ;; mpv running append file to playlist
+      (mpv--playlist-append (expand-file-name path)))))
+
+
+;; mpv play dired marked files
+(defun mpv-play-marked-files ()
+  "Play marked files with mpv"
+  (interactive)
+  (mapc 'mpv-play-dired (dired-get-marked-files nil nil nil t)))
+
+;; mpv dired embark
+(with-eval-after-load 'embark
+  (define-key embark-file-map "l" #'mpv-play-marked-files))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv eww
+;; ----------------------------------------------------------------------------------
+
+(defun mpv-play-eww ()
+  "Start an mpv process playing the video stream at URL."
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+  (unless (mpv--url-p url)
+    (user-error "Invalid argument: `%s' (must be a valid URL)" url))
+  (if (not mpv--process)
+      ;; mpv isnt running play file
+      (mpv-start url)
+      ;; mpv running append file to playlist
+    (mpv--playlist-append url))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "l" 'mpv-play-eww)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww pinch
+;; ----------------------------------------------------------------------------------
+
+(defun eww-pinch ()
+  "Send the url under the point to mpd with pinch"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "pinch -i " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "n" 'eww-pinch)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler yt-dlp
+;; ----------------------------------------------------------------------------------
+
+(defun eww-yt-dlp ()
+  "Send the url under the point to taskspooler and yt-dlp"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp yt-dlp -P ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "x" 'eww-yt-dlp)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler aria2c
+;; ----------------------------------------------------------------------------------
+
+(defun eww-aria2c ()
+  "Send the url under the point to taskspooler and aria2c"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp aria2c -d ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "b" 'eww-aria2c)
+
+
+;; ----------------------------------------------------------------------------------
 ;; hydra
 ;; ----------------------------------------------------------------------------------
 
 (defhydra hydra-mpv (global-map "<f2>")
   "
-  ^Seek^                    ^Actions^                ^General^
-  ^^^^^^^^---------------------------------------------------------------------------
-  _h_: seek back -5         _,_: back frame          _i_: insert playback position
-  _j_: seek back -60        _._: forward frame       _n_: insert a newline
-  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot
-  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd
+  ^Seek^                    ^Actions^                ^General^                       ^Playlists^
+  ^^^^^^^^-----------------------------------------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position   _n_: next item in playlist
+  _j_: seek back -60        _._: forward frame       _m_: insert a newline           _p_: previous item in playlist
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot          _e_: jump to playlist entry
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd               _r_: remove playlist entry
   ^
   "
   ("h" mpv-seek-backward "-5")
@@ -783,10 +987,14 @@ comp-enable-subr-trampolines nil)
   ("." mpv-frame-step)
   ("SPC" mpv-pause)
   ("q" mpv-kill)
-  ("s" mpv-screenshot)
   ("i" my/mpv-insert-playback-position)
+  ("m" end-of-line-and-indented-new-line)
+  ("s" mpv-screenshot)
   ("o" mpv-osd)
-  ("n" end-of-line-and-indented-new-line))
+  ("n" mpv-playlist-next)
+  ("p" mpv-playlist-prev)
+  ("e" mpv-jump-to-playlist-entry)
+  ("r" mpv-remove-playlist-entry))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -796,7 +1004,6 @@ comp-enable-subr-trampolines nil)
 ;; start ednc-mode
 (ednc-mode 1)
 
-;; open notications
 (defun show-notification-in-buffer (old new)
   (let ((name (format "Notification %d" (ednc-notification-id (or old new)))))
     (with-current-buffer (get-buffer-create name)
@@ -811,6 +1018,11 @@ comp-enable-subr-trampolines nil)
 (add-hook 'ednc-notification-presentation-functions
           #'show-notification-in-buffer)
 
+;; open notifications in side window
+(add-to-list 'display-buffer-alist
+   '("^Notification *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
 
 ;; ednc evil - normal mode
 (defun noevil ()
@@ -849,7 +1061,7 @@ comp-enable-subr-trampolines nil)
 
 ;; mpv play fullscreen on second display
 (setq elfeed-tube-mpv-options
-  '("--cache=yes" "--force-window=yes" "--fs" "--fs-screen=1"))
+  '("--force-window=yes" "--fs" "--fs-screen=1"))
 
 ; elfeed evil
 (add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
@@ -969,6 +1181,34 @@ minibuffer with something like `exit-minibuffer'."
     (elfeed-search-update :force)))
 
 (provide 'prot-elfeed)
+
+;; ----------------------------------------------------------------------------------
+;; mpc
+;; ----------------------------------------------------------------------------------
+
+;; mpd host
+(setq mpc-host "/home/djwilcox/.config/mpd/socket")
+
+
+;; ----------------------------------------------------------------------------------
+;; shell path
+;; ----------------------------------------------------------------------------------
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match
+that used by the user's shell.
+
+This is particularly useful under Mac OS X and macOS, where GUI
+apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
 
 
 ;; ----------------------------------------------------------------------------------
