@@ -11,4 +11,3 @@ xkb_symbols "alt_win_ctrl" {
     key <LWIN> { [ Control_L, Control_L ] };
     key <LCTL> { [ Alt_L, Meta_L ] };
 };
-
