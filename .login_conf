@@ -1,4 +1,5 @@
 me:\
   :charset=UTF-8:\
   :lang=en_GB.UTF-8:\
-  :setenv=LC_COLLATE=C:
+  :setenv=LC_COLLATE=C:\
+  :memorylocked=unlimited:

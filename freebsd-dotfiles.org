@@ -65,94 +65,10 @@ mkdir -p ~/.config/xmonad/
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
- '(connection-local-criteria-alist
-   '(((:application eshell)
-      eshell-connection-default-profile)
-     ((:application tramp :protocol "flatpak")
-      tramp-container-connection-local-default-flatpak-profile)
-     ((:application tramp)
-      tramp-connection-local-default-system-profile tramp-connection-local-default-shell-profile)))
- '(connection-local-profile-alist
-   '((eshell-connection-default-profile
-      (eshell-path-env-list))
-     (tramp-container-connection-local-default-flatpak-profile
-      (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin" "/usr/bin" "/sbin" "/usr/sbin" "/usr/local/bin" "/usr/local/sbin" "/local/bin" "/local/freeware/bin" "/local/gnu/bin" "/usr/freeware/bin" "/usr/pkg/bin" "/usr/contrib/bin" "/opt/bin" "/opt/sbin" "/opt/local/bin"))
-     (tramp-connection-local-darwin-ps-profile
-      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,uid,user,gid,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state=abcde" "-o" "ppid,pgid,sess,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etime,pcpu,pmem,args")
-      (tramp-process-attributes-ps-format
-       (pid . number)
-       (euid . number)
-       (user . string)
-       (egid . number)
-       (comm . 52)
-       (state . 5)
-       (ppid . number)
-       (pgrp . number)
-       (sess . number)
-       (ttname . string)
-       (tpgid . number)
-       (minflt . number)
-       (majflt . number)
-       (time . tramp-ps-time)
-       (pri . number)
-       (nice . number)
-       (vsize . number)
-       (rss . number)
-       (etime . tramp-ps-time)
-       (pcpu . number)
-       (pmem . number)
-       (args)))
-     (tramp-connection-local-busybox-ps-profile
-      (tramp-process-attributes-ps-args "-o" "pid,user,group,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "stat=abcde" "-o" "ppid,pgid,tty,time,nice,etime,args")
-      (tramp-process-attributes-ps-format
-       (pid . number)
-       (user . string)
-       (group . string)
-       (comm . 52)
-       (state . 5)
-       (ppid . number)
-       (pgrp . number)
-       (ttname . string)
-       (time . tramp-ps-time)
-       (nice . number)
-       (etime . tramp-ps-time)
-       (args)))
-     (tramp-connection-local-bsd-ps-profile
-      (tramp-process-attributes-ps-args "-acxww" "-o" "pid,euid,user,egid,egroup,comm=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" "-o" "state,ppid,pgid,sid,tty,tpgid,minflt,majflt,time,pri,nice,vsz,rss,etimes,pcpu,pmem,args")
-      (tramp-process-attributes-ps-format
-       (pid . number)
-       (euid . number)
-       (user . string)
-       (egid . number)
-       (group . string)
-       (comm . 52)
-       (state . string)
-       (ppid . number)
-       (pgrp . number)
-       (sess . number)
-       (ttname . string)
-       (tpgid . number)
-       (minflt . number)
-       (majflt . number)
-       (time . tramp-ps-time)
-       (pri . number)
-       (nice . number)
-       (vsize . number)
-       (rss . number)
-       (etime . number)
-       (pcpu . number)
-       (pmem . number)
-       (args)))
-     (tramp-connection-local-default-shell-profile
-      (shell-file-name . "/bin/sh")
-      (shell-command-switch . "-c"))
-     (tramp-connection-local-default-system-profile
-      (path-separator . ":")
-      (null-device . "/dev/null"))))
  '(custom-safe-themes
    '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "" default))
  '(package-selected-packages
-   '(all-the-icons doom-themes doom-modeline ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-collection evil-leader evil-surround fd-dired flycheck git-commit git-auto-commit-mode hydra iedit magit-section mpv ob-async openwith orderless rg s shrink-path undo-tree vertico wgrep which-key yaml-mode))
+   '(magit async evil-collection google-translate ednc elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-leader fd-dired git-auto-commit-mode hydra iedit mpv ob-async openwith rg s shrink-path undo-tree marginalia orderless embark vertico wgrep which-key yaml-mode doom-themes doom-modeline nerd-icons))
  '(warning-suppress-types '((comp)))
  '(youtube-sub-extractor-timestamps 'left-side-text))
 
@@ -168,6 +84,7 @@ mkdir -p ~/.config/xmonad/
 (unless package-archive-contents
   (package-refresh-contents))
 (package-install-selected-packages)
+
 
 
 ;; ----------------------------------------------------------------------------------
@@ -196,7 +113,7 @@ mkdir -p ~/.config/xmonad/
 
 ;; save
 (save-place-mode 1)         ;; save cursor position
-(desktop-save-mode 1)       ;; Save the desktop session
+(desktop-save-mode 0)       ;; dont save the desktop session
 (savehist-mode 1)           ;; save history
 (global-auto-revert-mode 1) ;; revert buffers when the underlying file has changed
 
@@ -304,7 +221,7 @@ mkdir -p ~/.config/xmonad/
 (evil-collection-define-key 'normal 'dired-mode-map
     "e" 'dired-find-file
     "h" 'dired-up-directory
-    "l" 'dired-find-file)
+    "l" 'dired-find-file-mpv)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -327,23 +244,21 @@ mkdir -p ~/.config/xmonad/
 (setq undo-tree-visualizer-timestamps t)
 (setq undo-tree-visualizer-diff t)
 
-(require 'openwith)
-;; nohup dont close launched programs when emacs quits
-(setq openwith-associations
-      (list
-       (list (openwith-make-extension-regexp
-              '("mpg" "mpeg" "mp3" "mp4" "m4v"
-                "avi" "wmv" "wav" "mov" "flv"
-                "ogm" "ogg" "mkv" "webm"))
-             "nohup 1>/dev/null 2>/dev/null mpv --fs --fs-screen=1"
-             '(file))
-       (list (openwith-make-extension-regexp
-              '("pdf"))
-             "nohup 1>/dev/null 2>/dev/null evince"
-             '(file))))
-
-(openwith-mode 1)
-
+;;(require 'openwith)
+;;(setq openwith-associations
+;;      (list
+;;;;       (list (openwith-make-extension-regexp
+;;;;              '("mpg" "mpeg" "mp3" "mp4" "m4v"
+;;;;                "avi" "wmv" "wav" "mov" "flv"
+;;;;                "ogm" "ogg" "mkv" "webm"))
+;;;;          "mpv --fs --fs-screen=1"
+;;;;          '(file))
+;;       (list (openwith-make-extension-regexp
+;;              '("pdf"))
+;;             "evince"
+;;             '(file))))
+;;
+;;(openwith-mode 1)
 
 ;; ----------------------------------------------------------------------------------
 ;; tree-sitter
@@ -357,6 +272,13 @@ mkdir -p ~/.config/xmonad/
 ;; sh-mode use bash-ts-mode
 (add-to-list 'major-mode-remap-alist
              '(sh-mode . bash-ts-mode))
+
+
+;; treesitter explore open in side window
+(add-to-list 'display-buffer-alist
+   '("^*tree-sitter explorer *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.40)))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -413,9 +335,6 @@ mkdir -p ~/.config/xmonad/
 ;; eww browser text width
 (setq shr-width 80)
 
-;; emacs 28 - dictionary server
-;;(setq dictionary-server "dict.org")
-
 ;; company auto complete
 (setq company-idle-delay 0)
 (setq company-minimum-prefix-length 3)
@@ -426,6 +345,52 @@ mkdir -p ~/.config/xmonad/
 
 ;; disable ring bell
 (setq ring-bell-function 'ignore)
+
+;; side windows
+(setq switch-to-buffer-obey-display-actions t)
+
+;; hippie expand
+(setq hippie-expand-try-functions-list
+      '(try-expand-all-abbrevs
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-dabbrev
+        try-expand-dabbrev-from-kill
+        try-expand-dabbrev-all-buffers
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
+
+;; ----------------------------------------------------------------------------------
+;; emacs 28 - dictionary server
+;; ----------------------------------------------------------------------------------
+
+(setq dictionary-server "dict.org")
+
+;; mandatory, as the dictionary misbehaves!
+(add-to-list 'display-buffer-alist
+   '("^\\*Dictionary\\*" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
+
+
+;; ----------------------------------------------------------------------------------
+;; functions
+;; ----------------------------------------------------------------------------------
+
+;; clear the kill ring
+(defun clear-kill-ring ()
+  "Clear the results on the kill ring."
+  (interactive)
+  (setq kill-ring nil))
+
+;; reload init.el
+(defun my-reload-init ()
+  "reload init.el"
+  (interactive)
+  (load-file "~/.config/emacs/init.el"))
+
 
 ;; ----------------------------------------------------------------------------------
 ;; completion
@@ -461,6 +426,11 @@ mkdir -p ~/.config/xmonad/
 
 (setq completion-in-region-function #'consult-completion-in-region)
 
+;; consult-yank-pop
+(global-set-key (kbd "M-y") 'consult-yank-pop)
+
+;; It lets you use a new minibuffer when you're in the minibuffer
+(setq enable-recursive-minibuffers t)
 
 ;;; Orderless
 
@@ -497,6 +467,8 @@ mkdir -p ~/.config/xmonad/
 ;; press M-/ and invoke hippie-expand
 (keymap-global-set "M-/" 'hippie-expand)
 
+;; window-toggle-side-windows
+(keymap-global-set "C-x x w" 'window-toggle-side-windows)
 
 ;; ----------------------------------------------------------------------------------
 ;; keymap-set
@@ -513,6 +485,10 @@ mkdir -p ~/.config/xmonad/
 
 ;; Toggle Hidden Files in Emacs dired with C-x M-o
 (require 'dired-x)
+
+;; dired-async
+(autoload 'dired-async-mode "dired-async.el" nil t)
+(dired-async-mode 1)
 
 ;; kill the current buffer when selecting a new directory to display
 (setq dired-kill-when-opening-new-dired-buffer t)
@@ -550,6 +526,10 @@ mkdir -p ~/.config/xmonad/
 ;; dired hide aync output buffer
 (add-to-list 'display-buffer-alist (cons "\\*Async Shell Command\\*.*" (cons #'display-buffer-no-window nil)))
 
+;; ob-async sentinel fix
+(defun no-hide-overlays (orig-fun &rest args)
+(setq org-babel-hide-result-overlays nil))
+(advice-add 'ob-async-org-babel-execute-src-block :before #'no-hide-overlays)
 
 ;; ----------------------------------------------------------------------------------
 ;; dired-fd
@@ -591,8 +571,9 @@ mkdir -p ~/.config/xmonad/
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-;; set tramp shell to sh to avoid zsh problems
-(with-eval-after-load 'tramp '(setenv "SHELL" "/bin/sh"))
+;; set tramp shell to bash to avoid zsh problems
+(setenv "SHELL" "/usr/bin/bash")
+(setq tramp-allow-unsafe-temporary-files t)
 
 ;; tramp backup directory
 (add-to-list 'backup-directory-alist (cons tramp-file-name-regexp nil))
@@ -638,8 +619,8 @@ mkdir -p ~/.config/xmonad/
 (setq org-capture-templates
     '(("w" "web site" entry
       (file+olp "~/git/personal/bookmarks/bookmarks.org" "sites")
-      (file "~/git/personal/bookmarks/templates/tpl-web.txt")
-       :empty-lines-before 1)))
+      "** [[%c][%^{link-description}]]"
+       :empty-lines-after 1)))
 
 ;; refile
 (setq org-refile-targets '((nil :maxlevel . 2)
@@ -675,6 +656,7 @@ mkdir -p ~/.config/xmonad/
      ("\\.mov\\'" . "mpv %s")
      ("\\.pdf\\'" . default))))
 
+  
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -753,12 +735,24 @@ mkdir -p ~/.config/xmonad/
 ;; mpv.el
 ;; ----------------------------------------------------------------------------------
 
-(org-link-set-parameters "mpv" :follow #'mpv-play)
+;; mpv-default-options play fullscreen on second display
+(setq mpv-default-options '("--fs" "--fs-screen=1"))
+
+;; org-link-set-parameters
+;;(org-link-set-parameters "mpv" :follow #'mpv-play)
+;;(defun org-mpv-complete-link (&optional arg)
+;;  (replace-regexp-in-string
+;;   "file:" "mpv:"
+;;   (org-link-complete-file arg)
+;;   t t))
+
 (defun org-mpv-complete-link (&optional arg)
   (replace-regexp-in-string
    "file:" "mpv:"
    (org-link-complete-file arg)
    t t))
+(org-link-set-parameters "mpv"
+  :follow #'mpv-play :complete #'org-mpv-complete-link)
 
 ;; M-RET will insert a new item with the timestamp of the current playback position
 (defun my:mpv/org-metareturn-insert-playback-position ()
@@ -885,17 +879,146 @@ mkdir -p ~/.config/xmonad/
 
 
 ;; ----------------------------------------------------------------------------------
+;; mpv dired
+;; ----------------------------------------------------------------------------------
+
+;; video and audio mime types
+(defvar supported-mime-types
+  '("video/quicktime"
+    "video/x-matroska"
+    "video/mp4"
+    "video/webm"
+    "video/x-m4v"
+    "video/x-msvideo"
+    "audio/x-wav"
+    "audio/mpeg"
+    "audio/x-hx-aac-adts"
+    "audio/mp4"
+    "audio/flac"
+    "audio/ogg"))
+
+;; subr-x
+(load "subr-x")
+
+;; get files mime type
+(defun get-mimetype (filepath)
+  (string-trim
+   (shell-command-to-string (concat "file -b --mime-type "
+                                    (shell-quote-argument filepath)))))
+
+;; dired-find-file-mpv
+(defun dired-find-file-mpv ()
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+  (interactive)
+  (let ((file (dired-get-file-for-visit)))
+    (if (member (get-mimetype file) supported-mime-types)
+        (mpv-play-dired file)
+      (dired-find-file))))
+
+
+;; mpv-play-dired
+(with-eval-after-load 'mpv
+  (defun mpv-play-dired (path)
+  "Start an mpv process playing the file at PATH append subsequent files to the playlist"
+    (if (not mpv--process)
+        ;; mpv isnt running play file
+        (mpv-start (expand-file-name path))
+        ;; mpv running append file to playlist
+      (mpv--playlist-append (expand-file-name path)))))
+
+
+;; mpv play dired marked files
+(defun mpv-play-marked-files ()
+  "Play marked files with mpv"
+  (interactive)
+  (mapc 'mpv-play-dired (dired-get-marked-files nil nil nil t)))
+
+;; mpv dired embark
+(with-eval-after-load 'embark
+  (define-key embark-file-map "l" #'mpv-play-marked-files))
+
+
+;; ----------------------------------------------------------------------------------
+;; mpv eww
+;; ----------------------------------------------------------------------------------
+
+(defun mpv-play-eww ()
+  "Start an mpv process playing the video stream at URL."
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+  (unless (mpv--url-p url)
+    (user-error "Invalid argument: `%s' (must be a valid URL)" url))
+  (if (not mpv--process)
+      ;; mpv isnt running play file
+      (mpv-start url)
+      ;; mpv running append file to playlist
+    (mpv--playlist-append url))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "l" 'mpv-play-eww)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww pinch
+;; ----------------------------------------------------------------------------------
+
+(defun eww-pinch ()
+  "Send the url under the point to mpd with pinch"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "pinch -i " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "n" 'eww-pinch)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler yt-dlp
+;; ----------------------------------------------------------------------------------
+
+(defun eww-yt-dlp ()
+  "Send the url under the point to taskspooler and yt-dlp"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp yt-dlp -P ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "x" 'eww-yt-dlp)
+
+
+;; ----------------------------------------------------------------------------------
+;; eww taskspooler aria2c
+;; ----------------------------------------------------------------------------------
+
+(defun eww-aria2c ()
+  "Send the url under the point to taskspooler and aria2c"
+  (interactive)
+  (let ((url (shr-url-at-point current-prefix-arg)))
+    (async-shell-command (concat
+                    "tsp aria2c -d ${HOME}/Downloads " (shell-quote-argument url)))))
+
+
+(evil-collection-define-key 'normal 'eww-mode-map
+    "b" 'eww-aria2c)
+
+
+;; ----------------------------------------------------------------------------------
 ;; hydra
 ;; ----------------------------------------------------------------------------------
 
 (defhydra hydra-mpv (global-map "<f2>")
   "
-  ^Seek^                    ^Actions^                ^General^
-  ^^^^^^^^---------------------------------------------------------------------------
-  _h_: seek back -5         _,_: back frame          _i_: insert playback position
-  _j_: seek back -60        _._: forward frame       _n_: insert a newline
-  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot
-  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd
+  ^Seek^                    ^Actions^                ^General^                       ^Playlists^
+  ^^^^^^^^-----------------------------------------------------------------------------------------------------------
+  _h_: seek back -5         _,_: back frame          _i_: insert playback position   _n_: next item in playlist
+  _j_: seek back -60        _._: forward frame       _m_: insert a newline           _p_: previous item in playlist
+  _k_: seek forward 60      _SPC_: pause             _s_: take a screenshot          _e_: jump to playlist entry
+  _l_: seek forward 5       _q_: quit mpv            _o_: show the osd               _r_: remove playlist entry
   ^
   "
   ("h" mpv-seek-backward "-5")
@@ -906,10 +1029,14 @@ mkdir -p ~/.config/xmonad/
   ("." mpv-frame-step)
   ("SPC" mpv-pause)
   ("q" mpv-kill)
-  ("s" mpv-screenshot)
   ("i" my/mpv-insert-playback-position)
+  ("m" end-of-line-and-indented-new-line)
+  ("s" mpv-screenshot)
   ("o" mpv-osd)
-  ("n" end-of-line-and-indented-new-line))
+  ("n" mpv-playlist-next)
+  ("p" mpv-playlist-prev)
+  ("e" mpv-jump-to-playlist-entry)
+  ("r" mpv-remove-playlist-entry))
 
 
 ;; ----------------------------------------------------------------------------------
@@ -919,7 +1046,6 @@ mkdir -p ~/.config/xmonad/
 ;; start ednc-mode
 (ednc-mode 1)
 
-;; open notications
 (defun show-notification-in-buffer (old new)
   (let ((name (format "Notification %d" (ednc-notification-id (or old new)))))
     (with-current-buffer (get-buffer-create name)
@@ -934,6 +1060,11 @@ mkdir -p ~/.config/xmonad/
 (add-hook 'ednc-notification-presentation-functions
           #'show-notification-in-buffer)
 
+;; open notifications in side window
+(add-to-list 'display-buffer-alist
+   '("^Notification *" display-buffer-in-side-window
+     (side . right)
+     (window-width . 0.50)))
 
 ;; ednc evil - normal mode
 (defun noevil ()
@@ -972,7 +1103,7 @@ mkdir -p ~/.config/xmonad/
 
 ;; mpv play fullscreen on second display
 (setq elfeed-tube-mpv-options
-  '("--cache=yes" "--force-window=yes" "--fs" "--fs-screen=1"))
+  '("--force-window=yes" "--fs" "--fs-screen=1"))
 
 ; elfeed evil
 (add-to-list 'evil-motion-state-modes 'elfeed-search-mode)
@@ -1092,6 +1223,34 @@ minibuffer with something like `exit-minibuffer'."
     (elfeed-search-update :force)))
 
 (provide 'prot-elfeed)
+
+;; ----------------------------------------------------------------------------------
+;; mpc
+;; ----------------------------------------------------------------------------------
+
+;; mpd host
+(setq mpc-host "/home/djwilcox/.config/mpd/socket")
+
+
+;; ----------------------------------------------------------------------------------
+;; shell path
+;; ----------------------------------------------------------------------------------
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match
+that used by the user's shell.
+
+This is particularly useful under Mac OS X and macOS, where GUI
+apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -1582,7 +1741,8 @@ completion (per `completing-read')."
 
 #+NAME: alacritty
 #+BEGIN_SRC yaml
-# alacritty
+# Alacritty config
+
 env:
   TERM: xterm-256color
 
@@ -1590,9 +1750,13 @@ window:
   padding:
     x: 4
     y: 4
-
-  decoration: none
+  decorations: full
   startup_mode: Windowed
+  dynamic_title: true
+  class:
+    instance: Alacritty
+    general: Alacritty
+  decorations_theme_variant: Dark
 
 # Font configuration
 font:
@@ -1808,7 +1972,7 @@ export PATH
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_RUNTIME_DIR="/var/run/user/$(id -u)"
+export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
 # firefox
 export MOZ_ENABLE_WAYLAND=1
@@ -1875,6 +2039,171 @@ export MPD_HOST="/home/djwilcox/.config/mpd/socket"
 <<zshenv>>
 #+END_SRC
 
+** mpv
+*** input.conf
+
+#+NAME: input.conf
+#+BEGIN_SRC conf
+# vim keybindings
+l seek  5
+h seek -5
+k seek  60
+j seek -60
+
+# subtitles
+J cycle sub 
+K cycle sub down
+
+# Audio filters:
+F1 show-text "F2: loudnorm | F3: dynaudnorm | F4: low Bass | F5: low Treble" 2000
+
+# loudnorm:
+F2 af toggle lavfi=[loudnorm=I=-16:TP=-3:LRA=4]
+
+# dynaudnorm:
+F3 af toggle lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5]
+
+# lowered bass:
+F4  af toggle "superequalizer=6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2:13b=2:14b=2:15b=2:16b=2:17b=2:18b=2"
+
+# lowered treble:
+F5  af toggle "superequalizer=1b=2:2b=2:3b=2:4b=2:5b=2:6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2"
+#+END_SRC
+
+*** mpv.conf
+
+#+NAME: mpv.conf
+#+BEGIN_SRC conf
+# mpv.conf
+
+# list profiles with: mpv --profile=help
+
+# load hwdec profile automatically
+profile=hwdec 
+
+# hardware acceleration profile
+[hwdec]
+profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
+vo=gpu
+#hwdec=vaapi
+
+# hide: GNOME's wayland compositor lacks support for the idle inhibit protocol. 
+msg-level=ffmpeg=fatal,vo/gpu/wayland=no
+
+# cache no for internet streams
+cache=no
+
+# yt-dlp best format 1080 or less
+ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
+
+# show milliseconds in the on screen display
+osd-fractions
+
+# youtube subs - J to switch to subs
+sub-auto=fuzzy
+ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
+sub-font='Noto Color Emoji'
+
+# screenshot timecode
+screenshot-template="%F-[%P]v%#01n"
+
+
+# cache profile: mpv --profile=cache
+[cache]
+profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+
+
+# youtube conditional auto profile match any youtube url
+[youtube]
+profile-desc="youtube hardware acceleration, cache"
+profile-cond=path:find('youtu%.?be') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=no
+# fullscreen 2nd display
+fs
+fs-screen=1
+
+
+# invidious conditional auto profile match any youtube url
+[invidious]
+profile-desc="invidious hardware acceleration, cache"
+profile-cond=path:find('http://127.0.0.1:3000') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=no
+# fullscreen 2nd display
+fs
+fs-screen=1
+
+
+# archive.org conditional auto profile match any archive.org url
+[archive]
+profile-desc="archive hardware acceleration, cache"
+profile-cond=path:find('archive.org') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+fs-screen=1
+
+
+# bbc iplayer conditional auto profile match any bbc iplayer url
+[iplayer]
+profile-desc="archive hardware acceleration, cache"
+profile-cond=path:find('bbc.co.uk/iplayer') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+fs-screen=1
+#+END_SRC
+
+**** mpv tangle
+***** input.conf tangle
+
++ home dir
+
+#+NAME: input.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: input.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/input.conf"
+<<input.conf>>
+#+END_SRC
+
+***** mpv.conf tangle
+
++ home dir
+
+#+NAME: mpv.conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mpv.conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
+** wayfire
+** wf-shell
 ** tmux
 *** tmux config
 
@@ -2022,114 +2351,6 @@ set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:
 #+NAME: tmux-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/tmux/tmux.conf"
 <<tmux>>
-#+END_SRC
-
-** mpv
-*** input.conf
-
-#+NAME: input.conf
-#+BEGIN_SRC conf
-# vim keybindings
-l seek  5
-h seek -5
-k seek  60
-j seek -60
-
-# subtitles
-J cycle sub 
-K cycle sub down
-
-# Audio filters:
-F1 show-text "F2: loudnorm | F3: dynaudnorm | F4: low Bass | F5: low Treble" 2000
-
-# loudnorm:
-F2 af toggle lavfi=[loudnorm=I=-16:TP=-3:LRA=4]
-
-# dynaudnorm:
-F3 af toggle lavfi=[dynaudnorm=g=5:f=250:r=0.9:p=0.5]
-
-# lowered bass:
-F4  af toggle "superequalizer=6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2:13b=2:14b=2:15b=2:16b=2:17b=2:18b=2"
-
-# lowered treble:
-F5  af toggle "superequalizer=1b=2:2b=2:3b=2:4b=2:5b=2:6b=2:7b=2:8b=2:9b=2:10b=2:11b=2:12b=2"
-#+END_SRC
-
-*** mpv.conf
-
-#+NAME: mpv.conf
-#+BEGIN_SRC conf
-# mpv.conf
-
-# list profiles with: mpv --profile=help
-
-# load hwdec profile automatically
-profile=hwdec 
-
-# hardware acceleration profile
-[hwdec]
-profile-desc="hardware acceleration, no cache, yt-dlp 1080 or less"
-vo=gpu
-hwdec=vaapi
-msg-level=ffmpeg=fatal
-
-# cache no for internet streams
-cache=no
-
-# yt-dlp best format 1080 or less
-ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
-
-# show milliseconds in the on screen display
-osd-fractions
-
-# alsa pipewire audio device
-#audio-device=alsa/pipewire
-
-# youtube subs - J to switch to subs
-sub-auto=fuzzy
-ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
-sub-font='Noto Color Emoji'
-
-# cache profile: mpv --profile=cache
-[cache]
-profile-desc="hardware acceleration, cache, yt-dlp 1080 or less"
-# include hwdec profile 
-profile=hwdec
-# override hwdec profile cache setting
-cache=auto
-#+END_SRC
-
-**** mpv tangle
-***** input.conf tangle
-
-+ home dir
-
-#+NAME: input.conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/input.conf"
-<<input.conf>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: input.conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/input.conf"
-<<input.conf>>
-#+END_SRC
-
-***** mpv.conf tangle
-
-+ home dir
-
-#+NAME: mpv.conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mpv/mpv.conf"
-<<mpv.conf>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: mpv.conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
-<<mpv.conf>>
 #+END_SRC
 
 ** yt-dlp
@@ -2591,6 +2812,79 @@ color alert = 7/8,bold
 <<aria2>>
 #+END_SRC
 
+** profile
+
+#+NAME: profile
+#+BEGIN_SRC conf
+# $FreeBSD: releng/11.0/share/skel/dot.profile 278616 2015-02-12 05:35:00Z cperciva $
+#
+# .profile - Bourne Shell startup script for login shells
+#
+# see also sh(1), environ(7).
+#
+
+# These are normally set through /etc/login.conf.  You may override them here
+# if wanted.
+# PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$HOME/bin; export PATH
+# BLOCKSIZE=K;	export BLOCKSIZE
+
+# Setting TERM is normally done through /etc/ttys.  Do only override
+# if you're sure that you'll never log in via telnet or xterm or a
+# serial line.
+# TERM=xterm; 	export TERM
+
+# set emacsclient as editor for ranger
+#EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
+#PAGER=less;  	export PAGER
+
+# set ENV to a file invoked each time sh is started for interactive use.
+ENV=$HOME/.shrc; export ENV
+#+END_SRC
+
+*** profile tangle
+
++ home dir
+
+#+NAME: profile-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.profile"
+<<profile>>
+#+END_SRC
+
++ current dir
+
+#+NAME: profile-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".profile"
+<<profile>>
+#+END_SRC
+
+** login_conf
+
+#+NAME: login_conf
+#+BEGIN_SRC conf
+me:\
+  :charset=UTF-8:\
+  :lang=en_GB.UTF-8:\
+  :setenv=LC_COLLATE=C:\
+  :memorylocked=unlimited:
+
+#+END_SRC
+
+*** login_conf tangle
+
++ home dir
+
+#+NAME: login_conf-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.login_conf"
+<<login_conf>>
+#+END_SRC
+
++ current dir
+
+#+NAME: login_conf-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".login_conf"
+<<login_conf>>
+#+END_SRC
+
 ** gitconfig
 
 #+NAME: gitconfig
@@ -2616,6 +2910,32 @@ ui = true
 #+NAME: gitconfig-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/git/config"
 <<gitconfig>>
+#+END_SRC
+
+** gtk-3.0
+
+#+NAME: gtk
+#+BEGIN_SRC conf
+[Settings]
+gtk-icon-theme-name = Adwaita-dark
+gtk-theme-name = Adwaita-dark
+gtk-application-prefer-dark-theme = true
+#+END_SRC
+
+*** gtk-3.0 tangle
+
++ home dir
+
+#+NAME: gtk-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/gtk-3.0/settings.ini"
+<<gtk>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gtk-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
+<<gtk>>
 #+END_SRC
 
 ** muttrc
@@ -2797,81 +3117,11 @@ set my_pgp_id="3B2C8BA1"
 <<muttrc>>
 #+END_SRC
 
-** profile
-
-#+NAME: profile
-#+BEGIN_SRC conf
-# $FreeBSD: releng/11.0/share/skel/dot.profile 278616 2015-02-12 05:35:00Z cperciva $
-#
-# .profile - Bourne Shell startup script for login shells
-#
-# see also sh(1), environ(7).
-#
-
-# These are normally set through /etc/login.conf.  You may override them here
-# if wanted.
-# PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:$HOME/bin; export PATH
-# BLOCKSIZE=K;	export BLOCKSIZE
-
-# Setting TERM is normally done through /etc/ttys.  Do only override
-# if you're sure that you'll never log in via telnet or xterm or a
-# serial line.
-# TERM=xterm; 	export TERM
-
-# set emacsclient as editor for ranger
-#EDITOR=/usr/local/bin/emacsclient;   	export EDITOR
-#PAGER=less;  	export PAGER
-
-# set ENV to a file invoked each time sh is started for interactive use.
-ENV=$HOME/.shrc; export ENV
-#+END_SRC
-
-*** profile tangle
-
-+ home dir
-
-#+NAME: profile-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.profile"
-<<profile>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: profile-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".profile"
-<<profile>>
-#+END_SRC
-
-** login_conf
-
-#+NAME: login_conf
-#+BEGIN_SRC conf
-me:\
-  :charset=UTF-8:\
-  :lang=en_GB.UTF-8:\
-  :setenv=LC_COLLATE=C:
-#+END_SRC
-
-*** login_conf tangle
-
-+ home dir
-
-#+NAME: login_conf-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.login_conf"
-<<login_conf>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: login_conf-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".login_conf"
-<<login_conf>>
-#+END_SRC
-
 ** xkb
-*** keymap.xkb
+*** keymap
+**** keymap.xkb config
 
-#+NAME: xkb-keymap.xkb
+#+NAME: keymap.xkb
 #+BEGIN_SRC conf
 xkb_keymap {
 xkb_keycodes "xfree86+aliases(qwerty)" {
@@ -4766,113 +5016,28 @@ xkb_geometry "pc(pc104)" {
 };
 
 };
-
 #+END_SRC
 
-*** custom
-
-#+NAME: xkb-custom
-#+BEGIN_SRC conf
-// Ctrl is mapped to Alt, Alt to Win, and Win to the Ctrl key.
-partial modifier_keys
-xkb_symbols "alt_win_ctrl" {
-    key <LALT> { [ Super_L ] };
-    key <LWIN> { [ Control_L, Control_L ] };
-    key <LCTL> { [ Alt_L, Meta_L ] };
-    modifier_map Control { <LCTL>, <RCTL> };
-    modifier_map Mod1 { <LALT>, <RALT>, Meta_L };
-    modifier_map Mod4 { <LWIN>, <RWIN> };
-};
-
-#+END_SRC
-
-**** xkb tangle
-
-***** keymap.xkb
+**** keymap.xkb tangle
 
 + home dir
 
-#+NAME: xkb-keymap.xkb-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xkb/keymap/keymap.xkb"
-<<xkb-keymap.xkb>>
+#+NAME: emacs-init.el-home-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle "~/.config/emacs/init.el"
+<<keymap.xkb>>
 #+END_SRC
 
 + current dir
 
-#+NAME: xkb-keymap.xkb-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xkb/keymap/keymap.xkb"
-<<xkb-keymap.xkb>>
+#+NAME: emacs-init.el-current-dir
+#+BEGIN_SRC emacs-lisp :noweb yes :tangle ".config/emacs/init.el"
+<<keymap.xkb>>
 #+END_SRC
 
-***** custom
-
-+ home dir
-
-#+NAME: xkb-custom-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.xkb/symbols/custom"
-<<xkb-custom>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: xkb-custom-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".xkb/symbols/custom"
-<<xkb-custom>>
-#+END_SRC
-
-** chrome
-
-#+NAME: chrome
-#+BEGIN_SRC conf
-#!/usr/bin/env xdg-open
-[Desktop Entry]
-Version=1.0
-Terminal=false
-Type=Application
-Name=Chrome Web Store Payments
-Exec=/usr/local/share/chromium/chrome --profile-directory=Default --app-id=nmmhkkegccagdldgiimedpiccmgmieda
-Icon=chrome-nmmhkkegccagdldgiimedpiccmgmieda-Default
-NoDisplay=true
-StartupWMClass=crx_nmmhkkegccagdldgiimedpiccmgmieda
-#+END_SRC
-
-*** chrome tangle
-
-+ home dir
-
-#+NAME: chrome-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/chrome-nmmhkkegccagdldgiimedpiccmgmieda-Default.desktop"
-<<chrome>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: chrome-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chrome-nmmhkkegccagdldgiimedpiccmgmieda-Default.desktop"
-<<chrome>>
-#+END_SRC
-
-** gtk-3.0
-
-#+NAME: gtk
-#+BEGIN_SRC conf
-[Settings]
-gtk-theme-name = Adwaita-dark
-#+END_SRC
-
-*** gtk-3.0 tangle
-
-+ home dir
-
-#+NAME: gtk-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/gtk-3.0/settings.ini"
-<<gtk>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: gtk-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
-<<gtk>>
-#+END_SRC
+*** rules
+**** evdev
+**** evdev.xml
+*** symbols
+**** custom
+**** gb
 

@@ -1,4 +1,5 @@
-# alacritty
+# Alacritty config
+
 env:
   TERM: xterm-256color
 
@@ -6,9 +7,13 @@ window:
   padding:
     x: 4
     y: 4
-
-  decoration: none
+  decorations: full
   startup_mode: Windowed
+  dynamic_title: true
+  class:
+    instance: Alacritty
+    general: Alacritty
+  decorations_theme_variant: Dark
 
 # Font configuration
 font:
