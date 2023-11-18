@@ -529,8 +529,8 @@
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-;; set tramp shell to bash to avoid zsh problems
-(setenv "SHELL" "/usr/bin/bash")
+;; set tramp shell to /bin/sh to avoid zsh problems
+(setenv "SHELL" "/bin/sh")
 (setq tramp-allow-unsafe-temporary-files t)
 
 ;; tramp backup directory
