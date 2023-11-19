@@ -157,7 +157,7 @@
 (tab-bar-mode 1)
 
 ;; tab bar menu bar button
-(setq tab-bar-menu-bar-button "👹")
+(setq tab-bar-menu-bar-button "👿")
 
 
 ;; ----------------------------------------------------------------------------------

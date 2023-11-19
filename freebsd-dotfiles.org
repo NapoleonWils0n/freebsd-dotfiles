@@ -186,7 +186,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 (tab-bar-mode 1)
 
 ;; tab bar menu bar button
-(setq tab-bar-menu-bar-button "👹")
+(setq tab-bar-menu-bar-button "👿")
 
 
 ;; ----------------------------------------------------------------------------------
