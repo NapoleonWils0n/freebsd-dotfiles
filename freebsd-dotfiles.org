@@ -2312,7 +2312,7 @@ new-window -n "urlview" '$SHELL -c "urlview < /tmp/tmux-buffer"'
 # tmux auto rename pane 
 set-option -g status-interval 1
 set-option -g automatic-rename on
-set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_current_path},#{pane_current_command}}"
+set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_title},#{pane_current_command}}"
 #+END_SRC
 
 *** tmux tangle
