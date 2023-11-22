@@ -3005,6 +3005,32 @@ ui = true
 <<gitconfig>>
 #+END_SRC
 
+** gpg-agent
+*** gpg-agent config
+
+#+NAME: gpg-agent
+#+BEGIN_SRC conf
+pinentry-program /usr/local/bin/pinentry-curses
+default-cache-ttl 36000
+max-cache-ttl 36000
+#+END_SRC
+
+*** gpg-agent tangle
+
++ home dir
+
+#+NAME: gpg-agent-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.gnupg/gpg-agent"
+<<gpg-agent>>
+#+END_SRC
+
++ current dir
+
+#+NAME: gpg-agent-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".gnupg/gpg-agent"
+<<gpg-agent>>
+#+END_SRC
+
 ** gtk-3.0
 
 #+NAME: gtk
