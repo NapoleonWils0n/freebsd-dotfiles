@@ -8,7 +8,7 @@ status-format = "[%artist% - ]%title%|%shortfile%"
 visible-bitrate = yes
 wrap-around = yes
 
-# colors
+## Enable/disable colors.
 enable-colors = no
 
 ## Set the background color.

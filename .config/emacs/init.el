@@ -24,11 +24,17 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "" default))
+   '("ffafb0e9f63935183713b204c11d22225008559fa62133a69848835f4f4a758c"
+     "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
+     "" default))
  '(package-selected-packages
-   '(magit async evil-collection google-translate ednc elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-leader fd-dired git-auto-commit-mode hydra iedit mpv ob-async openwith rg s shrink-path undo-tree marginalia orderless embark vertico wgrep which-key yaml-mode doom-themes doom-modeline nerd-icons))
- '(warning-suppress-types '((comp)))
- '(youtube-sub-extractor-timestamps 'left-side-text))
+   '(ednc async evil-collection google-translate elfeed-org elfeed-tub
+          elfeed-tube-mpv embark-consult emmet-mode evil-leader
+          fd-dired git-auto-commit-mode hydra iedit mpv ob-async rg s
+          shrink-path undo-tree marginalia orderless embark vertico
+          wgrep which-key yaml-mode doom-themes doom-modeline
+          nerd-icons))
+ '(warning-suppress-types '((comp))))
 
 ;; require package
 (require 'package)
@@ -43,6 +49,12 @@
   (package-refresh-contents))
 (package-install-selected-packages)
 
+;; emacs aysnc - asynchronous compilation of your (M)elpa packages
+(async-bytecomp-package-mode 1)
+(setq async-bytecomp-allowed-packages '(all))
+
+;;(setq native-comp-deferred-compilation nil
+;;comp-enable-subr-trampolines nil)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -158,7 +170,6 @@
 
 ;; tab bar menu bar button
 (setq tab-bar-menu-bar-button "👿")
-
 
 ;; ----------------------------------------------------------------------------------
 ;; evil
@@ -417,7 +428,7 @@
 ;; ----------------------------------------------------------------------------------
 
 ;; magit
-(keymap-global-set "C-x g" 'magit-status)
+;;(keymap-global-set "C-x g" 'magit-status)
 
 ;; org-capture
 (keymap-global-set "C-c c" 'org-capture)
@@ -452,6 +463,9 @@
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; dired directory listing options for ls
+(setq dired-use-ls-dired t)
+;; freebsd gls fix
+(setq insert-directory-program "/usr/local/bin/gls")
 (setq dired-listing-switches "-ahlv")
 
 ;; hide dotfiles
@@ -529,7 +543,7 @@
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-;; set tramp shell to /bin/sh to avoid zsh problems
+;; set tramp shell to bash to avoid zsh problems
 (setenv "SHELL" "/bin/sh")
 (setq tramp-allow-unsafe-temporary-files t)
 
@@ -1032,8 +1046,7 @@
 
 (add-hook 'ednc-view-mode-hook 'noevil)
 
-
-;; ----------------------------------------------------------------------------------
+; ----------------------------------------------------------------------------------
 ;; elfeed
 ;; ----------------------------------------------------------------------------------
 

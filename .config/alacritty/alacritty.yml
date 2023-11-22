@@ -9,7 +9,7 @@ window:
     y: 4
   decorations: full
   startup_mode: Windowed
-  dynamic_title: true
+  #dynamic_title: true
   class:
     instance: Alacritty
     general: Alacritty

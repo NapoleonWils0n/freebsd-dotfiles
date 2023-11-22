@@ -53,11 +53,17 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561" "" default))
+   '("ffafb0e9f63935183713b204c11d22225008559fa62133a69848835f4f4a758c"
+     "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
+     "" default))
  '(package-selected-packages
-   '(magit async evil-collection google-translate ednc elfeed-org elfeed-tube elfeed-tube-mpv embark-consult emmet-mode evil-leader fd-dired git-auto-commit-mode hydra iedit mpv ob-async openwith rg s shrink-path undo-tree marginalia orderless embark vertico wgrep which-key yaml-mode doom-themes doom-modeline nerd-icons))
- '(warning-suppress-types '((comp)))
- '(youtube-sub-extractor-timestamps 'left-side-text))
+   '(ednc async evil-collection google-translate elfeed-org elfeed-tub
+          elfeed-tube-mpv embark-consult emmet-mode evil-leader
+          fd-dired git-auto-commit-mode hydra iedit mpv ob-async rg s
+          shrink-path undo-tree marginalia orderless embark vertico
+          wgrep which-key yaml-mode doom-themes doom-modeline
+          nerd-icons))
+ '(warning-suppress-types '((comp))))
 
 ;; require package
 (require 'package)
@@ -72,6 +78,12 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
   (package-refresh-contents))
 (package-install-selected-packages)
 
+;; emacs aysnc - asynchronous compilation of your (M)elpa packages
+(async-bytecomp-package-mode 1)
+(setq async-bytecomp-allowed-packages '(all))
+
+;;(setq native-comp-deferred-compilation nil
+;;comp-enable-subr-trampolines nil)
 
 
 ;; ----------------------------------------------------------------------------------
@@ -187,7 +199,6 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 
 ;; tab bar menu bar button
 (setq tab-bar-menu-bar-button "👿")
-
 
 ;; ----------------------------------------------------------------------------------
 ;; evil
@@ -446,7 +457,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 ;; ----------------------------------------------------------------------------------
 
 ;; magit
-(keymap-global-set "C-x g" 'magit-status)
+;;(keymap-global-set "C-x g" 'magit-status)
 
 ;; org-capture
 (keymap-global-set "C-c c" 'org-capture)
@@ -481,6 +492,9 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 (setq dired-kill-when-opening-new-dired-buffer t)
 
 ;; dired directory listing options for ls
+(setq dired-use-ls-dired t)
+;; freebsd gls fix
+(setq insert-directory-program "/usr/local/bin/gls")
 (setq dired-listing-switches "-ahlv")
 
 ;; hide dotfiles
@@ -558,7 +572,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
                                '((tramp-parse-sconfig "/etc/ssh_config")
                                  (tramp-parse-sconfig "~/.ssh/config")))
 
-;; set tramp shell to /bin/sh to avoid zsh problems
+;; set tramp shell to bash to avoid zsh problems
 (setenv "SHELL" "/bin/sh")
 (setq tramp-allow-unsafe-temporary-files t)
 
@@ -1061,8 +1075,7 @@ emacs --batch -l org --eval '(org-babel-tangle-file "~/git/freebsd-dotfiles/free
 
 (add-hook 'ednc-view-mode-hook 'noevil)
 
-
-;; ----------------------------------------------------------------------------------
+; ----------------------------------------------------------------------------------
 ;; elfeed
 ;; ----------------------------------------------------------------------------------
 
@@ -1718,7 +1731,7 @@ window:
     y: 4
   decorations: full
   startup_mode: Windowed
-  dynamic_title: true
+  #dynamic_title: true
   class:
     instance: Alacritty
     general: Alacritty
@@ -1824,7 +1837,7 @@ zle -N zle-keymap-select
 
 # set terminal window title to program name
 case $TERM in
-  (*xterm* | rxvt | rxvt-unicode-256color)
+  (*xterm* | xterm-256color)
     function precmd {
       print -Pn "\e]0;%(1j,%j job%(2j|s|); ,)%~\a"
     }
@@ -2054,7 +2067,7 @@ vo=gpu
 #hwdec=vaapi
 
 # hide: GNOME's wayland compositor lacks support for the idle inhibit protocol. 
-msg-level=ffmpeg=fatal,vo/gpu/wayland=no
+#msg-level=ffmpeg=fatal,vo/gpu/wayland=no
 
 # cache no for internet streams
 cache=no
@@ -2065,6 +2078,9 @@ ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 # show milliseconds in the on screen display
 osd-fractions
 
+# alsa pipewire audio device
+#audio-device=alsa/pipewire
+
 # youtube subs - J to switch to subs
 sub-auto=fuzzy
 ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
@@ -2072,6 +2088,9 @@ sub-font='Noto Color Emoji'
 
 # screenshot timecode
 screenshot-template="%F-[%P]v%#01n"
+
+# show progress bar in the terminal
+#term-osd-bar
 
 
 # cache profile: mpv --profile=cache
@@ -2093,7 +2112,7 @@ profile=hwdec
 cache=no
 # fullscreen 2nd display
 fs
-fs-screen=1
+#fs-screen=1
 
 
 # invidious conditional auto profile match any youtube url
@@ -2106,7 +2125,7 @@ profile=hwdec
 cache=no
 # fullscreen 2nd display
 fs
-fs-screen=1
+#fs-screen=1
 
 
 # archive.org conditional auto profile match any archive.org url
@@ -2119,7 +2138,7 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-fs-screen=1
+#fs-screen=1
 
 
 # bbc iplayer conditional auto profile match any bbc iplayer url
@@ -2132,7 +2151,7 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-fs-screen=1
+#fs-screen=1
 #+END_SRC
 
 **** mpv tangle
@@ -2169,7 +2188,489 @@ fs-screen=1
 #+END_SRC
 
 ** wayfire
+*** wayfire config
+
+#+NAME: wayfire
+#+BEGIN_SRC conf
+[alpha]
+min_value = 0.100000
+modifier = <alt> <super> 
+
+[animate]
+close_animation = zoom
+duration = 400
+enabled_for = (type equals "toplevel" | (type equals "x-or" & focusable equals true))
+fade_duration = 400
+fade_enabled_for = type equals "overlay"
+fire_duration = 300
+fire_enabled_for = none
+fire_particle_size = 16.000000
+fire_particles = 2000
+open_animation = zoom
+startup_duration = 600
+zoom_duration = 500
+zoom_enabled_for = none
+
+[annotate]
+clear_workspace = <alt> <super> KEY_C
+draw = <alt> <super> BTN_LEFT
+from_center = true
+line_width = 3.000000
+method = draw
+stroke_color = \#FF0000FF
+
+[autorotate-iio]
+lock_rotation = false
+rotate_down = <ctrl> <super> KEY_DOWN
+rotate_left = <ctrl> <super> KEY_LEFT
+rotate_right = <ctrl> <super> KEY_RIGHT
+rotate_up = <ctrl> <super> KEY_UP
+
+[autostart]
+autostart_wf_shell = true
+
+[background-view]
+command = mpv --loop=inf
+file = 
+
+[bench]
+average_frames = 1
+frames_per_update = 3
+position = top_center
+
+[blur]
+blur_by_default = type is "toplevel"
+bokeh_degrade = 1
+bokeh_iterations = 15
+bokeh_offset = 5.000000
+box_degrade = 1
+box_iterations = 2
+box_offset = 1.000000
+gaussian_degrade = 1
+gaussian_iterations = 2
+gaussian_offset = 1.000000
+kawase_degrade = 8
+kawase_iterations = 2
+kawase_offset = 2.000000
+method = kawase
+saturation = 1.000000
+toggle = none
+
+[command]
+binding_browser = <alt> <super> KEY_ENTER
+binding_emacs = <ctrl> <super> KEY_ENTER
+binding_terminal = <ctrl> <super> KEY_SPACE
+command_browser = firefox
+command_emacs = emacsclient --alternate-editor= --create-frame
+command_terminal = alacritty
+
+[core]
+background_color = \#1A1A1AFF
+close_top_view = <alt> <shift> KEY_C
+focus_button_with_modifiers = false
+focus_buttons = BTN_LEFT | BTN_MIDDLE | BTN_RIGHT
+focus_buttons_passthrough = true
+max_render_time = -1
+plugins = autostart command expo grid idle move oswitch place resize switcher vswitch window-rules vswipe extra-gestures wm-actions follow-focus
+preferred_decoration_mode = client
+vheight = 3
+vwidth = 4
+xwayland = false
+xwayland_scale = 1
+
+[crosshair]
+line_color = \#FF0000FF
+line_width = 2
+
+[cube]
+activate = <alt> <ctrl> BTN_LEFT
+background = \#1A1A1AFF
+background_mode = simple
+cubemap_image = 
+deform = 0
+initial_animation = 350
+light = true
+rotate_left = none
+rotate_right = none
+skydome_mirror = true
+skydome_texture = 
+speed_spin_horiz = 0.020000
+speed_spin_vert = 0.020000
+speed_zoom = 0.070000
+zoom = 0.100000
+
+[dbus_interface]
+
+[decoration]
+active_color = \#222222AA
+border_size = 4
+button_order = minimize maximize close
+font = sans-serif
+ignore_views = none
+inactive_color = \#333333DD
+title_height = 30
+
+[expo]
+background = \#1A1A1AFF
+duration = 100
+offset = 10
+toggle = <super> 
+
+[extra-gestures]
+close_fingers = 20
+move_delay = 200
+move_fingers = 3
+
+[fast-switcher]
+activate = <alt> KEY_ESC
+activate_backward = <alt> <shift> KEY_ESC
+inactive_alpha = 0.700000
+
+[fisheye]
+radius = 450.000000
+toggle = <ctrl> <super> KEY_F
+zoom = 7.000000
+
+[follow-focus]
+change_output = true
+change_view = true
+focus_delay = 50
+raise_on_top = true
+threshold = 10
+
+[force-fullscreen]
+constrain_pointer = false
+constraint_area = output
+key_toggle_fullscreen = <alt> <super> KEY_F
+preserve_aspect = true
+transparent_behind_views = true
+x_skew = 0.000000
+y_skew = 0.000000
+
+[grid]
+duration = 300
+restore = <super> KEY_DOWN | <super> KEY_KP0
+slot_b = <super> KEY_KP2
+slot_bl = <super> KEY_KP1
+slot_br = <super> KEY_KP3
+slot_c = <super> KEY_UP | <super> KEY_KP5
+slot_l = <super> KEY_LEFT | <super> KEY_KP4
+slot_r = <super> KEY_RIGHT | <super> KEY_KP6
+slot_t = <super> KEY_KP8
+slot_tl = <super> KEY_KP7
+slot_tr = <super> KEY_KP9
+type = crossfade
+
+[idle]
+cube_max_zoom = 1.500000
+cube_rotate_speed = 1.000000
+cube_zoom_speed = 1000
+disable_on_fullscreen = true
+dpms_timeout = -1
+screensaver_timeout = 3600
+toggle = none
+
+[input]
+click_method = default
+cursor_size = 24
+cursor_theme = default
+disable_touchpad_while_mouse = false
+disable_touchpad_while_typing = false
+gesture_sensitivity = 1.000000
+kb_capslock_default_state = false
+kb_numlock_default_state = false
+kb_repeat_delay = 400
+kb_repeat_rate = 40
+left_handed_mode = false
+middle_emulation = false
+modifier_binding_timeout = 400
+mouse_accel_profile = default
+mouse_cursor_speed = 0.000000
+mouse_scroll_speed = 1.000000
+natural_scroll = false
+scroll_method = default
+tap_to_click = true
+touchpad_accel_profile = default
+touchpad_cursor_speed = 0.000000
+touchpad_scroll_speed = 1.000000
+xkb_layout = gb
+xkb_model = pc105
+xkb_options = custom:alt_win_ctrl
+xkb_rules = evdev
+xkb_variant = mac
+
+[input-device]
+output = 
+
+[invert]
+preserve_hue = false
+toggle = <super> KEY_I
+
+[join-views]
+
+[keycolor]
+color = \#000000FF
+opacity = 0.250000
+threshold = 0.500000
+
+[mag]
+default_height = 500
+toggle = <alt> <super> KEY_M
+zoom_level = 75
+
+[move]
+activate = <super> BTN_LEFT
+enable_snap = true
+enable_snap_off = true
+join_views = false
+quarter_snap_threshold = 50
+snap_off_threshold = 10
+snap_threshold = 10
+workspace_switch_after = -1
+
+[oswitch]
+next_output = <super> KEY_O
+next_output_with_win = <shift> <super> KEY_O
+
+[output]
+mode = auto
+position = auto
+scale = 1.000000
+transform = normal
+
+[place]
+mode = center
+
+[preserve-output]
+last_output_focus_timeout = 10000
+
+[resize]
+activate = <super> BTN_RIGHT
+
+[scale]
+allow_zoom = false
+bg_color = \#1A1A1AE6
+duration = 750
+inactive_alpha = 0.750000
+interact = false
+middle_click_close = false
+spacing = 50
+text_color = \#CCCCCCFF
+title_font_size = 16
+title_overlay = all
+title_position = center
+toggle = <super> KEY_P
+toggle_all = 
+
+[scale-title-filter]
+bg_color = \#00000080
+case_sensitive = false
+font_size = 30
+overlay = true
+share_filter = false
+text_color = \#CCCCCCCC
+
+[showrepaint]
+reduce_flicker = true
+toggle = <alt> <super> KEY_S
+
+[simple-tile]
+button_move = <super> BTN_LEFT
+button_resize = <super> BTN_RIGHT
+inner_gap_size = 5
+keep_fullscreen_on_adjacent = true
+key_focus_above = <super> KEY_K
+key_focus_below = <super> KEY_J
+key_focus_left = <super> KEY_H
+key_focus_right = <super> KEY_L
+key_toggle = <super> KEY_T
+outer_horiz_gap_size = 0
+outer_vert_gap_size = 0
+tile_by_default = all
+
+[switcher]
+next_view = <alt> KEY_TAB
+prev_view = <alt> <shift> KEY_TAB
+speed = 50
+view_thumbnail_scale = 1.000000
+
+[vswipe]
+background = \#1A1A1AFF
+delta_threshold = 24.000000
+duration = 50
+enable_free_movement = false
+enable_horizontal = true
+enable_smooth_transition = false
+enable_vertical = true
+fingers = 3
+gap = 0.000000
+speed_cap = 0.050000
+speed_factor = 256.000000
+threshold = 0.350000
+
+[vswitch]
+background = \#1A1A1AFF
+binding_down = <alt> <super> KEY_DOWN
+binding_left = <super> KEY_H
+binding_right = <super> KEY_L
+binding_up = <alt> <super> KEY_UP
+binding_win_down = <alt> <shift> <super> KEY_DOWN
+binding_win_left = <shift> <super> KEY_H
+binding_win_right = <shift> <super> KEY_L
+binding_win_up = <alt> <shift> <super> KEY_UP
+duration = 50
+gap = 0
+wraparound = true
+
+[water]
+activate = <ctrl> <super> BTN_LEFT
+
+[windecor]
+active_color = \#222222AA
+border_size = 4
+button_order = close
+close_color = \#CC000077
+font = sans-serif
+ignore_views = none
+inactive_color = \#333333DD
+maximize_color = \#09FF0077
+minimize_color = \#EDD40077
+title_height = 24
+
+[window-rules]
+
+[winzoom]
+dec_x_binding = <ctrl> <super> KEY_LEFT
+dec_y_binding = <ctrl> <super> KEY_UP
+inc_x_binding = <ctrl> <super> KEY_RIGHT
+inc_y_binding = <ctrl> <super> KEY_DOWN
+modifier = <ctrl> <super> 
+nearest_filtering = false
+preserve_aspect = true
+zoom_step = 0.100000
+
+[wm-actions]
+minimize = none
+send_to_back = none
+toggle_always_on_top = none
+toggle_fullscreen = <super> KEY_S
+toggle_maximize = none
+toggle_showdesktop = none
+toggle_sticky = none
+
+[wobbly]
+friction = 3.000000
+grid_resolution = 6
+spring_k = 8.000000
+
+[workarounds]
+all_dialogs_modal = true
+app_id_mode = stock
+dynamic_repaint_delay = false
+
+[workspace-names]
+background_color = \#333333B3
+display_duration = 500
+font = sans-serif
+position = center
+show_option_names = false
+text_color = \#FFFFFFFF
+
+[wrot]
+activate = <ctrl> <super> BTN_RIGHT
+activate-3d = <shift> <super> BTN_RIGHT
+invert = false
+reset = <ctrl> <super> KEY_R
+reset-one = <super> KEY_R
+reset_radius = 25.000000
+sensitivity = 24
+
+[zoom]
+modifier = <super> 
+smoothing_duration = 300
+speed = 0.010000
+
+#+END_SRC
+
+*** wayfire tangle
+
++ home dir
+
+#+NAME: wayfire-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wayfire.ini"
+<<wayfire>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wayfire-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wayfire.ini"
+<<wayfire>>
+#+END_SRC
+
 ** wf-shell
+*** wf-shell config
+
+#+NAME: wf-shell
+#+BEGIN_SRC conf
+[background]
+cycle_timeout = 150
+image = /home/djwilcox/pictures/wallpaper/freebsd-lynchmob.jpg
+preserve_aspect = false
+randomize = false
+
+[dock]
+autohide_duration = 300
+css_path = 
+position = bottom
+
+[panel]
+autohide = false
+autohide_duration = 300
+background_color = gtk_headerbar
+battery_font = default
+battery_icon_invert = true
+battery_icon_size = 24
+battery_status = 1
+clock_font = FiraCode-Bold
+clock_format = %e %A %H:%M
+css_path = 
+launchers_size = 38
+launchers_spacing = 4
+layer = top
+menu_fuzzy_search = true
+menu_icon = /home/djwilcox/pictures/icons/beastie.png
+menu_logout_command = 
+minimal_height = 20
+network_icon_invert_color = false
+network_icon_size = 32
+network_status = 1
+network_status_font = default
+network_status_use_color = false
+position = top
+volume_display_timeout = 2.500000
+widgets_center = 
+widgets_left = spacing4 menu
+widgets_right = clock
+
+#+END_SRC
+
+*** wf-shell tangle
+
++ home dir
+
+#+NAME: wf-shell-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/wf-shell.ini"
+<<wf-shell>>
+#+END_SRC
+
++ current dir
+
+#+NAME: wf-shell-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/wf-shell.ini"
+<<wf-shell>>
+#+END_SRC
+
 ** tmux
 *** tmux config
 
@@ -2178,6 +2679,9 @@ fs-screen=1
 # .tmux.conf
 
 # vi mode
+#set-option -g default-shell "/usr/local/bin/zsh"
+#set-option -g default-command "/usr/local/bin/zsh"
+#set -g default-command "${SHELL}"
 set-window-option -g mode-keys vi
 
 # Some tweaks to the status line
@@ -2290,6 +2794,7 @@ new-window -n "urlview" '$SHELL -c "urlview < /tmp/tmux-buffer"'
 
 # tmux auto rename pane 
 set-option -g status-interval 1
+set-option -g allow-rename on
 set-option -g automatic-rename on
 set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_title},#{pane_current_command}}"
 #+END_SRC
@@ -2395,178 +2900,6 @@ audio_output {
 <<mpd>>
 #+END_SRC
 
-** mutt
-
-#+NAME: mutt
-#+BEGIN_SRC conf
-set from = "danieljwilcox@gmail.com"
-set realname = "Daniel J Wilcox"
-
-# mutt colours
-#color normal default default
-#color hdrdefault black green
-#color quoted default default
-#color signature default default
-#color attachment default default
-#color message default default
-#color error default default
-#color indicator black green
-#color status black green
-#color tree default default
-#color normal default default
-#color markers default default
-#color search default default
-#color tilde default default
-#color index default default ~F
-#color index default default "~N|~O"
-
-
-# mutt colours
-color normal default default
-color hdrdefault black cyan
-color quoted default default
-color signature default default
-color attachment default default
-color message default default
-color error default default
-color indicator black cyan
-color status black cyan
-color tree default default
-color normal default default
-color markers default default
-color search default default
-color tilde default default
-color index default default ~F
-color index default default "~N|~O"
-
-set imap_user = "danieljwilcox@gmail.com"
-set smtp_url = "smtps://danieljwilcox@smtp.gmail.com:465/"
-source "gpg -d ~/.config/mutt/mutt-passwords.gpg |"
-
-set folder = "imaps://imap.gmail.com:993"
-set spoolfile = "+Inbox"
-set postponed = "+Drafts"
-#set trash = "imaps://imap.gmail.com/Trash"
-set record = "+Sent Mail"
-
-set header_cache = ~/.config/mutt/cache/headers
-set message_cachedir = ~/.config/mutt/cache/bodies
-set certificate_file = ~/.config/mutt/certificates
-set mailcap_path = ~/.config/mutt/mailcap       
-
-set sort=threads
-set sort_browser=reverse-date
-set sort_aux=reverse-last-date-received
-
-set move = "no" 
-set imap_idle = "yes"
-set mail_check = "60"
-set imap_keepalive = "900"
-set editor = "emacsclient"
-#set pager = "emacsclient"
-set beep_new
-
-# Ctrl-R to mark all as read
-macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
-
-set query_command = "abook --mutt-query '%s'"
-macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
-macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
-bind editor <Tab> complete-query
-
-bind index "^" imap-fetch-mail
-bind compose p pgp-menu
-macro compose Y pfy "send mail without GPG"
-
-bind index gg first-entry
-bind index G  last-entry
-
-bind pager k  previous-line
-bind pager j  next-line
-bind pager gg top
-bind pager G  bottom
-
-# View URLs inside Mutt with urlview
-macro index \cb "|urlview\n"
-macro pager \cb "|urlview\n"
-
-
-# Note that we explicitly set the comment armor header since GnuPG, when used
-# in some localiaztion environments, generates 8bit data in that header, thereby
-# breaking PGP/MIME.
-
-# decode application/pgp
-set pgp_decode_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
-
-# verify a pgp/mime signature
-set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
-
-# decrypt a pgp/mime attachment
-set pgp_decrypt_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
-
-# create a pgp/mime signed attachment
-set pgp_sign_command="gpg --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
-
-# create a application/pgp signed (old-style) message
-set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
-
-# create a pgp/mime encrypted attachment
-set pgp_encrypt_only_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
-
-# create a pgp/mime encrypted and signed attachment
-set pgp_encrypt_sign_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
-
-# import a key into the public key ring
-set pgp_import_command="gpg --no-verbose --import %f"
-
-# export a key from the public key ring
-set pgp_export_command="gpg --no-verbose --export --armor %r"
-
-# verify a key
-set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
-
-# read in the public key ring
-set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
-
-# read in the secret key ring
-set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
-
-# fetch keys
-# set pgp_getkeys_command="pkspxycwrap %r"
-# This will work when #172960 will be fixed upstream
-# set pgp_getkeys_command="gpg --recv-keys %r"
-
-# pattern for good signature - may need to be adapted to locale!
-
-# set pgp_good_sign="^gpgv?: Good signature from "
-
-# OK, here's a version which uses gnupg's message catalog:
-# set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
-
-# This version uses --status-fd messages
-set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
-
-# daniel j wilcox pgp
-set pgp_use_gpg_agent="yes"
-set my_pgp_id="3B2C8BA1"
-#+END_SRC
-
-*** mutt tangle
-
-+ home dir
-
-#+NAME: mutt-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mutt/muttrc"
-<<mutt>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: mutt-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mutt/muttrc"
-<<mutt>>
-#+END_SRC
-
 ** ncmpc
 
 #+NAME: ncmpc
@@ -2581,7 +2914,7 @@ status-format = "[%artist% - ]%title%|%shortfile%"
 visible-bitrate = yes
 wrap-around = yes
 
-# colors
+## Enable/disable colors.
 enable-colors = no
 
 ## Set the background color.
@@ -2884,6 +3217,178 @@ color alert = black,bold
 <<aria2>>
 #+END_SRC
 
+** mutt
+
+#+NAME: mutt
+#+BEGIN_SRC conf
+set from = "danieljwilcox@gmail.com"
+set realname = "Daniel J Wilcox"
+
+# mutt colours
+#color normal default default
+#color hdrdefault black green
+#color quoted default default
+#color signature default default
+#color attachment default default
+#color message default default
+#color error default default
+#color indicator black green
+#color status black green
+#color tree default default
+#color normal default default
+#color markers default default
+#color search default default
+#color tilde default default
+#color index default default ~F
+#color index default default "~N|~O"
+
+
+# mutt colours
+color normal default default
+color hdrdefault black cyan
+color quoted default default
+color signature default default
+color attachment default default
+color message default default
+color error default default
+color indicator black cyan
+color status black cyan
+color tree default default
+color normal default default
+color markers default default
+color search default default
+color tilde default default
+color index default default ~F
+color index default default "~N|~O"
+
+set imap_user = "danieljwilcox@gmail.com"
+set smtp_url = "smtps://danieljwilcox@smtp.gmail.com:465/"
+source "gpg -d ~/.config/mutt/mutt-passwords.gpg |"
+
+set folder = "imaps://imap.gmail.com:993"
+set spoolfile = "+Inbox"
+set postponed = "+Drafts"
+#set trash = "imaps://imap.gmail.com/Trash"
+set record = "+Sent Mail"
+
+set header_cache = ~/.config/mutt/cache/headers
+set message_cachedir = ~/.config/mutt/cache/bodies
+set certificate_file = ~/.config/mutt/certificates
+set mailcap_path = ~/.config/mutt/mailcap       
+
+set sort=threads
+set sort_browser=reverse-date
+set sort_aux=reverse-last-date-received
+
+set move = "no" 
+set imap_idle = "yes"
+set mail_check = "60"
+set imap_keepalive = "900"
+set editor = "emacsclient"
+#set pager = "emacsclient"
+set beep_new
+
+# Ctrl-R to mark all as read
+macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
+
+set query_command = "abook --mutt-query '%s'"
+macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
+macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
+bind editor <Tab> complete-query
+
+bind index "^" imap-fetch-mail
+bind compose p pgp-menu
+macro compose Y pfy "send mail without GPG"
+
+bind index gg first-entry
+bind index G  last-entry
+
+bind pager k  previous-line
+bind pager j  next-line
+bind pager gg top
+bind pager G  bottom
+
+# View URLs inside Mutt with urlview
+macro index \cb "|urlview\n"
+macro pager \cb "|urlview\n"
+
+
+# Note that we explicitly set the comment armor header since GnuPG, when used
+# in some localiaztion environments, generates 8bit data in that header, thereby
+# breaking PGP/MIME.
+
+# decode application/pgp
+set pgp_decode_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# verify a pgp/mime signature
+set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+
+# decrypt a pgp/mime attachment
+set pgp_decrypt_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
+
+# create a pgp/mime signed attachment
+set pgp_sign_command="gpg --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
+
+# create a application/pgp signed (old-style) message
+set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
+
+# create a pgp/mime encrypted attachment
+set pgp_encrypt_only_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+
+# create a pgp/mime encrypted and signed attachment
+set pgp_encrypt_sign_command="/usr/local/bin/pgpewrap gpg --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+
+# import a key into the public key ring
+set pgp_import_command="gpg --no-verbose --import %f"
+
+# export a key from the public key ring
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+
+# verify a key
+set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
+
+# read in the public key ring
+set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
+
+# read in the secret key ring
+set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
+
+# fetch keys
+# set pgp_getkeys_command="pkspxycwrap %r"
+# This will work when #172960 will be fixed upstream
+# set pgp_getkeys_command="gpg --recv-keys %r"
+
+# pattern for good signature - may need to be adapted to locale!
+
+# set pgp_good_sign="^gpgv?: Good signature from "
+
+# OK, here's a version which uses gnupg's message catalog:
+# set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
+
+# This version uses --status-fd messages
+set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
+
+# daniel j wilcox pgp
+set pgp_use_gpg_agent="yes"
+set my_pgp_id="3B2C8BA1"
+#+END_SRC
+
+*** mutt tangle
+
++ home dir
+
+#+NAME: mutt-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mutt/muttrc"
+<<mutt>>
+#+END_SRC
+
++ current dir
+
+#+NAME: mutt-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/mutt/muttrc"
+<<mutt>>
+#+END_SRC
+
 ** profile
 
 #+NAME: profile
@@ -3034,185 +3539,6 @@ gtk-application-prefer-dark-theme = true
 #+NAME: gtk-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/gtk-3.0/settings.ini"
 <<gtk>>
-#+END_SRC
-
-** muttrc
-
-#+NAME: muttrc
-#+BEGIN_SRC conf
-set from = "danieljwilcox@gmail.com"
-set realname = "Daniel J Wilcox"
-
-# mutt colours
-#color normal default default
-#color hdrdefault black green
-#color quoted default default
-#color signature default default
-#color attachment default default
-#color message default default
-#color error default default
-#color indicator black green
-#color status black green
-#color tree default default
-#color normal default default
-#color markers default default
-#color search default default
-#color tilde default default
-#color index default default ~F
-#color index default default "~N|~O"
-
-
-# mutt colours
-color normal default default
-color hdrdefault black cyan
-color quoted default default
-color signature default default
-color attachment default default
-color message default default
-color error default default
-color indicator black cyan
-color status black cyan
-color tree default default
-color normal default default
-color markers default default
-color search default default
-color tilde default default
-color index default default ~F
-color index default default "~N|~O"
-
-set imap_user = "danieljwilcox@gmail.com"
-set smtp_url = "smtps://danieljwilcox@smtp.gmail.com:465/"
-source "gpg -d ~/.mutt/mutt-passwords.gpg |"
-
-set folder = "imaps://imap.gmail.com:993"
-set spoolfile = "+Inbox"
-set postponed = "+Drafts"
-#set trash = "imaps://imap.gmail.com/Trash"
-set record = "+Sent Mail"
-
-set header_cache = ~/.mutt/cache/headers
-set message_cachedir = ~/.mutt/cache/bodies
-set certificate_file = ~/.mutt/certificates
-set mailcap_path = ~/.mutt/mailcap       
-
-set sort=threads
-set sort_browser=reverse-date
-set sort_aux=reverse-last-date-received
-
-set move = "no" 
-set imap_idle = "yes"
-set mail_check = "60"
-set imap_keepalive = "900"
-set editor = "emacsclient"
-#set pager = "emacsclient"
-set beep_new
-
-# Ctrl-R to mark all as read
-macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
-
-#set query_command="goobook query '%s'"
-#macro index,pager a "<pipe-message>goobook add<return>" "add sender to google contacts"
-
-set query_command = "abook --mutt-query '%s'"
-macro generic,index,pager \ca "<shell-escape>abook<return>" "launch abook"
-macro index,pager A "<pipe-message>abook --add-email<return>" "add the sender address to abook"
-bind editor <Tab> complete-query
-
-bind index "^" imap-fetch-mail
-bind compose p pgp-menu
-macro compose Y pfy "send mail without GPG"
-
-bind index gg first-entry
-bind index G  last-entry
-
-bind pager k  previous-line
-bind pager j  next-line
-bind pager gg top
-bind pager G  bottom
-
-# View URLs inside Mutt with urlview
-macro index \cb "|urlview\n"
-macro pager \cb "|urlview\n"
-
-
-# Note that we explicitly set the comment armor header since GnuPG, when used
-# in some localiaztion environments, generates 8bit data in that header, thereby
-# breaking PGP/MIME.
-
-# decode application/pgp
-set pgp_decode_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
-
-# verify a pgp/mime signature
-set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
-
-# decrypt a pgp/mime attachment
-set pgp_decrypt_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - %f"
-
-# create a pgp/mime signed attachment
-# set pgp_sign_command="gpg-2comp --comment '' --no-verbose --batch --output - %?p?--passphrase-fd 0? --armor --detach-sign --textmode %?a?-u %a? %f"
-set pgp_sign_command="gpg --no-verbose --batch --quiet --output - --armor --detach-sign --textmode %?a?-u %a? %f"
-
-# create a application/pgp signed (old-style) message
-# set pgp_clearsign_command="gpg-2comp --comment '' --no-verbose --batch --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
-set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
-
-# create a pgp/mime encrypted attachment
-# set pgp_encrypt_only_command="pgpewrap gpg-2comp -v --batch --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
-set pgp_encrypt_only_command="/usr/bin/pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
-
-# create a pgp/mime encrypted and signed attachment
-# set pgp_encrypt_sign_command="pgpewrap gpg-2comp %?p?--passphrase-fd 0? -v --batch --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
-set pgp_encrypt_sign_command="/usr/bin/pgpewrap gpg --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
-
-# import a key into the public key ring
-set pgp_import_command="gpg --no-verbose --import %f"
-
-# export a key from the public key ring
-set pgp_export_command="gpg --no-verbose --export --armor %r"
-
-# verify a key
-set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
-
-# read in the public key ring
-set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --list-keys %r" 
-
-# read in the secret key ring
-set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --list-secret-keys %r" 
-
-# fetch keys
-# set pgp_getkeys_command="pkspxycwrap %r"
-# This will work when #172960 will be fixed upstream
-# set pgp_getkeys_command="gpg --recv-keys %r"
-
-# pattern for good signature - may need to be adapted to locale!
-
-# set pgp_good_sign="^gpgv?: Good signature from "
-
-# OK, here's a version which uses gnupg's message catalog:
-# set pgp_good_sign="`gettext -d gnupg -s 'Good signature from "' | tr -d '"'`"
-
-# This version uses --status-fd messages
-set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
-
-# daniel j wilcox pgp
-set pgp_use_gpg_agent="yes"
-set my_pgp_id="3B2C8BA1"
-#+END_SRC
-
-*** muttrc tangle
-
-+ home dir
-
-#+NAME: muttrc-home-dir
-#+BEGIN_SRC conf :noweb yes :tangle "~/.config/mutt/muttrc"
-<<muttrc>>
-#+END_SRC
-
-+ current dir
-
-#+NAME: muttrc-current-dir
-#+BEGIN_SRC conf :noweb yes :tangle ".config/mutt/muttrc"
-<<muttrc>>
 #+END_SRC
 
 ** xkb
