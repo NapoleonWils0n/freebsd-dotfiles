@@ -98,7 +98,7 @@ zstyle ':completion:*:*:kill:*' list-colors '=(#b) #([0-9]#)*( *[a-z])*=22=31=34
 zstyle ':completion:*:options' list-colors '=(#b) #(-[a-zA-Z0-9,]#)*(-- *)=36=37'
 
 # zsh autocompletion for sudo and doas
-zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin
+zstyle ":completion:*:(sudo|su|doas):*" command-path /usr/local/bin /usr/sbin /home/djwilcox/bin
 
 # rehash commands
 zstyle ':completion:*' rehash true
