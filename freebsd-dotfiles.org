@@ -3217,6 +3217,42 @@ color alert = black,bold
 <<aria2>>
 #+END_SRC
 
+** desktop files
+*** desktop files config
+**** chromium config
+
+#+NAME: chromium-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=chrome --ozone-platform=wayland %U
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
+*** desktop files tangle
+**** chromium tangle
+
++ home dir
+  
+#+NAME: chromium-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/chromium-browser.desktop"
+<<chromium-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: chromium-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
+<<chromium-desktop>>
+#+END_SRC
+
 ** mutt
 
 #+NAME: mutt
