@@ -2187,6 +2187,52 @@ fs
 <<mpv.conf>>
 #+END_SRC
 
+** tofi
+*** tofi config
+
+#+NAME: tofi
+#+BEGIN_SRC conf
+anchor = top
+background-color = #000008
+border-width = 0
+drun-launch = true
+font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
+font-size = 10
+height = 30
+hint-font = false
+horizontal = true
+min-input-width = 0
+num-results = 10
+outline-width = 0
+padding-bottom = 0
+padding-left = 0
+padding-right = 0
+padding-top = 8
+prompt-color = #FFFFFF
+prompt-text = "$ "
+input-color = #268bd2
+result-spacing = 15
+selection-color = #268bd2
+text-color = #FFFFFF
+width = 100%
+#+END_SRC
+
+*** tofi tangle
+
++ home dir
+
+#+NAME: tofi-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/tofi/config"
+<<tofi>>
+#+END_SRC
+
++ current dir
+
+#+NAME: tofi-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/tofi/config"
+<<tofi>>
+#+END_SRC
+
 ** wayfire
 *** wayfire config
 
@@ -2227,7 +2273,8 @@ rotate_right = <ctrl> <super> KEY_RIGHT
 rotate_up = <ctrl> <super> KEY_UP
 
 [autostart]
-autostart_wf_shell = true
+autostart_wf_shell = false
+background = wf-background
 
 [background-view]
 command = mpv --loop=inf
@@ -2257,9 +2304,11 @@ saturation = 1.000000
 toggle = none
 
 [command]
+binding_0 = <super> KEY_A
 binding_browser = <alt> <super> KEY_ENTER
 binding_emacs = <ctrl> <super> KEY_ENTER
 binding_terminal = <ctrl> <super> KEY_SPACE
+command_0 = tofi-drun
 command_browser = firefox
 command_emacs = emacsclient --alternate-editor= --create-frame
 command_terminal = alacritty
@@ -2650,7 +2699,7 @@ network_status_use_color = false
 position = top
 volume_display_timeout = 2.500000
 widgets_center = 
-widgets_left = spacing4 menu
+widgets_left = 
 widgets_right = clock
 
 #+END_SRC
