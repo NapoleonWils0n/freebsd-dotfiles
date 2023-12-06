@@ -3265,6 +3265,35 @@ color alert = black,bold
 <<aria2>>
 #+END_SRC
 
+** user-dirs.dirs
+
+#+NAME: user-dirs.dirs
+#+BEGIN_SRC conf
+enabled=False
+XDG_DESKTOP_DIR="$HOME/desktop"
+XDG_DOCUMENTS_DIR="$HOME/documents"
+XDG_DOWNLOAD_DIR="$HOME/downloads"
+XDG_MUSIC_DIR="$HOME/music"
+XDG_PICTURES_DIR="$HOME/pictures"
+XDG_VIDEOS_DIR="$HOME/video"
+#+END_SRC
+
+*** user-dirs.dirs tangle
+
++ home dir
+  
+#+NAME: user-dirs.dirs-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/user-dirs.dirs"
+<<user-dirs.dirs>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: user-dirs.dirs-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/user-dirs.dirs"
+<<user-dirs.dirs>>
+#+END_SRC
+
 ** desktop files
 *** desktop files config
 **** chromium config
