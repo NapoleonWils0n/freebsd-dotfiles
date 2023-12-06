@@ -1,4 +1,4 @@
-#+TITLE: Freebsd Dotfiles
+#+TITLE: Freebsd Dotfiles mac
 #+STARTUP: overview hideblocks
 #+OPTIONS: num:nil author:nil
 #+PROPERTY: header-args :mkdirp yes
