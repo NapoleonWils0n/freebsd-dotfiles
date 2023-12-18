@@ -1944,7 +1944,7 @@ alias backlight-off='sysctl dev.asmc.0.light.control:0'
 
 # Path
 typeset -U PATH path
-path=("$HOME/bin" "$path[@]")
+path=("$HOME/bin" "/usr/local/bin" "$path[@]")
 export PATH
 
 # xdg directories
