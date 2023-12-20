@@ -2084,7 +2084,7 @@ osd-fractions
 # youtube subs - J to switch to subs
 sub-auto=fuzzy
 ytdl-raw-options=sub-lang="en",write-sub=,write-auto-sub=
-sub-font='Noto Color Emoji'
+sub-font='NotoColorEmoji'
 
 # screenshot timecode
 screenshot-template="%F-[%P]v%#01n"
