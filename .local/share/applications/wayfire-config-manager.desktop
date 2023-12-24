@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Config 
+Comment=Configure Wayfire Settings
+Exec=wcm
+Icon=wcm
+Type=Application
+Categories=Utility;

@@ -1,0 +1,24 @@
+[Desktop Entry]
+Name=vpn-Transmission
+GenericName=BitTorrent Client
+Comment=Download and share files over BitTorrent
+Keywords=torrents;downloading;uploading;share;sharing;
+Exec=sh -c 'setfib 1 transmission-gtk %U'
+Icon=transmission
+Terminal=false
+TryExec=transmission-gtk
+Type=Application
+StartupNotify=true
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+Categories=Network;FileTransfer;P2P;GTK;
+X-Ubuntu-Gettext-Domain=transmission
+X-AppInstall-Keywords=torrent
+Actions=Pause;Minimize;
+
+[Desktop Action Pause]
+Name=Start Transmission with All Torrents Paused
+Exec=setfib 1 transmission-gtk --paused
+
+[Desktop Action Minimize]
+Name=Start Transmission Minimized
+Exec=setfib 1 transmission-gtk --minimized

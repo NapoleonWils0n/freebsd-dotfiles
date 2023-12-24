@@ -3313,6 +3313,279 @@ MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme
 StartupNotify=true
 #+end_src
 
+**** obs config
+
+#+NAME: obs-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=OBS
+GenericName=Streaming/Recording Software
+Comment=Free and Open Source Streaming/Recording Software
+Exec=obs
+Icon=com.obsproject.Studio
+Terminal=false
+Type=Application
+Categories=AudioVideo;Recorder;
+StartupNotify=true
+StartupWMClass=obs
+#+end_src
+
+**** emacs config
+
+#+NAME: emacs-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacs %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+StartupNotify=true
+StartupWMClass=Emacs
+Hidden=true
+#+end_src
+
+**** emacsclient config
+
+#+NAME: emacsclient-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=Emacs
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;x-scheme-handler/org-protocol;
+Exec=sh -c "if [ -n \\"\\$*\\" ]; then exec /usr/local/bin/emacsclient --alternate-editor= --reuse-frame \\"\\$@\\"; else exec emacsclient --alternate-editor= --create-frame; fi" sh %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+StartupNotify=true
+StartupWMClass=Emacs
+Keywords=emacsclient;
+Actions=new-window;new-instance;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=/usr/local/bin/emacsclient --alternate-editor= --create-frame %F
+
+[Desktop Action new-instance]
+Name=New Instance
+Exec=emacs %F
+#+end_src
+
+**** firefox config
+
+#+NAME: firefox-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=Firefox
+Comment=Browse the World Wide Web
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=firefox %U
+Terminal=false
+Type=Application
+Icon=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+Actions=NewWindow;NewPrivateWindow;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=firefox -new-window
+
+[Desktop Action NewPrivateWindow]
+Name=Open a New Private Window
+Exec=firefox -private-window
+#+end_src
+
+**** mpv config
+
+#+NAME: mpv-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Name=mpv Media Player
+GenericName=Multimedia player
+Comment=Play movies and songs
+Icon=mpv
+TryExec=mpv
+Exec=mpv --player-operation-mode=pseudo-gui -- %U
+Terminal=false
+Categories=AudioVideo;Audio;Video;Player;TV;
+MimeType=application/ogg;application/x-ogg;application/mxf;application/sdp;application/smil;application/x-smil;application/streamingmedia;application/x-streamingmedia;application/vnd.rn-realmedia;application/vnd.rn-realmedia-vbr;audio/aac;audio/x-aac;audio/vnd.dolby.heaac.1;audio/vnd.dolby.heaac.2;audio/aiff;audio/x-aiff;audio/m4a;audio/x-m4a;application/x-extension-m4a;audio/mp1;audio/x-mp1;audio/mp2;audio/x-mp2;audio/mp3;audio/x-mp3;audio/mpeg;audio/mpeg2;audio/mpeg3;audio/mpegurl;audio/x-mpegurl;audio/mpg;audio/x-mpg;audio/rn-mpeg;audio/musepack;audio/x-musepack;audio/ogg;audio/scpls;audio/x-scpls;audio/vnd.rn-realaudio;audio/wav;audio/x-pn-wav;audio/x-pn-windows-pcm;audio/x-realaudio;audio/x-pn-realaudio;audio/x-ms-wma;audio/x-pls;audio/x-wav;video/mpeg;video/x-mpeg2;video/x-mpeg3;video/mp4v-es;video/x-m4v;video/mp4;application/x-extension-mp4;video/divx;video/vnd.divx;video/msvideo;video/x-msvideo;video/ogg;video/quicktime;video/vnd.rn-realvideo;video/x-ms-afs;video/x-ms-asf;audio/x-ms-asf;application/vnd.ms-asf;video/x-ms-wmv;video/x-ms-wmx;video/x-ms-wvxvideo;video/x-avi;video/avi;video/x-flic;video/fli;video/x-flc;video/flv;video/x-flv;video/x-theora;video/x-theora+ogg;video/x-matroska;video/mkv;audio/x-matroska;application/x-matroska;video/webm;audio/webm;audio/vorbis;audio/x-vorbis;audio/x-vorbis+ogg;video/x-ogm;video/x-ogm+ogg;application/x-ogm;application/x-ogm-audio;application/x-ogm-video;application/x-shorten;audio/x-shorten;audio/x-ape;audio/x-wavpack;audio/x-tta;audio/AMR;audio/ac3;audio/eac3;audio/amr-wb;video/mp2t;audio/flac;audio/mp4;application/x-mpegurl;video/vnd.mpegurl;application/vnd.apple.mpegurl;audio/x-pn-au;video/3gp;video/3gpp;video/3gpp2;audio/3gpp;audio/3gpp2;video/dv;audio/dv;audio/opus;audio/vnd.dts;audio/vnd.dts.hd;audio/x-adpcm;application/x-cue;audio/m3u;
+X-KDE-Protocols=ftp,http,https,mms,rtmp,rtsp,sftp,smb,srt,rist,webdav,webdavs
+StartupWMClass=mpv
+Hidden=true
+#+end_src
+
+**** pavucontrol config
+
+#+NAME: pavucontrol-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=Volume
+GenericName=Volume Control
+Comment=Adjust the volume level
+Exec=pavucontrol
+Icon=multimedia-volume-control
+StartupNotify=true
+Type=Application
+Categories=AudioVideo;Audio;Mixer;GTK;Settings;X-XFCE-SettingsDialog;X-XFCE-HardwareSettings;
+Keywords=pavucontrol;Microphone;Volume;Fade;Balance;Headset;Speakers;Headphones;Audio;Mixer;Output;Input;Devices;Playback;Recording;System Sounds;Sound Card;Settings;Preferences;
+#+end_src
+
+**** qt5ct config
+
+#+NAME: qt5ct-desktop
+#+begin_src conf
+[Desktop Entry]
+X-Desktop-File-Install-Version=0.11
+Name=Qt5 Settings
+Comment=Qt5 Configuration Tool
+Exec=qt5ct
+Icon=preferences-desktop-theme
+Terminal=false
+Type=Application
+Categories=Settings;DesktopSettings;Qt;
+Keywords=settings;desktop;qt;qtsettings;qt5;
+Hidden=true
+#+end_src
+
+**** vlc config
+
+#+NAME: vlc-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=VLC
+GenericName=Media player
+Comment=Read, capture, broadcast your multimedia streams
+Exec=/usr/local/bin/vlc --started-from-file %U
+TryExec=/usr/local/bin/vlc
+Icon=vlc
+Terminal=false
+Type=Application
+Categories=AudioVideo;Player;Recorder;
+MimeType=application/ogg;application/x-ogg;audio/ogg;audio/vorbis;audio/x-vorbis;audio/x-vorbis+ogg;video/ogg;video/x-ogm;video/x-ogm+ogg;video/x-theora+ogg;video/x-theora;audio/x-speex;audio/opus;application/x-flac;audio/flac;audio/x-flac;audio/x-ms-asf;audio/x-ms-asx;audio/x-ms-wax;audio/x-ms-wma;video/x-ms-asf;video/x-ms-asf-plugin;video/x-ms-asx;video/x-ms-wm;video/x-ms-wmv;video/x-ms-wmx;video/x-ms-wvx;video/x-msvideo;audio/x-pn-windows-acm;video/divx;video/msvideo;video/vnd.divx;video/avi;video/x-avi;application/vnd.rn-realmedia;application/vnd.rn-realmedia-vbr;audio/vnd.rn-realaudio;audio/x-pn-realaudio;audio/x-pn-realaudio-plugin;audio/x-real-audio;audio/x-realaudio;video/vnd.rn-realvideo;audio/mpeg;audio/mpg;audio/mp1;audio/mp2;audio/mp3;audio/x-mp1;audio/x-mp2;audio/x-mp3;audio/x-mpeg;audio/x-mpg;video/mp2t;video/mpeg;video/mpeg-system;video/x-mpeg;video/x-mpeg2;video/x-mpeg-system;application/mpeg4-iod;application/mpeg4-muxcodetable;application/x-extension-m4a;application/x-extension-mp4;audio/aac;audio/m4a;audio/mp4;audio/x-m4a;audio/x-aac;video/mp4;video/mp4v-es;video/x-m4v;application/x-quicktime-media-link;application/x-quicktimeplayer;video/quicktime;application/x-matroska;audio/x-matroska;video/x-matroska;video/webm;audio/webm;audio/3gpp;audio/3gpp2;audio/AMR;audio/AMR-WB;video/3gp;video/3gpp;video/3gpp2;x-scheme-handler/mms;x-scheme-handler/mmsh;x-scheme-handler/rtsp;x-scheme-handler/rtp;x-scheme-handler/rtmp;x-scheme-handler/icy;x-scheme-handler/icyx;application/x-cd-image;x-content/video-vcd;x-content/video-svcd;x-content/video-dvd;x-content/audio-cdda;x-content/audio-player;application/ram;application/xspf+xml;audio/mpegurl;audio/x-mpegurl;audio/scpls;audio/x-scpls;text/google-video-pointer;text/x-google-video-pointer;video/vnd.mpegurl;application/vnd.apple.mpegurl;application/vnd.ms-asf;application/vnd.ms-wpl;application/sdp;audio/dv;video/dv;audio/x-aiff;audio/x-pn-aiff;video/x-anim;video/x-nsv;video/fli;video/flv;video/x-flc;video/x-fli;video/x-flv;audio/wav;audio/x-pn-au;audio/x-pn-wav;audio/x-wav;audio/x-adpcm;audio/ac3;audio/eac3;audio/vnd.dts;audio/vnd.dts.hd;audio/vnd.dolby.heaac.1;audio/vnd.dolby.heaac.2;audio/vnd.dolby.mlp;audio/basic;audio/midi;audio/x-ape;audio/x-gsm;audio/x-musepack;audio/x-tta;audio/x-wavpack;audio/x-shorten;application/x-shockwave-flash;application/x-flash-video;misc/ultravox;image/vnd.rn-realpix;audio/x-it;audio/x-mod;audio/x-s3m;audio/x-xm;application/mxf;
+X-KDE-Protocols=ftp,http,https,mms,rtmp,rtsp,sftp,smb
+Keywords=Player;Capture;DVD;Audio;Video;Server;Broadcast;
+#+end_src
+
+**** wayfire config
+
+#+NAME: wayfire-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=Config 
+Comment=Configure Wayfire Settings
+Exec=wcm
+Icon=wcm
+Type=Application
+Categories=Utility;
+#+end_src
+
+**** weechat config
+
+#+NAME: weechat-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=WeeChat
+GenericName=Chat client
+Comment=Extensible chat client
+Keywords=WeeChat;extensible;chat;IRC;client;console;terminal;
+Exec=weechat %u
+Terminal=true
+Icon=weechat
+Type=Application
+Categories=Network;Chat;IRCClient;ConsoleOnly;
+MimeType=x-scheme-handler/irc;x-scheme-handler/ircs;
+Hidden=true
+#+end_src
+
+**** vpn-chromium config
+
+#+NAME: vpn-chromium-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=vpn-Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=sh -c 'setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U'
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
+**** vpn-firefox config
+
+#+NAME: vpn-firefox-desktop
+#+begin_src conf
+[Desktop Entry]
+Version=1.0
+Name=vpn-Firefox
+Comment=Browse the World Wide Web
+GenericName=Web Browser
+Keywords=Internet;WWW;Browser;Web;Explorer
+Exec=sh -c 'setfib 1 firefox %U'
+Terminal=false
+Type=Application
+Icon=firefox
+Categories=GNOME;GTK;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;x-scheme-handler/chrome;video/webm;application/x-xpinstall;
+StartupNotify=true
+Actions=NewWindow;NewPrivateWindow;
+
+[Desktop Action NewWindow]
+Name=Open a New Window
+Exec=setfib 1 firefox -new-window
+
+[Desktop Action NewPrivateWindow]
+Name=Open a New Private Window
+Exec=setfib 1 firefox -private-window
+#+end_src
+
+**** vpn-transmission config
+
+#+NAME: vpn-transmission-desktop
+#+begin_src conf
+[Desktop Entry]
+Name=vpn-Transmission
+GenericName=BitTorrent Client
+Comment=Download and share files over BitTorrent
+Keywords=torrents;downloading;uploading;share;sharing;
+Exec=sh -c 'setfib 1 transmission-gtk %U'
+Icon=transmission
+Terminal=false
+TryExec=transmission-gtk
+Type=Application
+StartupNotify=true
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+Categories=Network;FileTransfer;P2P;GTK;
+X-Ubuntu-Gettext-Domain=transmission
+X-AppInstall-Keywords=torrent
+Actions=Pause;Minimize;
+
+[Desktop Action Pause]
+Name=Start Transmission with All Torrents Paused
+Exec=setfib 1 transmission-gtk --paused
+
+[Desktop Action Minimize]
+Name=Start Transmission Minimized
+Exec=setfib 1 transmission-gtk --minimized
+#+end_src
+
 *** desktop files tangle
 **** chromium tangle
 
@@ -3328,6 +3601,214 @@ StartupNotify=true
 #+NAME: chromium-desktop-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/chromium-browser.desktop"
 <<chromium-desktop>>
+#+END_SRC
+
+**** obs tangle
+
++ home dir
+  
+#+NAME: obs-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/com.obsproject.Studio.desktop"
+<<obs-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: obs-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/com.obsproject.Studio.desktop"
+<<obs-desktop>>
+#+END_SRC
+
+**** emacs tangle
+
++ home dir
+  
+#+NAME: emacs-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/emacs.desktop"
+<<emacs-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: emacs-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacs.desktop"
+<<emacs-desktop>>
+#+END_SRC
+
+**** emacsclient tangle
+
++ home dir
+  
+#+NAME: emacsclient-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/emacsclient.desktop"
+<<emacsclient-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: emacsclient-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/emacsclient.desktop"
+<<emacsclient-desktop>>
+#+END_SRC
+
+**** firefox tangle
+
++ home dir
+  
+#+NAME: firefox-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/firefox.desktop"
+<<firefox-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: firefox-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/firefox.desktop"
+<<firefox-desktop>>
+#+END_SRC
+
+**** mpv tangle
+
++ home dir
+  
+#+NAME: mpv-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/mpv.desktop"
+<<mpv-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: mpv-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/mpv.desktop"
+<<mpv-desktop>>
+#+END_SRC
+
+**** pavucontrol tangle
+
++ home dir
+  
+#+NAME: pavucontrol-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/pavucontrol.desktop"
+<<pavucontrol-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: pavucontrol-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/pavucontrol.desktop"
+<<pavucontrol-desktop>>
+#+END_SRC
+
+**** qt5ct tangle
+
++ home dir
+  
+#+NAME: qt5ct-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/qt5ct.desktop"
+<<qt5ct-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: qt5ct-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/qt5ct.desktop"
+<<qt5ct-desktop>>
+#+END_SRC
+
+**** vlc tangle
+
++ home dir
+  
+#+NAME: vlc-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vlc.desktop"
+<<vlc-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: vlc-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vlc.desktop"
+<<vlc-desktop>>
+#+END_SRC
+
+**** wayfire tangle
+
++ home dir
+  
+#+NAME: wayfire-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/wayfire-config-manager.desktop"
+<<wayfire-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: wayfire-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/wayfire-config-manager.desktop"
+<<wayfire-desktop>>
+#+END_SRC
+
+**** weechat tangle
+
++ home dir
+  
+#+NAME: weechat-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/weechat.desktop"
+<<weechat-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: weechat-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/weechat.desktop"
+<<weechat-desktop>>
+#+END_SRC
+
+**** vpn-chromium tangle
+
++ home dir
+  
+#+NAME: vpn-chromium-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-chromium.desktop"
+<<vpn-chromium-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: vpn-chromium-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-chromium.desktop"
+<<vpn-chromium-desktop>>
+#+END_SRC
+
+**** vpn-firefox tangle
+
++ home dir
+  
+#+NAME: vpn-firefox-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-firefox.desktop"
+<<vpn-firefox-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: vpn-firefox-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-firefox.desktop"
+<<vpn-firefox-desktop>>
+#+END_SRC
+
+**** vpn-transmission tangle
+
++ home dir
+  
+#+NAME: vpn-transmission-desktop-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.local/share/applications/vpn-transmission.desktop"
+<<vpn-transmission-desktop>>
+#+END_SRC
+  
++ current dir
+
+#+NAME: vpn-transmission-desktop-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".local/share/applications/vpn-transmission.desktop"
+<<vpn-transmission-desktop>>
 #+END_SRC
 
 ** mutt

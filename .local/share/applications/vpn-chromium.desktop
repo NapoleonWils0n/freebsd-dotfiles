@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=vpn-Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=sh -c 'setfib 1 chrome --enable-features=Vulkan --use-vulkan --ozone-platform=wayland %U'
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
