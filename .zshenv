@@ -24,9 +24,6 @@ export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
 export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
 
-# wget
-export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
-
 # set emacsclient as editor
 #export ALTERNATE_EDITOR=""
 #export EDITOR="emacsclient -a emacs"
