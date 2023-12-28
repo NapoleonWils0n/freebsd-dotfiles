@@ -2546,14 +2546,14 @@ threshold = 0.350000
 
 [vswitch]
 background = \#1A1A1AFF
-binding_down = <alt> <super> KEY_DOWN
+binding_down = <super> KEY_J
 binding_left = <super> KEY_H
 binding_right = <super> KEY_L
-binding_up = <alt> <super> KEY_UP
-binding_win_down = <alt> <shift> <super> KEY_DOWN
+binding_up = <super> KEY_K
+binding_win_down = <shift> <super> KEY_J
 binding_win_left = <shift> <super> KEY_H
 binding_win_right = <shift> <super> KEY_L
-binding_win_up = <alt> <shift> <super> KEY_UP
+binding_win_up = <shift> <super> KEY_K
 duration = 50
 gap = 0
 wraparound = true
