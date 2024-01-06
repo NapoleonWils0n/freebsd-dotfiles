@@ -1278,49 +1278,32 @@ minibuffer with something like `exit-minibuffer'."
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("bookmarks"
- (filename . "~/git/personal/bookmarks/bookmarks.org")
- (front-context-string . "#+STARTUP: overv")
- (rear-context-string)
- (position . 1)
- (last-modified 25703 35089 410375 479000))
-("feeds"
- (filename . "~/git/personal/feeds/feeds.org")
+(("dotfiles"
+ (filename . "~/git/freebsd/freebsd-dotfiles/freebsd-dotfiles-mac.org")
+ (front-context-string . "* freebsd dotfil")
+ (rear-context-string . "g\")'\n#+END_SRC\n\n") (position . 382)
+ (last-modified 26009 27139 884243 798000))
+("bookmarks" (filename . "~/git/personal/bookmarks/bookmarks.org")
+ (front-context-string . "#+STARTUP: overv") (rear-context-string)
+ (position . 1) (last-modified 25703 35089 410375 479000))
+("feeds" (filename . "~/git/personal/feeds/feeds.org")
  (front-context-string . "* elfeed :elfeed")
- (rear-context-string . "TARTUP: content\n")
- (position . 20)
+ (rear-context-string . "TARTUP: content\n") (position . 20)
  (last-modified 25692 54791 894815 365000))
-("dotfiles"
- (filename . "~/git/fedora/fedora-dotfiles/fedora-dotfiles.org")
- (front-context-string . "* fedora dotfile")
- (rear-context-string . "g\")'\n#+end_src\n\n")
- (position . 374))
-("org-refile-last-stored"
- (filename . "~/git/personal/org/web.org")
+("org-refile-last-stored" (filename . "~/git/personal/org/web.org")
  (front-context-string . "** [[https://its")
- (rear-context-string . "lview\" program.\n")
- (position . 173198))
-("root"
- (filename . "/")
- (front-context-string . "bin -> usr/bin\n ")
- (rear-context-string . " 7 Oct 30 23:23 ")
- (position . 197))
-("home"
- (filename . "~/")
- (front-context-string . "..\n  drwxr-xr-x ")
- (rear-context-string . " 3 Oct 30 23:26 ")
- (position . 178))
-("desktop"
- (filename . "~/Desktop/")
+ (rear-context-string . "lview\" program.\n") (position . 173198))
+("root" (filename . "/") (front-context-string . "bin -> usr/bin\n ")
+ (rear-context-string . " 7 Oct 30 23:23 ") (position . 197))
+("home" (filename . "~/") (front-context-string . "..\n  drwxr-xr-x ")
+ (rear-context-string . " 3 Oct 30 23:26 ") (position . 178))
+("desktop" (filename . "~/Desktop/")
  (front-context-string . "zshrc-linux\n  -r")
- (rear-context-string . "45 Jan 18 17:53 ")
- (position . 236)
+ (rear-context-string . "45 Jan 18 17:53 ") (position . 236)
  (annotation . ""))
-("cerberus"
- (filename . "~/git/cerberus/")
+("cerberus" (filename . "~/git/cerberus/")
  (front-context-string . "7zip\n  drwxr-xr-")
- (rear-context-string . "96 Jan  4  2016 ")
- (position . 249))
+ (rear-context-string . "96 Jan  4  2016 ") (position . 249))
 )
 #+END_SRC
 
