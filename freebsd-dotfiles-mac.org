@@ -2071,7 +2071,7 @@ profile=hwdec
 cache=yes
 # fullscreen 2nd display
 fs
-#fs-screen=1
+#fs-screen-name=DP-3
 
 
 # invidious conditional auto profile match any youtube url
@@ -2084,7 +2084,7 @@ profile=hwdec
 cache=no
 # fullscreen 2nd display
 fs
-#fs-screen=1
+#fs-screen-name=DP-3
 
 
 # archive.org conditional auto profile match any archive.org url
@@ -2097,12 +2097,12 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-#fs-screen=1
+#fs-screen-name=DP-3
 
 
 # bbc iplayer conditional auto profile match any bbc iplayer url
 [iplayer]
-profile-desc="archive hardware acceleration, cache"
+profile-desc="iplayer hardware acceleration, cache"
 profile-cond=path:find('bbc.co.uk/iplayer') ~= nil
 # include hwdec profile 
 profile=hwdec
@@ -2110,7 +2110,20 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-#fs-screen=1
+#fs-screen-name=DP-3
+
+
+# bbc iplayer conditional auto profile match any bbc iplayer url
+[bbc]
+profile-desc="bbc hardware acceleration, cache"
+profile-cond=path:find('bbc:pips:service') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=auto
+# fullscreen 2nd display
+fs
+#fs-screen-name=DP-3
 #+END_SRC
 
 **** mpv tangle
