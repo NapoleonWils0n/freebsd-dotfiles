@@ -703,7 +703,7 @@
 
 ;; create a video: link type that opens a url using mpv-play-url
 (org-link-set-parameters "video"
-                         :follow #'mpv-play-url
+                         :follow #'mpv-play-remote-video
                          :complete #'org-mpv-complete-url
                          :store #'org-video-store-link)
 
@@ -716,6 +716,18 @@
        :link link
        :description description))
 
+
+;; mpv-play-remote-video
+(defun mpv-play-remote-video (url &rest args)
+  "Start an mpv process playing the video stream at URL."
+  (interactive)
+  (unless (mpv--url-p url)
+    (user-error "Invalid argument: `%s' (must be a valid URL)" url))
+  (if (not mpv--process)
+      ;; mpv isnt running play file
+      (mpv-start url)
+      ;; mpv running append file to playlist
+    (mpv--playlist-append url)))
 
 ;; create a mpv: link type that opens a file using mpv-play
 (defun org-mpv-complete-link (&optional arg)
