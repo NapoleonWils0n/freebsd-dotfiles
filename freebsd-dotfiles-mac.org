@@ -2245,11 +2245,13 @@ duration = 400
 enabled_for = (type equals "toplevel" | (type equals "x-or" & focusable equals true))
 fade_duration = 400
 fade_enabled_for = type equals "overlay"
+fire_color = \#B22303FF
 fire_duration = 300
 fire_enabled_for = none
 fire_particle_size = 16.000000
 fire_particles = 2000
 open_animation = zoom
+random_fire_color = false
 startup_duration = 600
 zoom_duration = 500
 zoom_enabled_for = none
@@ -2274,8 +2276,10 @@ autostart_wf_shell = false
 background = wf-background
 
 [background-view]
-#command = mpv --loop=inf
-#file = 
+app_id = mpv
+command = mpv --loop=inf
+file = 
+inhibit_input = true
 
 [bench]
 average_frames = 1
@@ -2301,14 +2305,14 @@ saturation = 1.000000
 toggle = none
 
 [command]
-binding_tofi = <super> KEY_A
-binding_playerctl = <alt> <super> KEY_SPACE
 binding_emacs = <ctrl> <super> KEY_ENTER
+binding_playerctl = <alt> <super> KEY_SPACE
 binding_terminal = <ctrl> <super> KEY_SPACE
-command_tofi = tofi-drun
-command_playerctl = playerctl play-pause
+binding_tofi = <super> KEY_A
 command_emacs = emacsclient --alternate-editor= --create-frame
+command_playerctl = playerctl play-pause
 command_terminal = alacritty
+command_tofi = tofi-drun
 
 [core]
 background_color = \#1A1A1AFF
@@ -2317,8 +2321,9 @@ focus_button_with_modifiers = false
 focus_buttons = BTN_LEFT | BTN_MIDDLE | BTN_RIGHT
 focus_buttons_passthrough = true
 max_render_time = -1
-plugins = autostart command expo grid idle move oswitch place resize switcher vswitch window-rules vswipe extra-gestures wm-actions follow-focus
+plugins = autostart command expo grid idle move oswitch place resize switcher vswitch window-rules vswipe extra-gestures wm-actions follow-focus wayfire-shell
 preferred_decoration_mode = client
+transaction_timeout = 100
 vheight = 3
 vwidth = 4
 xwayland = false
@@ -2359,8 +2364,11 @@ title_height = 30
 [expo]
 background = \#1A1A1AFF
 duration = 100
+inactive_brightness = 0.700000
+keyboard_interaction = true
 offset = 10
 toggle = <super> 
+transition_length = 200
 
 [extra-gestures]
 close_fingers = 20
@@ -2376,6 +2384,14 @@ inactive_alpha = 0.700000
 radius = 450.000000
 toggle = <ctrl> <super> KEY_F
 zoom = 7.000000
+
+[focus-request]
+auto_grant_focus = false
+
+[focus-steal-prevent]
+cancel_keys = KEY_ENTER
+deny_focus_views = none
+timeout = 1000
 
 [follow-focus]
 change_output = true
@@ -2393,6 +2409,8 @@ transparent_behind_views = true
 x_skew = 0.000000
 y_skew = 0.000000
 
+[foreign-toplevel]
+
 [grid]
 duration = 300
 restore = <super> KEY_DOWN | <super> KEY_KP0
@@ -2407,10 +2425,22 @@ slot_tl = <super> KEY_KP7
 slot_tr = <super> KEY_KP9
 type = crossfade
 
+[gtk-shell]
+
+[hide-cursor]
+hide_delay = 2000
+toggle = <ctrl> <super> KEY_H
+
+[hinge]
+filename = /sys/bus/iio/devices/iio:device1/in_angl0_raw
+flip_degree = 180
+poll_freq = 200
+
 [idle]
 cube_max_zoom = 1.500000
 cube_rotate_speed = 1.000000
 cube_zoom_speed = 1000
+disable_initially = false
 disable_on_fullscreen = true
 dpms_timeout = -1
 screensaver_timeout = 3600
@@ -2422,6 +2452,7 @@ cursor_size = 24
 cursor_theme = default
 disable_touchpad_while_mouse = false
 disable_touchpad_while_typing = false
+drag_lock = false
 gesture_sensitivity = 1.000000
 kb_capslock_default_state = false
 kb_numlock_default_state = false
@@ -2435,6 +2466,7 @@ mouse_cursor_speed = 0.000000
 mouse_scroll_speed = 1.000000
 natural_scroll = false
 scroll_method = default
+tablet_motion_mode = default
 tap_to_click = true
 touchpad_accel_profile = default
 touchpad_cursor_speed = 0.000000
@@ -2451,6 +2483,10 @@ output =
 [invert]
 preserve_hue = false
 toggle = <super> KEY_I
+
+[ipc]
+
+[ipc-rules]
 
 [join-views]
 
@@ -2469,6 +2505,9 @@ activate = <super> BTN_LEFT
 enable_snap = true
 enable_snap_off = true
 join_views = false
+preview_base_border = \#404080CC
+preview_base_color = \#8080FF80
+preview_border_width = 3
 quarter_snap_threshold = 50
 snap_off_threshold = 10
 snap_threshold = 10
@@ -2492,14 +2531,17 @@ last_output_focus_timeout = 10000
 
 [resize]
 activate = <super> BTN_RIGHT
+activate_preserve_aspect = none
 
 [scale]
 allow_zoom = false
 bg_color = \#1A1A1AE6
 duration = 750
 inactive_alpha = 0.750000
+include_minimized = false
 interact = false
 middle_click_close = false
+minimized_alpha = 0.450000
 spacing = 50
 text_color = \#CCCCCCFF
 title_font_size = 16
@@ -2521,6 +2563,7 @@ reduce_flicker = true
 toggle = <alt> <super> KEY_S
 
 [simple-tile]
+animation_duration = 0
 button_move = <super> BTN_LEFT
 button_resize = <super> BTN_RIGHT
 inner_gap_size = 5
@@ -2532,13 +2575,22 @@ key_focus_right = <super> KEY_L
 key_toggle = <super> KEY_T
 outer_horiz_gap_size = 0
 outer_vert_gap_size = 0
+preview_base_border = \#404080CC
+preview_base_color = \#8080FF80
+preview_border_width = 3
 tile_by_default = all
 
 [switcher]
 next_view = <alt> KEY_TAB
 prev_view = <alt> <shift> KEY_TAB
 speed = 50
+view_thumbnail_rotation = 30
 view_thumbnail_scale = 1.000000
+
+[view-shot]
+capture = <alt> <super> BTN_MIDDLE
+command = notify-send "The view under cursor was captured to %f"
+filename = /tmp/snapshot-%F-%T.png
 
 [vswipe]
 background = \#1A1A1AFF
@@ -2557,6 +2609,7 @@ threshold = 0.350000
 [vswitch]
 background = \#1A1A1AFF
 binding_down = <super> KEY_J
+binding_last = 
 binding_left = <super> KEY_H
 binding_right = <super> KEY_L
 binding_up = <super> KEY_K
@@ -2566,24 +2619,63 @@ binding_win_right = <shift> <super> KEY_L
 binding_win_up = <shift> <super> KEY_K
 duration = 50
 gap = 0
+send_win_down = 
+send_win_last = 
+send_win_left = 
+send_win_right = 
+send_win_up = 
+with_win_down = 
+with_win_last = 
+with_win_left = <alt> <shift> <super> KEY_LEFT
+with_win_right = <alt> <shift> <super> KEY_RIGHT
+with_win_up = <alt> <shift> <super> KEY_UP
 wraparound = true
 
 [water]
 activate = <ctrl> <super> BTN_LEFT
 
+[wayfire-shell]
+
 [windecor]
 active_color = \#222222AA
+attn_color = \#3CB371AA
+border_color = \#87CEEBFF
 border_size = 4
+button_always_colored = false
 button_order = close
 close_color = \#CC000077
+dynamic_border_color = true
 font = sans-serif
+font_color = \#FFFFFFFF
+font_size = 18
+icon_theme = breeze
 ignore_views = none
 inactive_color = \#333333DD
 maximize_color = \#09FF0077
 minimize_color = \#EDD40077
+sticky_color = \#1C71D877
+title_align = 0
 title_height = 24
+title_position = 2
+work_hard = false
 
 [window-rules]
+
+[winshadows]
+clip_shadow_inside = true
+enabled_views = type is "toplevel" & floating is true
+glow_color = \#1C71D8FF
+glow_emissivity = 1.000000
+glow_enabled = false
+glow_intensity = 0.600000
+glow_radius_limit = 100
+glow_spread = 10.000000
+glow_threshold = 0.030000
+horizontal_offset = 0
+include_undecorated_views = false
+shadow_color = \#00000070
+shadow_radius = 60
+vertical_offset = 5
 
 [winzoom]
 dec_x_binding = <ctrl> <super> KEY_LEFT
@@ -2613,11 +2705,17 @@ spring_k = 8.000000
 all_dialogs_modal = true
 app_id_mode = stock
 dynamic_repaint_delay = false
+enable_so_unloading = false
+force_preferred_decoration_mode = false
+remove_output_limits = false
+use_external_output_configuration = false
 
 [workspace-names]
 background_color = \#333333B3
+background_radius = 30.000000
 display_duration = 500
 font = sans-serif
+margin = 0
 position = center
 show_option_names = false
 text_color = \#FFFFFFFF
@@ -2631,10 +2729,17 @@ reset-one = <super> KEY_R
 reset_radius = 25.000000
 sensitivity = 24
 
+[wsets]
+label_duration = 2000
+
+[xdg-activation]
+
 [zoom]
+interpolation_method = 0
 modifier = <super> 
 smoothing_duration = 300
 speed = 0.010000
+
 #+END_SRC
 
 *** wayfire tangle
