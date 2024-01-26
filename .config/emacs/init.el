@@ -585,7 +585,7 @@
        :empty-lines-after 1)
       ("v" "video url" entry
        (file+olp "~/git/personal/bookmarks/video.org" "links")
-       "[[video:%c][%^{link-description}]]"
+       "** [[video:%c][%^{link-description}]]"
         :empty-lines-after 1)))
 
 ;; refile
