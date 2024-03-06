@@ -13,6 +13,8 @@ export XDG_RUNTIME_DIR="/var/run/user/`id -u`"
 
 # firefox
 export MOZ_ENABLE_WAYLAND=1
+# need for firefox 123.01,2
+export MOZ_DISABLE_WAYLAND_PROXY=1
 
 # qt5
 export QT_QPA_PLATFORMTHEME=qt5ct
