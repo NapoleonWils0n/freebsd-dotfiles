@@ -2,7 +2,11 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("dotfiles"
+(("desktop" (filename . "~/desktop/")
+ (front-context-string . "  -rw-r--r--  1 ")
+ (rear-context-string . "wilcox/desktop:\n") (position . 27)
+ (last-modified 26100 23708 303122 580000))
+("dotfiles"
  (filename . "~/git/freebsd/freebsd-dotfiles/freebsd-dotfiles-mac.org")
  (front-context-string . "* freebsd dotfil")
  (rear-context-string . "g\")'\n#+END_SRC\n\n") (position . 382)
@@ -21,10 +25,6 @@
  (rear-context-string . " 7 Oct 30 23:23 ") (position . 197))
 ("home" (filename . "~/") (front-context-string . "..\n  drwxr-xr-x ")
  (rear-context-string . " 3 Oct 30 23:26 ") (position . 178))
-("desktop" (filename . "~/Desktop/")
- (front-context-string . "zshrc-linux\n  -r")
- (rear-context-string . "45 Jan 18 17:53 ") (position . 236)
- (annotation . ""))
 ("cerberus" (filename . "~/git/cerberus/")
  (front-context-string . "7zip\n  drwxr-xr-")
  (rear-context-string . "96 Jan  4  2016 ") (position . 249))
