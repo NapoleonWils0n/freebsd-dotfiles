@@ -1847,6 +1847,314 @@ y = 4
 <<alacritty>>
 #+END_SRC
 
+** labwc
+*** labwc config
+**** autostart config
+
+#+NAME: autostart
+#+BEGIN_SRC conf
+# autostart file
+
+swaybg -i "${HOME}/pictures/wallpaper/macosx.png" >/dev/null 2>&1 &
+kanshi >/dev/null 2>&1 &
+#+END_SRC
+
+**** environment config
+
+#+NAME: environment
+#+BEGIN_SRC conf
+XKB_DEFAULT_LAYOUT=gb(mac)
+XKB_DEFAULT_OPTIONS=ctrl:swap_lalt_lctl,caps:none
+XDG_CURRENT_DESKTOP=wlroots
+#+END_SRC
+
+**** menu.xml config
+
+#+NAME: menu.xml
+#+BEGIN_SRC xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu>
+<!-- Note: for localization support of menu items "client-menu" has to be removed here -->
+<menu id="client-menu">
+  <item label="Always on Top">
+    <action name="ToggleAlwaysOnTop" />
+  </item>
+  <!--
+    Any menu with the id "workspaces" will be hidden
+    if there is only a single workspace available.
+  -->
+  <menu id="workspaces" label="Workspace">
+    <item label="Move left">
+      <action name="SendToDesktop" to="left" />
+    </item>
+    <item label="Move right">
+      <action name="SendToDesktop" to="right" />
+    </item>
+    <separator />
+    <item label="Always on Visible Workspace">
+      <action name="ToggleOmnipresent" />
+    </item>
+  </menu>
+</menu>
+
+<menu id="root-menu">
+  <item label="Reconfigure">
+    <action name="Reconfigure" />
+  </item>
+  <item label="Terminal">
+    <action name="Execute" command="alacritty" />
+  </item>
+  <item label="Emacs">
+    <action name="Execute" command="emacsclient -a= -c" />
+  </item>
+  <item label="Exit">
+    <action name="Exit" />
+  </item>
+</menu>
+</openbox_menu>
+#+END_SRC
+
+**** rc.xml config
+
+#+NAME: rc.xml
+#+BEGIN_SRC xml
+<?xml version="1.0"?>
+
+<labwc_config>
+
+  <!-- window placement -->
+  <placement>
+    <policy>automatic</policy>
+  </placement>
+
+  <theme>
+    <name>BL-Lithium</name>
+    <cornerRadius>12</cornerRadius>
+    <font name="sans" size="10" />
+  </theme>
+
+  <!-- keyboard -->
+  <keyboard>
+    <default />
+    <!-- terminal, emacs, tofi, wlr-which-key -->
+    <keybind key="W-S-Return">
+      <action name="Execute" command="alacritty" />
+    </keybind>
+    <keybind key="W-C-Return">
+      <action name="Execute" command="emacsclient -a= -c" />
+    </keybind>
+    <keybind key="W-a">
+      <action name="Execute" command="tofi-drun" />
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute" command="window-switcher" />
+    </keybind>
+    <keybind key="W-z">
+      <action name="Execute" command="wlr-which-key" />
+    </keybind>
+
+    <!-- windows -->
+    <keybind key="S-W-c">
+      <action name="Close" />
+    </keybind>
+    <keybind key="W-m">
+      <action name="ToggleMaximize" />
+    </keybind>
+    <keybind key="W-n">
+      <action name="ToggleFullscreen" />
+    </keybind>
+
+    <!-- GoToDesktop by number -->
+    <keybind key="W-1">
+      <action name="GoToDesktop"><to>1</to></action>
+    </keybind>
+    <keybind key="W-2">
+      <action name="GoToDesktop"><to>2</to></action>
+    </keybind>
+    <keybind key="W-3">
+      <action name="GoToDesktop"><to>3</to></action>
+    </keybind>
+    <keybind key="W-4">
+      <action name="GoToDesktop"><to>4</to></action>
+    </keybind>
+
+    <!-- GoToDesktop with h and l -->
+    <keybind key="W-h">
+      <action name="GoToDesktop"><to>left</to></action>
+    </keybind>
+    <keybind key="W-l">
+      <action name="GoToDesktop"><to>right</to></action>
+    </keybind>
+
+    <!-- SendToDesktop -->
+    <keybind key="S-W-1">
+      <action name="SendToDesktop"><to>1</to></action>
+    </keybind>
+    <keybind key="S-W-2">
+      <action name="SendToDesktop"><to>2</to></action>
+    </keybind>
+    <keybind key="S-W-3">
+      <action name="SendToDesktop"><to>3</to></action>
+    </keybind>
+    <keybind key="S-W-4">
+      <action name="SendToDesktop"><to>4</to></action>
+    </keybind>
+
+    <!-- move window to left monitor -->
+    <keybind key="S-W-i">
+    <action name="MoveToOutput" direction="left">
+    </action>
+    </keybind>
+
+    <!-- move window to right monitor -->
+    <keybind key="S-W-o">
+    <action name="MoveToOutput" direction="right">
+    </action>
+    </keybind>
+
+    <!-- warp cursor left-->
+    <keybind key="W-i">
+       <action name="FocusOutput" output="eDP-1" />
+    </keybind>
+
+    <!-- warp cursor right-->
+    <keybind key="W-o">
+       <action name="FocusOutput" output="DP-3" />
+    </keybind>
+
+    <!-- audio -->
+    <keybind key="XF86_AudioLowerVolume">
+      <action name="Execute" command="mixer vol=-5%:-5%" />
+    </keybind>
+    <keybind key="XF86_AudioRaiseVolume">
+      <action name="Execute" command="mixer vol=+5%:+5%" />
+    </keybind>
+    <keybind key="XF86_AudioMute">
+      <action name="Execute" command="mixer vol.mute=^" />
+    </keybind>
+    <keybind key="A-W-Space">
+      <action name="Execute" command="playerctl play-pause" />
+    </keybind>
+
+  </keyboard>
+
+  <!-- mouse -->
+  <mouse>
+    <default />
+    <context name="Root">
+      <mousebind button="Right" action="Press">
+        <action name="ShowMenu" menu="some-custom-menu" />
+      </mousebind>
+    </context>
+  </mouse>
+
+  <!-- focus -->
+  <focus>
+    <followMouse>yes</followMouse>
+    <followMouseRequiresMovement>no</followMouseRequiresMovement>
+    <raiseOnFocus>no</raiseOnFocus>
+  </focus>
+
+  <!-- virtual desktops - hide workspace switcher -->
+  <desktops number="4">
+    <popupTime>0</popupTime>
+  </desktops>
+
+  <!-- window rules -->
+    <windowRules>
+
+  <!-- chromium -->
+      <windowRule identifier="chromium-browser" matchOnce="true">
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
+        <action name="ToggleOmnipresent"/>
+      </windowRule>
+
+  <!-- firefox pip -->
+      <windowRule identifier="firefox" title="Picture-in-Picture" matchOnce="false">
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
+        <action name="ToggleOmnipresent"/>
+      </windowRule>
+
+  <!-- mpv -->
+      <windowRule identifier="mpv" matchOnce="true">
+        <skipTaskbar>no</skipTaskbar>
+        <skipWindowSwitcher>no</skipWindowSwitcher>
+        <action name="ToggleOmnipresent"/>
+      </windowRule>
+
+    </windowRules>
+
+</labwc_config>
+#+END_SRC
+
+*** labwc tangle
+**** autostart tangle
+
++ home dir
+
+#+NAME: autostart-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/labwc/autostart"
+<<autostart>>
+#+END_SRC
+
++ current dir
+
+#+NAME: autostart-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/labwc/autostart"
+<<autostart>>
+#+END_SRC
+
+**** environment tangle
+
++ home dir
+
+#+NAME: environment-home-dir
+#+BEGIN_SRC conf :noweb yes :tangle "~/.config/labwc/environment"
+<<environment>>
+#+END_SRC
+
++ current dir
+
+#+NAME: environment-current-dir
+#+BEGIN_SRC conf :noweb yes :tangle ".config/labwc/environment"
+<<environment>>
+#+END_SRC
+
+**** menu.xml tangle
+
++ home dir
+
+#+NAME: menu.xml-home-dir
+#+BEGIN_SRC xml :noweb yes :tangle "~/.config/labwc/menu.xml"
+<<menu.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: menu.xml-current-dir
+#+BEGIN_SRC xml :noweb yes :tangle ".config/labwc/menu.xml"
+<<menu.xml>>
+#+END_SRC
+
+**** rc.xml tangle
+
++ home dir
+
+#+NAME: rc.xml-home-dir
+#+BEGIN_SRC xml :noweb yes :tangle "~/.config/labwc/rc.xml"
+<<rc.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: rc.xml-current-dir
+#+BEGIN_SRC xml :noweb yes :tangle ".config/labwc/rc.xml"
+<<rc.xml>>
+#+END_SRC
+
 ** zsh
 *** zsh config
 **** zshrc
@@ -2245,11 +2553,11 @@ fs
 #+NAME: tofi
 #+BEGIN_SRC conf
 anchor = top
-background-color = #000008
+background-color = #2b2b2b
 border-width = 0
 drun-launch = true
 font = "/usr/local/share/fonts/firacode/FiraCode-Bold.ttf"
-font-size = 10
+font-size = 12
 height = 32
 hint-font = false
 horizontal = true
@@ -2259,14 +2567,21 @@ outline-width = 0
 padding-bottom = 0
 padding-left = 0
 padding-right = 0
-padding-top = 8
+padding-top = 0
 prompt-color = #FFFFFF
 prompt-text = "$ "
 input-color = #268bd2
-result-spacing = 15
+result-spacing = 20
 selection-color = #268bd2
+default-result-color = #eee8d5
 text-color = #FFFFFF
 width = 100%
+default-result-background = #586e75
+selection-background = #eee8d5
+selection-background-padding = 4
+selection-background-corner-radius = 4
+default-result-background-padding = 4
+default-result-background-corner-radius = 8
 #+END_SRC
 
 *** tofi tangle
@@ -2471,6 +2786,10 @@ set-option -g status-interval 1
 set-option -g allow-rename on
 set-option -g automatic-rename on
 set-option -g automatic-rename-format "#{?#{==:#{pane_current_command},zsh},#{b:pane_title},#{pane_current_command}}"
+
+# tmux title program name
+set-option -g set-titles on
+set-option -g set-titles-string "#W"
 #+END_SRC
 
 *** tmux tangle

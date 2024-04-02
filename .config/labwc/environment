@@ -1,0 +1,3 @@
+XKB_DEFAULT_LAYOUT=gb(mac)
+XKB_DEFAULT_OPTIONS=ctrl:swap_lalt_lctl,caps:none
+XDG_CURRENT_DESKTOP=wlroots

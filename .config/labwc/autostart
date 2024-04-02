@@ -1,0 +1,4 @@
+# autostart file
+
+swaybg -i "${HOME}/pictures/wallpaper/macosx.png" >/dev/null 2>&1 &
+kanshi >/dev/null 2>&1 &
