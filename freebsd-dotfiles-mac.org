@@ -2037,6 +2037,31 @@ XDG_CURRENT_DESKTOP=wlroots
       <action name="Execute" command="playerctl play-pause" />
     </keybind>
 
+    <keybind key="S-Left">
+      <action name="MoveToEdge" direction="left" />
+    </keybind>
+    <keybind key="S-Right">
+      <action name="MoveToEdge" direction="right" />
+    </keybind>
+    <keybind key="S-Up">
+      <action name="MoveToEdge" direction="up" />
+    </keybind>
+    <keybind key="S-Down">
+      <action name="MoveToEdge" direction="down" />
+    </keybind>
+    <keybind key="S-W-Left">
+      <action name="SnapToEdge" direction="left" />
+    </keybind>
+    <keybind key="S-W-Right">
+      <action name="SnapToEdge" direction="right" />
+    </keybind>
+    <keybind key="S-W-Up">
+      <action name="SnapToEdge" direction="up" />
+    </keybind>
+    <keybind key="S-W-Down">
+      <action name="SnapToEdge" direction="down" />
+    </keybind>
+
   </keyboard>
 
   <!-- mouse -->
