@@ -9,7 +9,7 @@
 
   <theme>
     <name>BL-Lithium</name>
-    <cornerRadius>12</cornerRadius>
+    <cornerRadius>0</cornerRadius>
     <font name="sans" size="10" />
   </theme>
 
