@@ -7,11 +7,19 @@
     <policy>automatic</policy>
   </placement>
 
+  <!-- theme -->
   <theme>
     <name>BL-Lithium</name>
     <cornerRadius>0</cornerRadius>
     <font name="sans" size="10" />
   </theme>
+
+  <!-- window switcher -->
+  <windowSwitcher show="yes" preview="yes" outlines="yes">
+    <fields>
+      <field content="title" width="100%" />
+    </fields>
+  </windowSwitcher>
 
   <!-- keyboard -->
   <keyboard>

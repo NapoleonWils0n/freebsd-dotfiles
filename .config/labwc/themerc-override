@@ -1,0 +1,10 @@
+border.width: 0
+padding.height: 4
+osd.border.width: 1
+osd.window-switcher.width: 500
+osd.window-switcher.padding: 4
+osd.window-switcher.item.padding.x: 2
+osd.window-switcher.item.padding.y: 1
+osd.window-switcher.item.active.border.width: 1
+osd.workspace-switcher.boxes.width: 20
+osd.workspace-switcher.boxes.height: 20
