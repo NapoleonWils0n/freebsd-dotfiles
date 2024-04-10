@@ -40,3 +40,6 @@ export KEYTIMEOUT=1
 
 # mpd host variable for mpc
 export MPD_HOST="/home/djwilcox/.config/mpd/socket"
+
+# dark theme needed for handbrake
+export GTK_THEME=Adwaita-dark:dark
