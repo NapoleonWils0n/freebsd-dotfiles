@@ -9,7 +9,7 @@
 
   <!-- theme -->
   <theme>
-    <name>BL-Lithium</name>
+    <name>Solarized-Dark-Blue</name>
     <cornerRadius>0</cornerRadius>
     <font name="sans" size="10" />
   </theme>

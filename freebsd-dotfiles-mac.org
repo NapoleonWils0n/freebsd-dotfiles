@@ -1930,7 +1930,7 @@ XDG_CURRENT_DESKTOP=wlroots
 
   <!-- theme -->
   <theme>
-    <name>BL-Lithium</name>
+    <name>Solarized-Dark-Blue</name>
     <cornerRadius>0</cornerRadius>
     <font name="sans" size="10" />
   </theme>
@@ -2137,6 +2137,7 @@ osd.window-switcher.item.padding.y: 1
 osd.window-switcher.item.active.border.width: 1
 osd.workspace-switcher.boxes.width: 20
 osd.workspace-switcher.boxes.height: 20
+window.active.title.bg.color: #073642
 #+END_SRC
 
 *** labwc tangle
@@ -2636,16 +2637,18 @@ padding-bottom = 0
 padding-left = 0
 padding-right = 0
 padding-top = 0
-prompt-color = #FFFFFF
+prompt-color = #fdf6e3
 prompt-text = "$ "
 input-color = #268bd2
 result-spacing = 20
-selection-color = #268bd2
+selection-color = #002b36
 default-result-color = #eee8d5
-text-color = #FFFFFF
+text-color = #fdf6e3
 width = 100%
-default-result-background = #586e75
-selection-background = #eee8d5
+default-result-background = #839496
+selection-background = #268bd2
+background-color = #073642
+prompt-background=#002b36
 selection-background-padding = 4
 selection-background-corner-radius = 4
 default-result-background-padding = 4
