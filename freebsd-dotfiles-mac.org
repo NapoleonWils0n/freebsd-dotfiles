@@ -2120,6 +2120,23 @@ XDG_CURRENT_DESKTOP=wlroots
 
     </windowRules>
 
+  <libinput>
+    <device category="default">
+      <naturalScroll>no</naturalScroll>
+      <leftHanded></leftHanded>
+      <pointerSpeed></pointerSpeed>
+      <accelProfile></accelProfile>
+      <tap>yes</tap>
+      <tapButtonMap></tapButtonMap>
+      <tapAndDrag></tapAndDrag>
+      <dragLock></dragLock>
+      <middleEmulation></middleEmulation>
+      <disableWhileTyping></disableWhileTyping>
+      <clickMethod></clickMethod>
+      <sendEventsMode></sendEventsMode>
+    </device>
+  </libinput>
+
 </labwc_config>
 #+END_SRC
 
