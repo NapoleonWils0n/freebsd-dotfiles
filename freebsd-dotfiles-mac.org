@@ -4146,8 +4146,8 @@ max-cache-ttl 36000
 #+NAME: gtk
 #+BEGIN_SRC conf
 [Settings]
-gtk-icon-theme-name = Adwaita-dark
-gtk-theme-name = Adwaita-dark
+gtk-icon-theme-name = Adwaita-dark:dark
+gtk-theme-name = Adwaita-dark:dark
 gtk-application-prefer-dark-theme = true
 #+END_SRC
 
