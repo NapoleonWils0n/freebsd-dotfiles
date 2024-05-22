@@ -151,11 +151,6 @@
 
 ;; now playing
 (require 'doom-modeline-now-playing)
-(doom-modeline-now-playing-timer)
-
-(doom-modeline-def-modeline 'main
-'(bar matches buffer-info remote-host buffer-position parrot selection-info now-playing)
-'(misc-info minor-modes input-method buffer-encoding major-mode process vcs check time))
 
 ;; max length
 (setq doom-modeline-now-playing-max-length 35)
@@ -163,10 +158,18 @@
 ;; update interval 1 second
 (setq doom-modeline-now-playing-interval 1)
 
+;; ignored players
+(setq doom-modeline-now-playing-ignored-players '(""))
+
 ;; playerctl format
 (setq doom-modeline-now-playing-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
 
+(doom-modeline-def-modeline 'main
+'(bar matches buffer-info remote-host buffer-position parrot selection-info now-playing)
+'(misc-info minor-modes input-method buffer-encoding major-mode process vcs check time))
+
 ;; modeline
+(with-eval-after-load 'doom-modeline-now-playing
 (doom-modeline-def-segment now-playing
   "Current status of playerctl. Configurable via
 variables for update interval, output format, etc."
@@ -191,7 +194,10 @@ variables for update interval, output format, etc."
        (doom-modeline-spc)
        (propertize
         (truncate-string-to-width text doom-modeline-now-playing-max-length nil nil "...")
-        'face 'doom-modeline-now-playing-text)))))
+        'face 'doom-modeline-now-playing-text))))))
+
+;; doom-modeline-now-playing-timer - keep at bottom
+(doom-modeline-now-playing-timer)
 
 
 ;; ----------------------------------------------------------------------------------
