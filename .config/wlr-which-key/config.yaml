@@ -27,6 +27,7 @@ menu:
     desc: emacs
     submenu:
       "m": { desc: mpv, cmd: emacsclient -cF "((visibility . nil))" -e "(mpv-play-clipboard)" }
+      "l": { desc: links, cmd: org-playlist -i "$(wl-paste)" }
   "o":
     desc: obs
     submenu:
