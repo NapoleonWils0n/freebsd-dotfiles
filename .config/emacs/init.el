@@ -788,7 +788,7 @@ variables for update interval, output format, etc."
   (interactive)
   (let ((yt-url (current-kill 0 t)))
     (async-shell-command (concat
-                   "yt-dlp --skip-download --print \"%(title)s\" " (shell-quote-argument yt-url)))))
+                   "yt-dlp --skip-download --no-playlist --print \"%(title)s\" " (shell-quote-argument yt-url)))))
 
 
 ;; yank the async buffer
