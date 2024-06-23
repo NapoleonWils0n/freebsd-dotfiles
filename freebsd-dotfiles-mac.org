@@ -2662,6 +2662,18 @@ cache=no
 # fullscreen 2nd display
 fs
 #fs-screen-name=DP-3
+
+# kodi invidious conditional auto profile match any youtube url
+[kodi]
+profile-desc="kodi invidious hardware acceleration, cache"
+profile-cond=path:find('http?s://inv.tux.pizza') ~= nil
+# include hwdec profile 
+profile=hwdec
+# override hwdec profile cache setting
+cache=no
+# fullscreen 2nd display
+fs
+fs-screen-name=DP-3
 #+END_SRC
 
 **** mpv tangle
@@ -2694,6 +2706,154 @@ fs
 
 #+NAME: mpv.conf-current-dir
 #+BEGIN_SRC conf :noweb yes :tangle ".config/mpv/mpv.conf"
+<<mpv.conf>>
+#+END_SRC
+
+** kodi
+*** kodi config
+**** playercorefactory.xml
+
+#+NAME: playercorefactory.xml
+#+BEGIN_SRC xml
+<playercorefactory>
+ <players>
+   <player name="save url" type="ExternalPlayer" audio="true" video="true">
+	<filename>printf</filename>
+     <args>"%s\n" "{0}" > "$HOME/Desktop/url-$(date +"%Y-%m-%d-%H-%M-%S").txt"</args>
+     <hidexbmc>false</hidexbmc>
+   </player>
+   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
+	<filename>"/usr/local/bin/mpv"</filename>
+     <args>-i "{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="play" type="ExternalPlayer" audio="false" video="true">
+	<filename>"$HOME/.venv/pilfer/bin/pilferplay"</filename>
+     <args>-i "{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="record video" type="ExternalPlayer" audio="false" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record video - 30 minutes" type="ExternalPlayer" audio="false" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 1 hour" type="ExternalPlayer" audio="false" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 2 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record video - 3 hours" type="ExternalPlayer" audio="false" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-i "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio" type="ExternalPlayer" audio="true" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" &</args>
+     <hidexbmc>false</hidexbmc>
+   </player>  
+   <player name="record audio - 30 minutes" type="ExternalPlayer" audio="true" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 00:30:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 1 hour" type="ExternalPlayer" audio="true" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 01:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 2 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 02:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+   <player name="record audio - 3 hours" type="ExternalPlayer" audio="true" video="true">
+	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
+     <args>-a "{0}" -t 03:00:00 &</args>
+     <hidexbmc>false</hidexbmc>
+   </player> 
+ </players>
+ <rules action="overwrite">
+   <rule internetstream="true" player="play"></rule>
+
+   <!-- change the default player below -->
+
+   <!-- <rule protocols="nfs|smb" player="dvdplayer"></rule> -->
+   <!-- uncomment to make play the default player
+    <rule video="true" player="play"></rule>
+   -->
+   
+   <!-- uncomment to make record the default player
+    <rule video="true" player="record"></rule>
+   -->
+   
+ </rules>
+</playercorefactory>
+#+END_SRC
+
+**** favourites.xml
+
+#+NAME: favourites.xml
+#+BEGIN_SRC xml
+<favourites>
+    <favourite name="BBC One    [COLOR orange]Euro 2024[/COLOR]" thumb="resource://resource.images.iplayerwww/media/bbc_one_hd.png">PlayMedia(&quot;plugin://plugin.video.iplayerwww/?url=bbc_one_hd&amp;mode=203&amp;name=BBC+One++++%5BCOLOR+orange%5DEuro+2024%5B%2FCOLOR%5D&amp;iconimage=resource%3A%2F%2Fresource.images.iplayerwww%2Fmedia%2Fbbc_one_hd.png&amp;description=16%3A00+-+Euro+2024%0A19%3A30+-+BBC+News+at+Six%0A19%3A45+-+BBC+News+where+You+Are%0A20%3A00+-+Question+Time%0A22%3A00+-+BBC+News+at+Ten%0A22%3A30+-+BBC+News+where+You+Are%0A22%3A40+-+The+Outlaws%0A23%3A40+-+Newscast%0A00%3A10+-+Rebus%0A00%3A55+-+Euro+2024%0A02%3A45+-+Weather+for+the+Week+Ahead%0A02%3A50+-+Joins+BBC+News&amp;subtitles_url=&amp;episode_id=&amp;stream_id=&amp;resume_time=0&amp;total_time=&amp;replay_chan_id=&amp;time=1718899062.3408222&quot;,playlist_type_hint=1)</favourite>
+    <favourite name="The Magpie Channel TV" thumb="https://yt3.googleusercontent.com/ytc/AIdro_l7guMug0Qnial-Y2kEyFndznIi7_YiFlBxU2YONG7NdA=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCzbwOixfdDkOEl4c2Gy1Xow&quot;,return)</favourite>
+    <favourite name="Roobenstein" thumb="https://yt3.ggpht.com/FdztOigwufG5iEIpsPregv9dzbdoAiJuPEKqY9B-En6Zv2GaXHatZAs58fE54xl6ee3k5c1nsQ=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UC2WTz3aJZ65nN3p5_LMJAzg&quot;,return)</favourite>
+    <favourite name="Adam Pearson" thumb="https://yt3.googleusercontent.com/ytc/AIdro_lMR8RCVSH3F8XJGwe5FVDDxdmohRQFZuIUdqZV31ZfeDs=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCbXlSJHSuY1nNHoxSElKiIA&quot;,return)</favourite>
+    <favourite name="Newcastle United" thumb="https://yt3.ggpht.com/BWvcV6nWayFXr8E9pNuDl_yuW47k4QhOG-VBx5P88cHg6nd3J5W-_JXc08dpo8raeNPud7BXYg=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCywGl_BPp9QhD0uAcP2HsJw&quot;,return)</favourite>
+    <favourite name="Farron Balanced" thumb="https://yt3.googleusercontent.com/ytc/AIdro_m_zmnVM0g_KtmR0w3Cmc_hmY8g-CHPi6Batrw_mygZ1n0=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UC5dUUCs748wCYQl682LX6bg&quot;,return)</favourite>
+    <favourite name="The Ring of Fire" thumb="https://yt3.ggpht.com/jJwLtO9uiqKO2yQZ1q1M1556ACegIF9Wy-ocssYVuK3_q4JPMG-86y_-YTlat7_3Xmp-k9oyDw=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCYWIEbibRcZav6xMLo9qWWw&quot;,return)</favourite>
+    <favourite name="Jimmy Kimmel Live" thumb="https://yt3.googleusercontent.com/ytc/AIdro_ni-o03fIMm59CNpCt9fxuL1G4u-ZPwffhAxLxL-4AlHVGX=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCa6vGFO9ty8v5KZJXQxdhaw&quot;,return)</favourite>
+    <favourite name="A Closer Look - Late Night with Seth Meyers" thumb="https://i.ytimg.com/vi/RPLvoPnwwNk/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&amp;rs=AOn4CLC-qzY9SudIsaH9z-UDDOu-F_lnAg">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_playlist&amp;playlist_id=PLJaq64dKJZoqsh7PGGUi-SARV4wUz_lVa&quot;,return)</favourite>
+    <favourite name="GaryH Tech" thumb="https://yt3.ggpht.com/GflvQPQ5hDebKAVopslmWo9amaELLk6KklCM7l7UmyGPQFHInlziXUhv_hDxgNMaNInxN8upQQ=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCIFzjAer2W9gTWVECZgtDzg&quot;,return)</favourite>
+    <favourite name="RoboNuggie" thumb="https://yt3.ggpht.com/eyxkTClpSKQH6os09siPmolp7nx1REBrf2wsTxOue9YKLgWxOOTt_5cJGP1wUBTI1nlPFAnvAA=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCxwcmRAmBRzZMNS37dCgmHA&quot;,return)</favourite>
+    <favourite name="System Crafters" thumb="https://yt3.googleusercontent.com/ytc/AIdro_lyKTyQXxB_3HJ08fFXcD3EAJUzMll3LWVs9g5bpYmt=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UCAiiOTio8Yu69c3XnR7nQBQ&quot;,return)</favourite>
+    <favourite name="Thriller - Complete British TV Series" thumb="https://i.ytimg.com/vi/QCHDi63yVxM/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&amp;rs=AOn4CLDWh0w_W3Art23j2bpIyAD3R2Ha2A">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_playlist&amp;playlist_id=PLXhyaOtvjvQbw9tB_ZTmP_aY-JY1WHOhs&quot;,return)</favourite>
+    <favourite name="Sledge Hammer (1986–1988)" thumb="https://i.ytimg.com/vi/2q20qsG7ssQ/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&amp;rs=AOn4CLALdv3VPqK47tNZEX7p7hOIcIJESA">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_playlist&amp;playlist_id=PLyv4UuGykKa_6dohUDs6nOB3ZdoTXMWba&quot;,return)</favourite>
+    <favourite name="New Castle After Dark" thumb="https://yt3.ggpht.com/rn-wcv90NG-7hJVhf01wjLYrU9x8Pb3SbvyBHUqm-LC-AgGK9GUnLBTvMpqVBBh3FqoWspwPuo8=s88-c-k-c0x00ffffff-no-rj-mo">ActivateWindow(10025,&quot;plugin://plugin.video.invidious/?action=view_channel&amp;channel_id=UC951AqujycbBI083GmKRY3A&quot;,return)</favourite>
+</favourites>
+#+END_SRC
+
+*** kodi tangle
+**** playercorefactory.xml tangle
+
++ home dir
+
+#+NAME: playercorefactory.xml-home-dir
+#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/playercorefactory.xml"
+<<playercorefactory.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: playercorefactory.xml-current-dir
+#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/playercorefactory.xml"
+<<playercorefactory.xml>>
+#+END_SRC
+
+**** favourites.xml tangle
+
++ home dir
+
+#+NAME: favourites.xml-home-dir
+#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/favourites.xml"
+<<favourites.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: favourites.xml-current-dir
+#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/favourites.xml"
 <<mpv.conf>>
 #+END_SRC
 
