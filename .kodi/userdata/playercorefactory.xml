@@ -63,6 +63,7 @@
  </players>
  <rules action="overwrite">
    <rule internetstream="true" player="play"></rule>
+   <rule video="true" player="play"></rule>
 
    <!-- change the default player below -->
 
