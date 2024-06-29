@@ -10,6 +10,16 @@
      <args>-i "{0}"</args>
      <hidexbmc>true</hidexbmc>
    </player>  
+   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
+	<filename>mpv</filename>
+     <args>"{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="emacs" type="ExternalPlayer" audio="false" video="true">
+	<filename>emacsclient</filename>
+     <args>-u -e "(mpv-play-remote-video \"{0}\")"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
    <player name="record video" type="ExternalPlayer" audio="false" video="true">
 	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
      <args>-i "{0}" &</args>
@@ -62,8 +72,9 @@
    </player> 
  </players>
  <rules action="overwrite">
-   <rule internetstream="true" player="play"></rule>
-   <rule video="true" player="play"></rule>
+   <rule internetstream="true" player="mpv"></rule>
+   <rule video="true" player="mpv"></rule>
+   <!-- <rule internetstream="true" player="play"></rule> -->
 
    <!-- change the default player below -->
 

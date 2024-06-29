@@ -2727,6 +2727,16 @@ fs-screen-name=DP-3
      <args>-i "{0}"</args>
      <hidexbmc>true</hidexbmc>
    </player>  
+   <player name="mpv" type="ExternalPlayer" audio="false" video="true">
+	<filename>mpv</filename>
+     <args>"{0}"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
+   <player name="emacs" type="ExternalPlayer" audio="false" video="true">
+	<filename>emacsclient</filename>
+     <args>-u -e "(mpv-play-remote-video \"{0}\")"</args>
+     <hidexbmc>true</hidexbmc>
+   </player>  
    <player name="record video" type="ExternalPlayer" audio="false" video="true">
 	<filename>"ts $HOME/.venv/pilfer/bin/pilfer"</filename>
      <args>-i "{0}" &</args>
@@ -2779,8 +2789,9 @@ fs-screen-name=DP-3
    </player> 
  </players>
  <rules action="overwrite">
-   <rule internetstream="true" player="play"></rule>
-   <rule video="true" player="play"></rule>
+   <rule internetstream="true" player="mpv"></rule>
+   <rule video="true" player="mpv"></rule>
+   <!-- <rule internetstream="true" player="play"></rule> -->
 
    <!-- change the default player below -->
 
@@ -2818,6 +2829,37 @@ fs-screen-name=DP-3
 </favourites>
 #+END_SRC
 
+**** sources.xml
+
+#+NAME: sources.xml
+#+BEGIN_SRC xml
+<sources>
+    <programs>
+        <default pathversion="1"></default>
+    </programs>
+    <video>
+        <default pathversion="1"></default>
+        <source>
+            <name>The Bill</name>
+            <path pathversion="1">https://archive.org/download/the-bill_202211/</path>
+            <allowsharing>true</allowsharing>
+        </source>
+    </video>
+    <music>
+        <default pathversion="1"></default>
+    </music>
+    <pictures>
+        <default pathversion="1"></default>
+    </pictures>
+    <files>
+        <default pathversion="1"></default>
+    </files>
+    <games>
+        <default pathversion="1"></default>
+    </games>
+</sources>
+#+END_SRC
+
 *** kodi tangle
 **** playercorefactory.xml tangle
 
@@ -2849,6 +2891,22 @@ fs-screen-name=DP-3
 #+NAME: favourites.xml-current-dir
 #+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/favourites.xml"
 <<favourites.xml>>
+#+END_SRC
+
+**** sources.xml tangle
+
++ home dir
+
+#+NAME: sources.xml-home-dir
+#+BEGIN_SRC xml :noweb yes :tangle "~/.kodi/userdata/sources.xml"
+<<sources.xml>>
+#+END_SRC
+
++ current dir
+
+#+NAME: sources.xml-current-dir
+#+BEGIN_SRC xml :noweb yes :tangle ".kodi/userdata/sources.xml"
+<<sources.xml>>
 #+END_SRC
 
 ** tofi
