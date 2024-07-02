@@ -2995,6 +2995,7 @@ menu:
       "m": { desc: mpv, cmd: ts mpv "$(wl-paste)" 1>/dev/null }
       "p": { desc: pinch, cmd: pinch -i "$(wl-paste)" }
       "y": { desc: yt-dlp, cmd: ts yt-dlp "$(wl-paste)" -o "$HOME/downloads/%(title)s.%(ext)s" }
+      "k": { desc: m3u-kodi, cmd: m3u-kodi -i "$(wl-paste)" }
   "e":
     desc: emacs
     submenu:
