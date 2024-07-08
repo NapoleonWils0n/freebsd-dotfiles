@@ -23,7 +23,17 @@ menu:
       "m": { desc: mpv, cmd: ts mpv "$(wl-paste)" 1>/dev/null }
       "p": { desc: pinch, cmd: pinch -i "$(wl-paste)" }
       "y": { desc: yt-dlp, cmd: ts yt-dlp "$(wl-paste)" -o "$HOME/downloads/%(title)s.%(ext)s" }
-      "k": { desc: m3u-kodi, cmd: m3u-kodi -i "$(wl-paste)" }
+  "k":
+    desc: kodi
+    submenu:
+      "k": { desc: kyt-send, cmd: kyt-send -i "$(wl-paste)" }
+      "m": { desc: m3u-kodi, cmd: m3u-kodi -i "$(wl-paste)" }
+  "s":
+    desc: screenshot
+    submenu:
+      "l": { desc: laptop, cmd: grim -o eDP-1 }
+      "m": { desc: monitor, cmd: grim -o DP-3 }
+      "b": { desc: both, cmd: grim }
   "e":
     desc: emacs
     submenu:
