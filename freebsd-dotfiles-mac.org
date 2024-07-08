@@ -2789,7 +2789,7 @@ fs-screen-name=DP-3
    </player> 
  </players>
  <rules action="overwrite">
-   <rule internetstream="true" player="mpv"></rule>
+   <rule internetstream="true" player="play"></rule>
    <rule video="true" player="mpv"></rule>
    <!-- <rule internetstream="true" player="play"></rule> -->
 
