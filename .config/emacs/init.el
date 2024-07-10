@@ -213,6 +213,8 @@ variables for update interval, output format, etc."
 (setq tab-bar-new-tab-to 'right)
 (setq tab-bar-tab-hints nil)
 (setq tab-bar-separator " ")
+(setq tab-bar-auto-width-max '((100) 20))
+(setq tab-bar-auto-width t)
 
 ;; Customize the tab bar format to add the global mode line string
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator tab-bar-format-align-right tab-bar-format-global))
