@@ -10,4 +10,5 @@ xkb_symbols "alt_win_ctrl" {
     key <LALT> { [ Super_L ] };
     key <LWIN> { [ Control_L, Control_L ] };
     key <LCTL> { [ Alt_L, Meta_L ] };
+    key <AE03> { [ 3, numbersign, sterling ] };
 };
