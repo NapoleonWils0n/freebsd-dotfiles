@@ -159,7 +159,7 @@
 (setq doom-modeline-now-playing-interval 1)
 
 ;; ignored players
-(setq doom-modeline-now-playing-ignored-players '("firefox"))
+(setq doom-modeline-now-playing-ignored-players '(""))
 
 ;; playerctl format
 (setq doom-modeline-now-playing-format "[{{duration(position)}}/{{duration(mpris:length)}}] {{title}}")
