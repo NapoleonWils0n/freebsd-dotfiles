@@ -1422,7 +1422,10 @@ minibuffer with something like `exit-minibuffer'."
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("desktop" (filename . "~/desktop/")
+(("video" (filename . "~/git/personal/bookmarks/video.org")
+ (front-context-string . "#+TITLE: video l") (rear-context-string)
+ (position . 1) (last-modified 26366 43436 379270 855000))
+("desktop" (filename . "~/desktop/")
  (front-context-string . "  -rw-r--r--  1 ")
  (rear-context-string . "wilcox/desktop:\n") (position . 27)
  (last-modified 26100 23708 303122 580000))
