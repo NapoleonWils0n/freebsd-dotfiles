@@ -2581,7 +2581,7 @@ ytdl-format="bestvideo[height<=?1080]+bestaudio/best"
 osd-fractions
 
 # alsa pipewire audio device
-#audio-device=alsa/pipewire
+#audio-device=oss//dev/dsp0
 
 # youtube subs - J to switch to subs
 sub-auto=fuzzy
