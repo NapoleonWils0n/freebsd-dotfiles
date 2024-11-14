@@ -32,8 +32,9 @@
            ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark
            embark-consult emmet-mode evil evil-collection evil-leader
            fd-dired git-auto-commit-mode google-translate hydra iedit
-           marginalia mpv nerd-icons nix-mode ob-async orderless rg s
-           shrink-path undo-tree vertico wgrep which-key yaml-mode))
+           marginalia mpv nerd-icons nix-mode ob-async orderless
+           org-tree-slide rg s shrink-path undo-tree vertico wgrep
+           which-key yaml-mode))
  '(warning-suppress-types '((comp))))
 
 ;; require package
@@ -110,7 +111,7 @@
 (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height efs/default-font-size)
 
 ;; Set the variable pitch face
-(set-face-attribute 'variable-pitch nil :font "Cantarell" :height efs/default-variable-font-size :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height efs/default-variable-font-size :weight 'regular)
 
 ;; tab bar background
 (set-face-attribute 'tab-bar nil
@@ -618,6 +619,18 @@ variables for update interval, output format, etc."
 (require 'org-capture)
 (setq org-agenda-files '("~/git/personal/org/"))
 
+;; resize org headings
+(require 'org-faces)
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1)))
+  (set-face-attribute (car face) nil :font "Iosevka Aile" :weight 'medium :height (cdr face)))
+
 ;; org babel supress do you want to execute code message
 (setq org-confirm-babel-evaluate nil
       org-src-fontify-natively t
@@ -733,6 +746,73 @@ variables for update interval, output format, etc."
       (insert image)
       (write-region (point-min) (point-max) file))
     (insert (format "[[file:%s]]\n" (file-relative-name file)))))
+
+
+;; ----------------------------------------------------------------------------------
+;; org tree slide
+;; ----------------------------------------------------------------------------------
+
+;; presentation start
+(defun my/presentation-setup ()
+(setq-local mode-line-format nil) 
+(setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+                                   (header-line (:height 4.0) variable-pitch)
+                                   (org-document-title (:height 1.75) org-document-title)
+                                   (org-code (:height 1.55) org-code)
+                                   (org-verbatim (:height 1.55) org-verbatim)
+                                   (org-block (:height 1.25) org-block)
+                                   (org-block-begin-line (:height 0.7) org-block))))
+
+;; presentation end
+(defun my/presentation-end ()
+(doom-modeline-set-modeline 'main)
+  (setq-local face-remapping-alist '((default fixed-pitch default)))
+  (setq-local face-remapping-alist '((default variable-pitch default))))
+
+;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;; presentation hooks
+(add-hook 'org-tree-slide-play-hook 'my/presentation-setup)
+(add-hook 'org-tree-slide-stop-hook 'my/presentation-end)
+
+;; org tree slide settings
+(setq org-tree-slide-header nil)
+(setq org-tree-slide-activate-message "Presentation started")
+(setq org-tree-slide-deactivate-message "Presentation finished")
+(setq org-tree-slide-slide-in-effect t)
+(setq org-tree-slide-breakcrumbs " // ")
+(setq org-tree-slide-heading-emphasis nil)
+(setq org-tree-slide-slide-in-blank-lines 2)
+(setq org-tree-slide-indicator nil)
+
+;; make #+ lines invisible during presentation
+(with-eval-after-load "org-tree-slide"
+  (defvar my-hide-org-meta-line-p nil)
+  (defun my-hide-org-meta-line ()
+    (interactive)
+    (setq my-hide-org-meta-line-p t)
+    (set-face-attribute 'org-meta-line nil
+			                  :foreground (face-attribute 'default :background)))
+  (defun my-show-org-meta-line ()
+    (interactive)
+    (setq my-hide-org-meta-line-p nil)
+    (set-face-attribute 'org-meta-line nil :foreground nil))
+
+  (defun my-toggle-org-meta-line ()
+    (interactive)
+    (if my-hide-org-meta-line-p
+	      (my-show-org-meta-line) (my-hide-org-meta-line)))
+
+  (add-hook 'org-tree-slide-play-hook #'my-hide-org-meta-line)
+  (add-hook 'org-tree-slide-stop-hook #'my-show-org-meta-line))
 
 
 ;; ----------------------------------------------------------------------------------
