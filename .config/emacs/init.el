@@ -24,9 +24,7 @@
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
  '(custom-safe-themes
-   '("ffafb0e9f63935183713b204c11d22225008559fa62133a69848835f4f4a758c"
-     "636b135e4b7c86ac41375da39ade929e2bd6439de8901f53f88fde7dd5ac3561"
-     "" default))
+   '("" default))
  '(package-selected-packages
    '(async consult doom-modeline doom-modeline-now-playing doom-themes
            ednc elfeed elfeed-org elfeed-tube elfeed-tube-mpv embark
@@ -54,8 +52,12 @@
 (async-bytecomp-package-mode 1)
 (setq async-bytecomp-allowed-packages '(all))
 
-;;(setq native-comp-deferred-compilation nil
-;;comp-enable-subr-trampolines nil)
+
+;; ----------------------------------------------------------------------------------
+;; load-theme
+;; ----------------------------------------------------------------------------------
+
+(load-theme 'modus-vivendi-tinted t)
 
 
 ;; ----------------------------------------------------------------------------------
