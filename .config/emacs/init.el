@@ -930,13 +930,6 @@ targets."
 ;; mpv-default-options play fullscreen on second display
 (setq mpv-default-options '("--fs" "--fs-screen=1"))
 
-;; yank the async buffer
-(defun yank-async ()
-  "yank async buffer"
-  (interactive)
-    (yank (kill-new (with-current-buffer "*Async Shell Command*"
-    (buffer-substring-no-properties (point-min) (point-max))))))
-
 
 ;; create a video: link type that opens a url using mpv-play-remote-video
 (org-link-set-parameters "video"
