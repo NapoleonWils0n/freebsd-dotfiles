@@ -39,11 +39,3 @@ menu:
     submenu:
       "m": { desc: mpv, cmd: emacsclient -cF "((visibility . nil))" -e "(mpv-play-clipboard)" }
       "l": { desc: links, cmd: org-playlist -i "$(wl-paste)" }
-  "o":
-    desc: obs
-    submenu:
-      "h": { desc: laptop, cmd: obs-cmd scene switch laptop }
-      "j": { desc: monitor, cmd: obs-cmd scene switch monitor }
-      "k": { desc: both, cmd: obs-cmd scene switch both }
-      "l": { desc: ffmpeg, cmd: obs-cmd scene switch ffmpeg }
-      "r": { desc: record, cmd: obs-cmd recording toggle }
