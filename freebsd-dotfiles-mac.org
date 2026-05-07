@@ -3861,25 +3861,7 @@ profile-cond=path:find('youtu%.?be') ~= nil
 profile=hwdec
 # override hwdec profile cache setting
 cache=yes
-# fullscreen 2nd display
 fs
-fs-screen-name=DP-3
-
-
-#===============================================================================
-# invidious conditional auto profile match any invidious url
-#===============================================================================
-
-[invidious]
-profile-desc="invidious hardware acceleration, cache"
-profile-cond=path:find('http://192.168.1.151:3000') ~= nil
-# include hwdec profile 
-profile=hwdec
-# override hwdec profile cache setting
-cache=no
-# fullscreen 2nd display
-fs
-fs-screen-name=DP-3
 
 
 #===============================================================================
@@ -3895,7 +3877,6 @@ profile=hwdec
 cache=auto
 # fullscreen 2nd display
 fs
-fs-screen-name=DP-3
 
 
 #===============================================================================
@@ -3911,7 +3892,6 @@ profile=hwdec
 cache=yes
 # fullscreen 2nd display
 fs
-fs-screen-name=DP-3
 
 
 #===============================================================================
@@ -3927,7 +3907,6 @@ profile=hwdec
 cache=yes
 # fullscreen 2nd display
 fs
-fs-screen-name=DP-3
 #+END_SRC
 
 *** mpv tangle
