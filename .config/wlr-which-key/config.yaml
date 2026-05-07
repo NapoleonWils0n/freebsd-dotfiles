@@ -1,1 +1,37 @@
-<<wlr-which-key>>
+# Theming
+font: Fira Code 18
+background: "#282828d0"
+color: "#fbf1c7"
+border: "#005577"
+separator: " ➜ "
+border_width: 2
+corner_r: 10
+padding: 15 # Defaults to corner_r
+
+# Anchor and margin
+anchor: center # One of center, left, right, top, bottom, bottom-left, top-left, etc.
+# Only relevant when anchor is not center
+margin_right: 0
+margin_bottom: 0
+margin_left: 0
+margin_top: 0
+
+menu: 
+  - key: "m"
+    desc: mpv
+    cmd: emacsclient -cF "((visibility . nil))" -e "(mpv-play-clipboard)" 
+  - key: "p"
+    desc: pinch
+    cmd: /home/djwilcox/bin/pinch -i "$(wl-paste)"
+  - key: "s"
+    desc: screenshot
+    submenu:
+      - key: "l"
+        desc: laptop
+        cmd: grim -o eDP-1
+      - key: "m"
+        desc: monitor
+        cmd: grim -o DP-3
+      - key: "b"
+        desc: both
+        cmd: grim
