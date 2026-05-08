@@ -6261,6 +6261,23 @@ StartupNotify=true
 StartupWMClass=obs
 #+end_src
 
+**** vpn-chromium config
+
+#+NAME: vpn-chromium-desktop
+#+begin_src conf
+[Desktop Entry]
+Type=Application
+Version=1.0
+Encoding=UTF-8
+Name=vpn-Chromium
+Comment=Google web browser based on WebKit
+Icon=chrome
+Exec=sh -c 'setfib 1 /usr/local/bin/chrome %U'
+Categories=Application;Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/ftp;
+StartupNotify=true
+#+end_src
+
 **** vpn-firefox config
 
 #+NAME: vpn-firefox-desktop
@@ -6323,6 +6340,21 @@ SingleMainWindow=true
 #+NAME: obs-desktop-current-dir
 #+BEGIN_SRC conf :tangle ".local/share/applications/com.obsproject.Studio.desktop"
 <<obs-desktop>>
+#+END_SRC
+
+**** vpn-chromium tangle
+***** home dir
+  
+#+NAME: vpn-chromium-desktop-home-dir
+#+BEGIN_SRC conf :tangle "~/.local/share/applications/vpn-chromium-browser.desktop"
+<<vpn-chromium-desktop>>
+#+END_SRC
+  
+***** current dir
+
+#+NAME: vpn-chromium-desktop-current-dir
+#+BEGIN_SRC conf :tangle ".local/share/applications/vpn-chromium-browser.desktop"
+<<vpn-chromium-desktop>>
 #+END_SRC
 
 **** vpn-firefox tangle
